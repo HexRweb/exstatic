@@ -1,0 +1,21 @@
+{
+	"HookManager": {
+		"registered_unknown_hook": "Plugin \"%{plugin}\" attempted to register unknown hook \"%{hook}\"",
+		"called_unknown_hook": "Attempted to execute unknown hook \"%{hook}\"",
+		"execution_failed": "Failed to execute \"%{hook}\" hook for plugin \"%{plugin}\" - %{error}"
+	},
+	"Exstatic": {
+		"registering_helpers": "Registering helpers",
+		"registering_helper": "Registering %{async} Helper: %{name}",
+		"helpers_registered": "Done registering helpers",
+		"using_config": "Using config file: _config.%{ext}",
+		"plugin_loaded": "Plugin loaded: \"%{name}\"",
+		"plugin_loading_failed": "Failed to load plugin: \"%{name}\" - %{error}",
+		"reading_files": "Loading files",
+		"files_read": "Finished loading files from disk",
+		"compile_file": "Compiling file: %{name}",
+		"write_file": "Writing file: %{name}",
+		"duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
+		"exiting": "Detected exit request; cleaning up temp dir..."
+	}
+}
