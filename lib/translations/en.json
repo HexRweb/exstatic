@@ -16,6 +16,7 @@
 		"compile_file": "Compiling file: %{name}",
 		"write_file": "Writing file: %{name}",
 		"duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
-		"exiting": "Detected exit request; cleaning up temp dir..."
+		"exiting": "Cleaning up temp directory before exiting...",
+		"terminating": "Detected exit request; cleaning up temp dir..."
 	}
 }
