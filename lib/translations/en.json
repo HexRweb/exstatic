@@ -18,5 +18,8 @@
 		"duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
 		"exiting": "Cleaning up temp directory before exiting...",
 		"terminating": "Detected exit request; cleaning up temp dir..."
+	},
+	"File": {
+		"yaml_failed": "Failed parsing metadata for %{path} - %{error}"
 	}
 }
