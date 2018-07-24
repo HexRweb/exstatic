@@ -13,6 +13,7 @@
 		"plugin_loading_failed": "Failed to load plugin: \"%{name}\" - %{error}",
 		"reading_files": "Loading files",
 		"files_read": "Finished loading files from disk",
+		"refreshing_file": "Attempting to refresh file %{file}",
 		"compile_file": "Compiling file: %{name}",
 		"write_file": "Writing file: %{name}",
 		"duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
