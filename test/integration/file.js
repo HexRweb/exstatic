@@ -51,18 +51,20 @@ describe('Integration > File', function () {
 		it('Files with only content', function () {
 			return getFile('no-meta').then(file => {
 				const expectedFileMeta = {
+					title: 'no-meta',
 					slug: 'no-meta',
 					path: '/no-meta/'
 				};
 
 				expect(file.meta).to.deep.equal(expectedFileMeta);
-				expect(hash(file.hbs)).to.equal('Kaw0SDnF3wqIpDcTC5CE2GG+K2vVjel+nHDPLRwXJQg=');
+				expect(hash(file.hbs)).to.equal('9ww3CYkueKXosF1jHTX61at2GM8C/iykLsCEn4yTBJk=');
 			});
 		});
 
-		it('Files with delimiters but no content', function () {
-			return getFile('delim-no-meta', file => {
+		it('Files with metadata delimiters but no metadata', function () {
+			return getFile('delim-no-meta').then(file => {
 				const expectedFileMeta = {
+					title: 'delim-no-meta',
 					slug: 'delim-no-meta',
 					path: '/delim-no-meta/'
 				};
