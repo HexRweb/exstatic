@@ -28,7 +28,8 @@
     "xo": "^0.21.1"
   },
   "scripts": {
-	"test": "xo"
+	"test": "xo",
+	"test:integration": "nyc --reporter=html --reporter=text mocha --recursive test/integration"
   },
   "xo": {
     "rules": {
@@ -40,6 +41,14 @@
     },
     "ignore": [
       "lib/helpers/**/*"
-    ]
+	],
+	"overrides": [{
+		"files": "test/**/*.js",
+		"envs": ["node", "mocha"],
+		"rules": {
+			"func-names": "off",
+			"prefer-arrow-callback": "off"
+		}
+	}]
   }
 }
