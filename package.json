@@ -29,7 +29,9 @@
   },
   "scripts": {
 	"lint": "xo",
-	"test:integration": "nyc --reporter=html --reporter=text mocha --recursive test/integration"
+	"test:all": "yarn run test:unit && yarn run test:integration",
+	"test:unit": "nyc --reporter=html --reporter=text mocha --recursive test/unit",
+	"test:integration": "mocha --recursive test/integration"
   },
   "xo": {
     "rules": {
