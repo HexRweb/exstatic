@@ -28,7 +28,7 @@
     "xo": "^0.21.1"
   },
   "scripts": {
-	"test": "xo",
+	"lint": "xo",
 	"test:integration": "nyc --reporter=html --reporter=text mocha --recursive test/integration"
   },
   "xo": {
