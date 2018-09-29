@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@hexr/hookit": "^0.1.1",
     "bluebird": "^3.5.2",
     "express-hbs": "^1.0.4",
     "fs-extra": "^7.0.0",
