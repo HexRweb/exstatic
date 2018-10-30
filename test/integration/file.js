@@ -19,59 +19,55 @@ describe('Integration > File', function () {
 			})).extractMeta();
 		}
 
-		it('Generic Files', function () {
-			return getFile('generic-file').then(file => {
-				const expectedFileMeta = {
-					title: 'Generic File',
-					page: true,
-					// Generated through extractMeta
-					path: '/generic-file/',
-					slug: 'generic-file'
-				};
-				expect(file.meta).to.deep.equal(expectedFileMeta);
-				expect(hash(file.hbs)).to.equal('69k5saSnIMIcITGMDTI7QrbIhwRX6AjlT01ehqTo6mY=');
-			});
+		it('Generic Files', async function () {
+			const file = await getFile('generic-file');
+			const expectedFileMeta = {
+				title: 'Generic File',
+				page: true,
+				// Generated through extractMeta
+				path: '/generic-file/',
+				slug: 'generic-file'
+			};
+			expect(file.meta).to.deep.equal(expectedFileMeta);
+			expect(hash(file.hbs)).to.equal('69k5saSnIMIcITGMDTI7QrbIhwRX6AjlT01ehqTo6mY=');
 		});
 
-		it('Files with only metadata', function () {
-			return getFile('only-meta').then(file => {
-				const expectedFileMeta = {
-					title: 'Only Metadata',
-					page: false,
-					description: 'This file contains only metadata',
-					slug: 'only-meta',
-					path: '/only-meta/'
-				};
+		it('Files with only metadata', async function () {
+			const file = await getFile('only-meta');
+			const expectedFileMeta = {
+				title: 'Only Metadata',
+				page: false,
+				description: 'This file contains only metadata',
+				slug: 'only-meta',
+				path: '/only-meta/'
+			};
 
-				expect(file.meta).to.deep.equal(expectedFileMeta);
-				expect(file.hbs).to.equal('');
-			});
+			expect(file.meta).to.deep.equal(expectedFileMeta);
+			expect(file.hbs).to.equal('');
 		});
 
-		it('Files with only content', function () {
-			return getFile('no-meta').then(file => {
-				const expectedFileMeta = {
-					title: 'no-meta',
-					slug: 'no-meta',
-					path: '/no-meta/'
-				};
+		it('Files with only content', async function () {
+			const file = await getFile('no-meta');
+			const expectedFileMeta = {
+				title: 'no-meta',
+				slug: 'no-meta',
+				path: '/no-meta/'
+			};
 
-				expect(file.meta).to.deep.equal(expectedFileMeta);
-				expect(hash(file.hbs)).to.equal('9ww3CYkueKXosF1jHTX61at2GM8C/iykLsCEn4yTBJk=');
-			});
+			expect(file.meta).to.deep.equal(expectedFileMeta);
+			expect(hash(file.hbs)).to.equal('9ww3CYkueKXosF1jHTX61at2GM8C/iykLsCEn4yTBJk=');
 		});
 
-		it('Files with metadata delimiters but no metadata', function () {
-			return getFile('delim-no-meta').then(file => {
-				const expectedFileMeta = {
-					title: 'delim-no-meta',
-					slug: 'delim-no-meta',
-					path: '/delim-no-meta/'
-				};
+		it('Files with metadata delimiters but no metadata', async function () {
+			const file = await getFile('delim-no-meta');
+			const expectedFileMeta = {
+				title: 'delim-no-meta',
+				slug: 'delim-no-meta',
+				path: '/delim-no-meta/'
+			};
 
-				expect(file.meta).to.deep.equal(expectedFileMeta);
-				expect(hash(file.hbs)).to.equal('8jCPJ/lJZGmsCD4Y17DIxnvNCR9rM2wXLE7GVO+N7sY=');
-			});
+			expect(file.meta).to.deep.equal(expectedFileMeta);
+			expect(hash(file.hbs)).to.equal('8jCPJ/lJZGmsCD4Y17DIxnvNCR9rM2wXLE7GVO+N7sY=');
 		});
 	});
 });

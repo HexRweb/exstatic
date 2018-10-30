@@ -42,7 +42,8 @@
       "func-names": [
         "error",
         "as-needed"
-      ],
+	  ],
+	  "prefer-object-spread": "off",
       "no-use-extend-native/no-use-extend-native": "off"
     },
     "ignore": [
