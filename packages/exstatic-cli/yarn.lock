@@ -20,7 +20,7 @@
 
 "@exstatic/core@https://github.com/hexrweb/exstatic.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic.git#548cd1dfeb32b9d905d2421ddb3b4b248c4bf19e"
+  resolved "https://github.com/hexrweb/exstatic.git#e931e814cc6660cd3000c99ce69ad31d3e8e4ddb"
   dependencies:
     "@hexr/hookit" "^0.1.1"
     bluebird "^3.5.2"
@@ -36,7 +36,7 @@
 
 "@exstatic/dev@https://github.com/hexrweb/exstatic-dev.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic-dev.git#853bc083617b0e4a2dc351608927ca3255a6e98d"
+  resolved "https://github.com/hexrweb/exstatic-dev.git#cff90368675fca0984b1fd484fdecd84951456da"
   dependencies:
     "@exstatic/core" "https://github.com/hexrweb/exstatic.git"
     chokidar "^2.0.4"
