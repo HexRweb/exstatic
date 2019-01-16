@@ -1,5 +1,5 @@
 {
-  "name": "@exstatic/dev",
+  "name": "@exstatic/cli",
   "version": "0.0.1",
   "description": "Command Line Interface for Exstatic",
   "main": "lib/bootstrap.js",
