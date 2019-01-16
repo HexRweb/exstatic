@@ -7,8 +7,24 @@
   "author": "HexR <hello@hexr.org>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "lint": "xo"
+  },
   "dependencies": {
     "chokidar": "^2.0.4",
     "exstatic": "https://github.com/hexrweb/exstatic.git"
+  },
+  "devDependencies": {
+    "xo": "^0.24.0"
+  },
+  "xo": {
+    "rules": {
+      "func-names": [
+        "error",
+        "as-needed"
+      ],
+      "prefer-object-spread": "off",
+      "no-use-extend-native/no-use-extend-native": "off"
+    }
   }
 }
