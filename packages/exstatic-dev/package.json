@@ -11,8 +11,8 @@
     "lint": "xo"
   },
   "dependencies": {
-    "chokidar": "^2.0.4",
-    "exstatic": "https://github.com/hexrweb/exstatic.git"
+    "@exstatic/core": "https://github.com/hexrweb/exstatic.git",
+    "chokidar": "^2.0.4"
   },
   "devDependencies": {
     "xo": "^0.24.0"

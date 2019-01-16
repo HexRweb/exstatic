@@ -1,8 +1,8 @@
 const {unlink} = require('fs');
 const chokidar = require('chokidar');
-const {Exstatic} = require('exstatic');
-const File = require('exstatic/lib/file');
-const log = require('exstatic/lib/log');
+const {Exstatic} = require('@exstatic/core');
+const File = require('@exstatic/core/lib/file');
+const log = require('@exstatic/core/lib/log');
 
 module.exports = function watchForChanges() {
 	if (!(this instanceof Exstatic)) {

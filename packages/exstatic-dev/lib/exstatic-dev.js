@@ -1,4 +1,4 @@
-const {Exstatic} = require('exstatic');
+const {Exstatic} = require('@exstatic/core');
 const {watch} = require('./extends');
 
 class ExstaticDev extends Exstatic {
