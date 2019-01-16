@@ -1,5 +1,5 @@
 {
-  "name": "exstatic",
+  "name": "@exstatic/core",
   "version": "0.0.1",
   "description": "HexR's Static Site Generator. Opinionated and SEO friendly",
   "main": "index.js",
