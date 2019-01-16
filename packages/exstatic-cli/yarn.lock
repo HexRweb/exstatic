@@ -1155,14 +1155,14 @@ express-hbs@^2.0.1:
 
 "exstatic-dev@https://github.com/hexrweb/exstatic-dev.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic-dev.git#0e2a7c0f6cae478367782d192519858cade87d80"
+  resolved "https://github.com/hexrweb/exstatic-dev.git#6dbe12aa3703516db5176e3207084702835dd93c"
   dependencies:
     chokidar "^2.0.4"
     exstatic "https://github.com/hexrweb/exstatic.git"
 
 "exstatic@https://github.com/hexrweb/exstatic.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic.git#912ad71941f85f29e3f1dfc52dcf8cb273e791cf"
+  resolved "https://github.com/hexrweb/exstatic.git#cc3de0d8f7912a822b2523c71efc7b693176960f"
   dependencies:
     "@hexr/hookit" "^0.1.1"
     bluebird "^3.5.2"
