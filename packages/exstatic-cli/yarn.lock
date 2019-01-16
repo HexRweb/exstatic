@@ -20,7 +20,7 @@
 
 "@exstatic/core@https://github.com/hexrweb/exstatic.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic.git#ad0875e963b99c2522ef367a8a28e3404206b2c0"
+  resolved "https://github.com/hexrweb/exstatic.git#548cd1dfeb32b9d905d2421ddb3b4b248c4bf19e"
   dependencies:
     "@hexr/hookit" "^0.1.1"
     bluebird "^3.5.2"
