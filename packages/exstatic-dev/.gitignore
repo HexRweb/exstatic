@@ -26,3 +26,5 @@ _peekaboo
 *.code-workspace
 
 .exstatic
+built
+testing
