@@ -1,4 +1,4 @@
-const exstatic = require('exstatic-dev');
+const exstatic = require('@exstatic/dev');
 const Error = require('../lib/exstatic-error');
 
 module.exports = {
