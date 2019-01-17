@@ -7,7 +7,7 @@
 	"Exstatic": {
 		"registering_types": "Registering content types",
 		"registering_helpers": "Registering helpers",
-		"registering_helper": "Registering %{async} Helper: %{name}",
+		"registering_helper": "Registering %{type} Helper: %{name}",
 		"helpers_registered": "Done registering helpers",
 		"using_config": "Using config file: _config.%{ext}",
 		"config_parsing_failed": "Failed parsing config file _config.%{ext} - %{code}",
