@@ -10,6 +10,7 @@
 		"registering_helper": "Registering %{async} Helper: %{name}",
 		"helpers_registered": "Done registering helpers",
 		"using_config": "Using config file: _config.%{ext}",
+		"config_parsing_failed": "Failed parsing config file _config.%{ext} - %{code}",
 		"plugin_loaded": "Plugin loaded: \"%{name}\"",
 		"plugin_loading_failed": "Failed to load plugin: \"%{name}\" - %{error}",
 		"reading_files": "Loading files",
