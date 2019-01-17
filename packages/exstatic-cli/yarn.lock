@@ -36,7 +36,7 @@
 
 "@exstatic/dev@https://github.com/hexrweb/exstatic-dev.git":
   version "0.0.1"
-  resolved "https://github.com/hexrweb/exstatic-dev.git#bbcf6f3f454ed038aa5117b722c8ad5f4899b343"
+  resolved "https://github.com/hexrweb/exstatic-dev.git#a09227422eef7a4d9297bcd34e222c0ba270506e"
   dependencies:
     "@exstatic/core" "https://github.com/hexrweb/exstatic.git"
     chokidar "^2.0.4"
