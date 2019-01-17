@@ -1,17 +1,34 @@
 const yargs = require('yargs');
 const ExstaticError = require('./exstatic-error');
 
-module.exports = yargs.command('$0', '', () => {}, _ => {
-	console.log('Nothing to do :)');
-	process.exit(0);
-})
-	.commandDir('../commands')
-	.fail((msg, err) => {
+module.exports = yargs
+	.usage('$0 <action>')
+	.alias('h', 'help')
+	.help()
+	.option('d', {
+		alias: ['directory'],
+		desc: 'Directory to run in',
+		global: true
+	})
+	.commandDir('./commands')
+	.fail((msg, err, yargs) => {
 		if (err instanceof ExstaticError) {
 			return console.error(err.message);
 		}
 
-		console.log(msg, err);
+		if (msg.indexOf('Did you mean ') === 0) {
+			yargs.showHelp();
+			return console.log('\n\nCommand not found.', msg);
+		}
+
+		if (msg === 'SHOW_HELP') {
+			return yargs.showHelp();
+		}
+
+		console.log(msg);
 	})
-	.help()
+	.demandCommand(1, 'SHOW_HELP')
+	.showHelpOnFail(true)
+	.recommendCommands()
+	.epilogue('⚠  Exstatic is extremely beta and not suitable for production ⚠')
 	.argv;
