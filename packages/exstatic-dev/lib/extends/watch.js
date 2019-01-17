@@ -19,7 +19,7 @@ module.exports = function watchForChanges() {
 		foldersToWatch.push(this.files.partialsDir);
 	}
 
-	log.verbose(`Watching folders: ${foldersToWatch.join(', ')}`);
+	log.info(`Watching folders: ${foldersToWatch.join(', ')}`);
 
 	const watcher = chokidar.watch(foldersToWatch, {
 		persistent: true
