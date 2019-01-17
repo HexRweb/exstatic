@@ -81,4 +81,6 @@ module.exports = function watchForChanges() {
 		log.verbose('Disabling folder watch');
 		watcher.close();
 	}];
+
+	return this;
 };

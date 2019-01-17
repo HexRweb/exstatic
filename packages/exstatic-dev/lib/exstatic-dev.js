@@ -1,10 +1,14 @@
 const {Exstatic} = require('@exstatic/core');
-const {watch} = require('./extends');
+const {watch, build} = require('./extends');
 
 class ExstaticDev extends Exstatic {
 	constructor(...args) {
 		super(...args);
 		this.exitActions = [];
+	}
+
+	build() {
+		return build.call(this);
 	}
 
 	watch() {
