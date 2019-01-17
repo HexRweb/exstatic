@@ -3,6 +3,7 @@ const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
 const File = require('@exstatic/core/lib/file');
 const log = require('@exstatic/core/lib/log');
+const normalize = require('@exstatic/core/lib/utils/normalize');
 
 module.exports = function watchForChanges() {
 	if (!(this instanceof Exstatic)) {
@@ -27,6 +28,7 @@ module.exports = function watchForChanges() {
 
 	watcher.on('ready', () => {
 		watcher.on('add', absolutePath => {
+			absolutePath = normalize(absolutePath);
 			log.verbose(`File added: ${absolutePath}`);
 			const file = new File({
 				location: absolutePath,
@@ -40,6 +42,7 @@ module.exports = function watchForChanges() {
 		});
 
 		watcher.on('change', absolutePath => {
+			absolutePath = normalize(absolutePath);
 			log.verbose(`File changed: ${absolutePath}`);
 			let check = false;
 			if (absolutePath.includes(this.files.layoutsDir) || absolutePath.includes(this.files.partialsDir)) {
@@ -56,6 +59,7 @@ module.exports = function watchForChanges() {
 		});
 
 		watcher.on('remove', absolutePath => {
+			absolutePath = normalize(absolutePath);
 			log.verbose(`File removed:${absolutePath}`);
 			log.info(`Removing File ${absolutePath}`);
 			let index = -1;
