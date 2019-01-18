@@ -1,19 +1,31 @@
-const exstatic = require('@exstatic/dev');
+const {ExstaticDev} = require('@exstatic/dev');
 const Error = require('../exstatic-error');
 const preHandle = require('../base-handler');
 
 module.exports = {
 	desc: 'Rebuild affected files when you make a change',
-	async handler(argv) {
+	handler(argv) {
 		preHandle(argv);
-		const instance = exstatic();
 
-		try {
-			await instance.build();
-		} catch (error) {
-			throw new Error(`Build failed - ${error.message}`);
+		let instance;
+
+		async function startInstance() {
+			instance = new ExstaticDev();
+
+			instance.events.on('TRIGGER_RESTART', () => {
+				instance.destroy();
+				startInstance().catch(error => {
+					throw new Error(`Unable to restart - ${error.message}`);
+				});
+			});
+
+			await instance.build().catch(error => {
+				throw new Error(`Build failed - ${error.message}`);
+			});
+
+			return instance.watch();
 		}
 
-		return instance.watch();
+		return startInstance();
 	}
 };
