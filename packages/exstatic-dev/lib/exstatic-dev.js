@@ -1,3 +1,5 @@
+const EventEmitter = require('events');
+
 const {Exstatic} = require('@exstatic/core');
 const {watch, build} = require('./extends');
 
@@ -5,6 +7,8 @@ class ExstaticDev extends Exstatic {
 	constructor(...args) {
 		super(...args);
 		this.exitActions = [];
+		this.events = new EventEmitter();
+		this.events.setMaxListeners(25);
 	}
 
 	build() {
@@ -13,6 +17,11 @@ class ExstaticDev extends Exstatic {
 
 	watch() {
 		return watch.call(this);
+	}
+
+	destroy() {
+		process.off('SIGINT', this.realOnBeforeExit).off('SIGTERM', this.realOnBeforeExit);
+		this.exitActions.forEach(action => action());
 	}
 
 	registerExitHooks(...args) {
