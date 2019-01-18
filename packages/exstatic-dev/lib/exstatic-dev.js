@@ -20,7 +20,8 @@ class ExstaticDev extends Exstatic {
 	}
 
 	destroy() {
-		process.off('SIGINT', this.realOnBeforeExit).off('SIGTERM', this.realOnBeforeExit);
+		process.removeListener('SIGINT', this.realOnBeforeExit)
+			.removeListener('SIGTERM', this.realOnBeforeExit);
 		this.exitActions.forEach(action => action());
 	}
 
@@ -34,8 +35,8 @@ class ExstaticDev extends Exstatic {
 		}).bind(this);
 		/* eslint-enable no-extra-bind */
 
-		process.off('SIGINT', this.onBeforeExit)
-			.off('SIGTERM', this.onBeforeExit)
+		process.removeListener('SIGINT', this.onBeforeExit)
+			.removeListener('SIGTERM', this.onBeforeExit)
 			.on('SIGINT', this.realOnBeforeExit)
 			.on('SIGTERM', this.realOnBeforeExit);
 	}
