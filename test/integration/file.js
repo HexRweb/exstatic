@@ -12,6 +12,7 @@ describe('Integration > File', function () {
 		function getFile(name) {
 			return (new File({
 				location: path.resolve(fixturesPath, `${name}.hbs`),
+				writePath: '/tmp',
 				directory: fixturesPath,
 				url: 'https://localhost:3000',
 				compiler: sinon.stub(),

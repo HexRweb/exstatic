@@ -44,6 +44,7 @@
         "as-needed"
       ],
       "prefer-object-spread": "off",
+      "prefer-spread": "off",
       "no-use-extend-native/no-use-extend-native": "off"
     },
     "ignore": [

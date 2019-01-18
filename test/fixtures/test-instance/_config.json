@@ -1,0 +1,9 @@
+{
+	"outputDir": "./build",
+	"inputDir": "./src/pages",
+	"layoutsDir": "./src/layouts",
+	"partialsDir": "./src/partials",
+	"site": {
+		"url": "http://exstatic.dev"
+	}
+}
