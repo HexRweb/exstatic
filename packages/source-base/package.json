@@ -1,0 +1,24 @@
+{
+  "name": "@exstatic/source-base",
+  "version": "0.0.1",
+  "description": "Base implementation for pulling in external data",
+  "author": "HexR <hello@hexr.org>",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HexRweb/exstatic.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/HexRweb/exstatic/issues"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
