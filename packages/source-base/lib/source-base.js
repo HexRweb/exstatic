@@ -2,7 +2,7 @@ const axios = require('axios');
 
 class ExstaticSource {
 	constructor() {
-		this.request = axios;
+		this.request = axios.create();
 	}
 
 	get name() {
@@ -15,6 +15,10 @@ class ExstaticSource {
 
 	configure() {
 		throw new Error('Configure was not implemented');
+	}
+
+	run() {
+		throw new Error('Run was not implemented');
 	}
 
 	registerHooks(registerHook) {
@@ -30,4 +34,4 @@ class ExstaticSource {
 	}
 }
 
-module.exports = new ExstaticSource();
+module.exports = ExstaticSource;

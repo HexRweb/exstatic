@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/HexRweb/exstatic/issues"
   },
+  "scripts": {
+    "test": "nyc --all --reporter=html --reporter=text mocha --recursive test"
+  },
   "dependencies": {
     "axios": "^0.18.0"
   }
