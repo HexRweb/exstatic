@@ -11,7 +11,7 @@ describe('Test > Source Base', function () {
 	});
 
 	it('index exports base', function () {
-		expect(require('../index.js')).to.equal(Base);
+		expect(require('../index.js')).to.equal(Base); // eslint-disable-line unicorn/import-index
 	});
 
 	it('constructs', function () {
@@ -20,7 +20,7 @@ describe('Test > Source Base', function () {
 
 	it('getting name throws an error by default', function () {
 		try {
-			const name = instance.name;
+			const name = instance.name; // eslint-disable-line prefer-destructuring, no-unused-vars
 			throw new Error('expected an error to be thrown');
 		} catch (error) {
 			expect(error.message).to.equal('Name was not implemented');
@@ -31,7 +31,7 @@ describe('Test > Source Base', function () {
 		instance.name = 'test';
 
 		try {
-			const {name} = instance;
+			const {name} = instance; // eslint-disable-line no-unused-vars
 			throw new Error('expected an error to be thrown');
 		} catch (error) {
 			expect(error.message).to.equal('Name was not implemented');
@@ -81,7 +81,7 @@ describe('Test > Source Base', function () {
 
 	it('registered hook calls run', function () {
 		const run = sinon.stub();
-		const ctx = {name: 'test', run}
+		const ctx = {name: 'test', run};
 		const {async} = instance.register.call(ctx);
 		async.test('this', 'is', 'a', 'test', 1);
 		expect(run.calledOnce).to.be.true;
