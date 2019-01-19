@@ -45,8 +45,7 @@ class File {
 		this.writePath = normalize(options.writePath);
 		this.baseUrl = options.url;
 		this.compiler = options.compiler;
-		this.tempDir = normalize(path.isAbsolute(options.tempFolder) ?
-			options.tempFolder : path.resolve(this.dir, options.tempFolder));
+		this.tempDir = normalize(path.resolve(this.dir, options.tempFolder));
 		this.raw = false;
 		this.md = false;
 		this.meta = false;
