@@ -1,9 +1,6 @@
-const path = require('path');
 const Promise = require('bluebird');
-let {readdir, stat} = require('fs-extra');
+const readdir = Promise.promisify(require('readdirp'));
 const normalize = require('./normalize');
-
-readdir = Promise.promisify(readdir);
 
 // @todo: don't hardcode extensions
 const ALLOWED_EXTENSIONS = ['hbs', 'md'];
@@ -23,20 +20,11 @@ const isValidFile = (file, blacklist) => {
 	}, true);
 };
 
-async function getAllFiles(dir, blacklist = []) {
-	const dirContents = await readdir(dir);
-
-	return Promise.map(dirContents, async fileName => {
-		fileName = path.resolve(dir, fileName);
-		const fileInfo = await stat(fileName);
-		if (fileInfo.isDirectory()) {
-			return getAllFiles(fileName, blacklist);
-		}
-
-		return normalize(fileName);
-	})
-		.reduce((a, b) => a.concat(b), [])
+async function getAllowedFiles(dir, blacklist = []) {
+	const {files} = await readdir({root: dir, entryType: 'files'});
+	return files
+		.map(({fullPath}) => normalize(fullPath))
 		.filter(file => isValidFile(file, blacklist));
 }
 
-module.exports = getAllFiles;
+module.exports = getAllowedFiles;
