@@ -7,6 +7,12 @@ const {stripYaml, getYaml} = require('./utils/yaml-parser');
 const normalize = require('./utils/normalize');
 const t = require('./translations');
 
+/*
+ * Pattern used by express-hbs to get layout
+ * @link https://github.com/barc/express-hbs/blob/master/lib/hbs.js
+*/
+const expHbsLayoutPattern = /{{!<\s+[A-Za-z0-9._\-/]+\s*}}/;
+
 // @todo: Update documentation with new lifecycle
 /*
 ** This is the File Class. It's responsible for storing and parsing metadata for
@@ -131,20 +137,15 @@ class File {
 		await this.buildMarkdown();
 
 		const tempFile = path.resolve(this.tempDir, this.tempName);
-		/*
-		** @todo: We need to make sure the markdown doesn't already contain
-		**		an express-hbs layout definition (`{{!< layout}}`) - if it
-		**		does, we need to give the metadata preference and get rid
-		**		of the markdown's version
-		*/
 
-		/*
-		** @todo: Extract express-hbs layout definition if it exists - marked
-		*/
+		// CASE: Layout was explicitly specified
+		// CASE: Layout definition was already defined
 		if (this.meta.layout) {
+			// Meta layout gets preference over markdown layout
+			this.compiledSection = this.compiledSection.replace(expHbsLayoutPattern, '');
 			this.compiledSection = `{{!< ${this.meta.layout}}}\n${this.compiledSection}`;
 			delete this.meta.layout;
-		} else {
+		} else if (!expHbsLayoutPattern.test(this.compiledSection)) {
 			this.compiledSection = `{{!< default}}\n${this.compiledSection}`;
 		}
 
