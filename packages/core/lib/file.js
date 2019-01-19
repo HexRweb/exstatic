@@ -1,4 +1,3 @@
-'use strict';
 const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile, ensureDir} = require('fs-extra');

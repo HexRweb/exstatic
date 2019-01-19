@@ -1,4 +1,3 @@
-'use strict';
 const ensureArray = require('../utils/ensure-array');
 
 module.exports = function postDocumentGenerationHookResolver(hookResults, docs) {

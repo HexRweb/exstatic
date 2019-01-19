@@ -1,4 +1,3 @@
-const _url = require('url');
 // @todo: add support for relative urls
 // @todo: add support for stripping text
 module.exports = function url(location) {

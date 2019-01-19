@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function registerTypes(results, defaults) {
 	const types = {};
 

@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 module.exports = {
 	sync: {
 		all: require('./all'),
@@ -8,5 +7,3 @@ module.exports = {
 	},
 	async: {}
 };
-
-/* eslint-disable camelcase */

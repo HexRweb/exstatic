@@ -1,4 +1,3 @@
-'use strict';
 const mergeHelpers = require('../utils/merge-helpers');
 
 module.exports = function preRegisterHook(hookResults, helpers) {

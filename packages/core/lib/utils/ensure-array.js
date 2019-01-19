@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function ensureArray(item) {
 	if (Array.isArray(item)) {
 		return item;

@@ -1,5 +1,3 @@
-'use strict';
-
 // Modified version of Jekyll's regex - https://git.io/flblI
 // Javascript doesn't support \A so the parsing is a bit more complicated :(
 const YML_REGEX = new RegExp(/^(?:---\s*\n.*?\n?)(?:([\s\S]+)?)^(?:---\s*$\n?)/, 'm');

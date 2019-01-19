@@ -1,5 +1,3 @@
-'use strict';
-
 // @todo: add support for automatic locale determination
 
 const translate = require('node-translate');

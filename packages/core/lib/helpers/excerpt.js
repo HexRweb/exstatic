@@ -14,7 +14,7 @@ module.exports = function generateExcerpt(text, options) {
 
 	/* return downsize({
 		words: settings.wordcount
-	});*/
+	}); */
 
 	// return new SafeString(excerpt);
 };

@@ -1,4 +1,3 @@
-'use strict';
 const path = require('path');
 const Promise = require('bluebird');
 let {readdir, stat} = require('fs-extra');
