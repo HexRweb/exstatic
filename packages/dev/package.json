@@ -2,11 +2,19 @@
   "name": "@exstatic/dev",
   "version": "0.0.1",
   "description": "Exstatic development made easy",
-  "main": "index.js",
-  "repository": "https://github.com/hexrweb/exstatic-dev",
   "author": "HexR <hello@hexr.org>",
   "license": "MIT",
-  "private": false,
+  "repository": "https://github.com/hexrweb/exstatic",
+  "main": "index.js",
+  "engines": {
+    "node": "^8.9.0 || ^10.12.0"
+  },
+  "files": [
+    "lib",
+    "index.js",
+    "yarn.lock"
+  ],
+  "bugs": "https://github.com/HexRweb/exstatic/issues",
   "scripts": {
     "lint": "xo"
   },
@@ -24,7 +32,22 @@
         "as-needed"
       ],
       "prefer-object-spread": "off",
-      "no-use-extend-native/no-use-extend-native": "off"
-    }
+      "no-use-extend-native/no-use-extend-native": "off",
+      "unicorn/no-process-exit": "off"
+    },
+    "overrides": [
+      {
+        "files": "test/**/*.spec.js",
+        "envs": [
+          "node",
+          "mocha"
+        ],
+        "rules": {
+          "func-names": "off",
+          "prefer-arrow-callback": "off",
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
   }
 }

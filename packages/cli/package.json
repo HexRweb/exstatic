@@ -2,21 +2,24 @@
   "name": "@exstatic/cli",
   "version": "0.0.1",
   "description": "Command Line Interface for Exstatic",
-  "main": "lib/bootstrap.js",
-  "repository": "https://github.com/hexrweb/exstatic-cli",
   "author": "HexR <hello@hexr.org>",
   "license": "MIT",
-  "private": false,
+  "repository": "https://github.com/hexrweb/exstatic",
+  "main": "lib/bootstrap.js",
+  "engines": {
+    "node": "^8.9.0 || ^10.12.0"
+  },
   "files": [
     "bin",
     "lib",
     "yarn.lock"
   ],
-  "bin": {
-    "exstatic": "./bin/exstatic"
-  },
+  "bugs": "https://github.com/HexRweb/exstatic/issues",
   "scripts": {
     "lint": "xo"
+  },
+  "bin": {
+    "exstatic": "./bin/exstatic"
   },
   "dependencies": {
     "@exstatic/dev": "https://github.com/hexrweb/exstatic-dev.git",
@@ -34,6 +37,20 @@
       "prefer-object-spread": "off",
       "no-use-extend-native/no-use-extend-native": "off",
       "unicorn/no-process-exit": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": "test/**/*.spec.js",
+        "envs": [
+          "node",
+          "mocha"
+        ],
+        "rules": {
+          "func-names": "off",
+          "prefer-arrow-callback": "off",
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
   }
 }
