@@ -6,14 +6,12 @@
   "license": "MIT",
   "main": "index.js",
   "files": [
-    "lib"
+    "lib",
+    "index.js"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HexRweb/exstatic.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/HexRweb/exstatic/issues"
