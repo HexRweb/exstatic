@@ -22,7 +22,6 @@
     "exstatic": "./bin/exstatic"
   },
   "dependencies": {
-    "@exstatic/dev": "https://github.com/hexrweb/exstatic-dev.git",
     "yargs": "^12.0.5"
   },
   "devDependencies": {
