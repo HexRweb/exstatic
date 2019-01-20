@@ -15,7 +15,7 @@ module.exports = async function readConfig(basedir) {
 		log.info(t('Exstatic.using_config', {ext: 'json'}));
 		return {data, file};
 	} catch (error) {
-		if (error.code !== 'MODULE_NOT_FOUND') {
+		if (error.code !== 'ENOENT') {
 			log.error(t('Exstatic.config_parsing_failed', {ext: 'json', code: error.code}));
 		}
 	}

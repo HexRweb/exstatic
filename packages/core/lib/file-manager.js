@@ -38,7 +38,7 @@ module.exports = class FileManager {
 	}
 
 	set config(value) {
-		this._config = normalize(value);
+		this._config = value ? normalize(value) : value;
 	}
 
 	get config() {
