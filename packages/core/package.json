@@ -24,7 +24,7 @@
   "dependencies": {
     "@hexr/hookit": "^0.1.1",
     "bluebird": "^3.5.2",
-    "express-hbs": "^2.0.1",
+    "express-hbs": "1.0.4",
     "fs-extra": "^7.0.0",
     "html-minifier": "^3.5.20",
     "js-yaml": "^3.12.0",
