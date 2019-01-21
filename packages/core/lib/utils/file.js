@@ -41,6 +41,9 @@ function fileName(urlPath, explicit = false) {
 	// Give the path it's own directory
 	if (!explicit && !urlPath.match(/\/?index\.html$/i)) {
 		urlPath = `${urlPath.replace(/\.html$/i, '')}/index.html`;
+	// Make sure the file gets its own directory
+	} else if (explicit && !urlPath.match(/\.[\w]+$/)) {
+		urlPath += '/index.html';
 	}
 
 	return urlPath.replace(/\/\/+/g, '/');

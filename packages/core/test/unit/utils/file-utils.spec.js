@@ -53,6 +53,10 @@ describe.only('Unit > Utils > File', function () {
 			expect(fileName('/error.html', true)).to.equal('error.html');
 		});
 
+		it('explicit paths', function () {
+			expect(fileName('/error', true)).to.equal('error/index.html');
+		});
+
 		it('uppercase paths are converted to lower case', function () {
 			expect(fileName('/I-LOVE-TO-SCREAM')).to.equal('i-love-to-scream/index.html');
 		});
