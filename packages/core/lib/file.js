@@ -1,4 +1,4 @@
-const assert = require('assert');
+	const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile, ensureDir} = require('fs-extra');
 const marked = require('marked');
@@ -47,13 +47,13 @@ class File {
 		try {
 			this.meta = getYaml(contents);
 			contents = stripYaml(contents);
-		} catch(error) {
+		} catch (error) {
 			throw new Error(t('File.yaml_failed', {path: this.source, error}));
 		}
 
 		// Step 3: Handle metadata
 		// 3a. Determine what layout to use
-		let layout = this.meta.layout;
+		let {layout} = this.meta;
 
 		// CASE: Layout was defined in meta
 		if (!layout) {
@@ -75,7 +75,7 @@ class File {
 		// 3b. Determine paths
 		const urlPath = fileUtils.urlPath(this.meta.path, this.dir, this.source);
 		this.meta.title = fileUtils.title(this.meta.title, urlPath);
-		const filePath = fileUtils.fileName(urlPath);
+		const filePath = fileUtils.fileName(urlPath, Boolean(this.meta.path));
 		this.filename = normalize(path.resolve(this.writePath, filePath));
 
 		const tempPath = path.resolve(

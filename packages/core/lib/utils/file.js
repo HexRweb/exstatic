@@ -25,7 +25,7 @@ function title(override = false, urlPath) {
 	return path.basename(urlPath).replace(/[-_]/g, ' ').split('.')[0];
 }
 
-function fileName(urlPath) {
+function fileName(urlPath, explicit = false) {
 	urlPath = normalize(urlPath).toLowerCase();
 	urlPath = urlPath.replace('/index.html', '');
 
@@ -38,10 +38,9 @@ function fileName(urlPath) {
 	// Clear slashes
 	urlPath = urlPath.replace(/^\/|\/$/, '');
 
-	// Make sure the file extension is `.html` in its own directory
-	if (!urlPath.endsWith('/index.html') && !urlPath.match(/\.[\w]+$/)) {
-		// urlPath = `${urlPath.replace(/\.[\w]+$/i, '')}/index.html`;
-		urlPath += '/index.html';
+	// Give the path it's own directory
+	if (!explicit && !urlPath.match(/\/?index\.html$/i)) {
+		urlPath = `${urlPath.replace(/\.html$/i, '')}/index.html`;
 	}
 
 	return urlPath.replace(/\/\/+/g, '/');

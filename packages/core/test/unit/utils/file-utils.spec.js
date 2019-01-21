@@ -50,7 +50,7 @@ describe.only('Unit > Utils > File', function () {
 		});
 
 		it('explicit paths', function () {
-			expect(fileName('/error.html')).to.equal('error.html');
+			expect(fileName('/error.html', true)).to.equal('error.html');
 		});
 
 		it('uppercase paths are converted to lower case', function () {
@@ -58,7 +58,11 @@ describe.only('Unit > Utils > File', function () {
 		});
 
 		it('custom file extensions', function () {
-			expect(fileName('/post/2013.02.01/about-me.pdf')).to.equal('post/2013.02.01/about-me.pdf');
+			expect(fileName('/post/2013.02.01/about-me.pdf')).to.equal('post/2013.02.01/about-me.pdf/index.html');
+		});
+
+		it('custom file extensions (explicit)', function () {
+			expect(fileName('/post/2013.02.01/about-me.pdf', true)).to.equal('post/2013.02.01/about-me.pdf');
 		});
 	});
 });
