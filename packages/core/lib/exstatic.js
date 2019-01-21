@@ -120,13 +120,15 @@ class Exstatic {
 		const writtenList = [];
 		return Promise.mapSeries([this.docs.core, this.docs.files], async fileList => {
 			fileList = await Promise.mapSeries(fileList, file => {
-				log.verbose(t('Exstatic.compile_file', {name: file.filename}));
-				const originalName = file.filename;
+				log.verbose(t('Exstatic.compile_file', {name: file.source}));
+				// @todo: add duplicate detection
+
+				/* const originalName = file.filename;
 				let index = 0;
 				while (writtenList.includes(file.filename)) {
 					log.info(t('Exstatic.duplicate_detected', {path: file.filename}));
 					file.filename = `${originalName}-${++index}`;
-				}
+				} */
 
 				return file.compile();
 			});
