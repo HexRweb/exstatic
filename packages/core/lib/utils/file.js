@@ -6,7 +6,7 @@ function urlPath(override = false, root, filePath) {
 	let resolved = override;
 
 	if (override) {
-		resolved = path.resolve('/', filePath);
+		resolved = path.relative('/', override);
 	} else {
 		resolved = path.relative(root, filePath);
 	}
