@@ -62,9 +62,9 @@ class Exstatic {
 		return this;
 	}
 
-	loadFile(file) {
-		const theFile = new File({
-			location: file,
+	loadFile(location) {
+		const file = new File({
+			location,
 			directory: this.files.inputDir,
 			writePath: this.files.outputDir,
 			url: this.data.site.url,
@@ -72,7 +72,7 @@ class Exstatic {
 			compiler: this._hbs.generateCompiler.bind(this._hbs)
 		});
 
-		return theFile.extractMeta();
+		return file.compile();
 	}
 
 	async loadFiles() {
@@ -80,7 +80,7 @@ class Exstatic {
 			return this.docs;
 		}
 
-		const blacklist = [this.files.layoutsDir, this.files.partialsDir].map(bad => bad.replace(/\\/g, '/'));
+		const blacklist = [this.files.layoutsDir, this.files.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
 		const generateFileList = require('./utils/get-all-files');
@@ -100,7 +100,7 @@ class Exstatic {
 
 		[...this.docs.core, ...this.docs.files].forEach(file => {
 			if (file.path === filePath) {
-				promise = file.reload('extractMeta');
+				promise = file.reload();
 			}
 		});
 
@@ -134,7 +134,7 @@ class Exstatic {
 			fileList = await this.hook.executeHook('pre-write', [], fileList);
 			await Promise.mapSeries(fileList, file => {
 				log.verbose(t('Exstatic.write_file', {name: file.filename}));
-				return file.write(force);
+				return file.save(force);
 			});
 		});
 	}
