@@ -2,13 +2,16 @@ const path = require('path');
 const slugify = require('slugify');
 const normalize = require('./normalize');
 
-function urlPath(override = false, root, path) {
+function urlPath(override = false, root, filePath) {
+	let resolved = override;
 
 	if (override) {
-		return path.resolve('/', this.meta.path);
+		resolved = path.resolve('/', filePath);
+	} else {
+		resolved = path.relative(root, filePath);
 	}
 
-	return path.relative(root, path);
+	return resolved.replace(/\.hbs$/i, '.html');
 }
 
 

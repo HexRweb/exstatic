@@ -72,7 +72,7 @@ class Exstatic {
 			compiler: this._hbs.generateCompiler.bind(this._hbs)
 		});
 
-		return file.compile();
+		return file.read();
 	}
 
 	async loadFiles() {
@@ -128,7 +128,7 @@ class Exstatic {
 					file.filename = `${originalName}-${++index}`;
 				}
 
-				return file.compileFile();
+				return file.compile();
 			});
 
 			fileList = await this.hook.executeHook('pre-write', [], fileList);

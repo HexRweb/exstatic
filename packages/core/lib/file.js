@@ -29,9 +29,19 @@ class File {
 		this.rendered = false;
 	}
 
+	async read() {
+		if (this.raw) {
+			return this;
+		}
+
+		this.raw = await readFile(this.source);
+		return this;
+	}
+
 	async compile() {
 		// Step 1: Read contents
-		let contents = (await readFile(this.source, 'utf8')).trim();
+		await this.read();
+		let contents = this.raw.toString().trim();
 
 		// Step 2: Extract metadata from file
 		try {
@@ -47,9 +57,9 @@ class File {
 
 		// CASE: Layout was defined in meta
 		if (!layout) {
-			layout = content.match(expHbsLayoutPattern);
+			layout = contents.match(expHbsLayoutPattern);
 			// CASE: layout was defined (`{{!> layout}})`)
-			if (layout.length) {
+			if (layout) {
 				layout = layout[1];
 				// CASE: no layout specified
 			} else {
@@ -58,7 +68,7 @@ class File {
 		}
 
 		// No matter what, the layout definition needs to be removed
-		content = content.replace(expHbsLayoutPattern, '');
+		contents = contents.replace(expHbsLayoutPattern, '');
 
 		this.meta.layout = layout;
 
@@ -66,7 +76,7 @@ class File {
 		const urlPath = fileUtils.urlPath(this.meta.path, this.dir, this.source);
 		this.meta.title = fileUtils.title(this.meta.title, urlPath);
 		const filePath = fileUtils.fileName(urlPath);
-		this.fileName = normalize(path.resolve(this.writePath, filePath));
+		this.filename = normalize(path.resolve(this.writePath, filePath));
 
 		const tempPath = path.resolve(
 			this.tempDir,
@@ -87,8 +97,8 @@ class File {
 
 		contents = `{{!< ${layout}}}\n${contents}`;
 
-		await writeFile(tempFile, this.compiledSection);
-		this.compiled = await this.compiler(tempFile, {page: this.meta});
+		await writeFile(tempPath, this.compiledSection);
+		this.compiled = await this.compiler(tempPath, {page: this.meta});
 		return this;
 	}
 
@@ -108,10 +118,11 @@ class File {
 	// @todo: use fs.stat to reload only if the file changed since last read
 	async reload() {
 		this.meta = {};
+		this.raw = false;
 		this.rendered = false;
 		this.written = false;
 
-		await this.compile();
+		await this.read();
 		return this;
 	}
 }
