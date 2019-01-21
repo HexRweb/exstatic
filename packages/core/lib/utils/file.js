@@ -39,7 +39,7 @@ function fileName(urlPath) {
 	urlPath = urlPath.replace(/^\/|\/$/, '');
 
 	// Make sure the file extension is `.html` in its own directory
-	if (!urlPath.endsWith('.html') && !urlPath.match(/\.[\w]+$/)) {
+	if (!urlPath.endsWith('/index.html') && !urlPath.match(/\.[\w]+$/)) {
 		// urlPath = `${urlPath.replace(/\.[\w]+$/i, '')}/index.html`;
 		urlPath += '/index.html';
 	}
