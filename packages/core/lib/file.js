@@ -2,37 +2,16 @@ const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile, ensureDir} = require('fs-extra');
 const marked = require('marked');
-const slugify = require('slugify');
 const {stripYaml, getYaml} = require('./utils/yaml-parser');
 const normalize = require('./utils/normalize');
+const fileUtils = require('./utils/file');
 const t = require('./translations');
 
 /*
  * Pattern used by express-hbs to get layout
  * @link https://github.com/barc/express-hbs/blob/master/lib/hbs.js
 */
-const expHbsLayoutPattern = /{{!<\s+[A-Za-z0-9._\-/]+\s*}}/;
-
-// @todo: Update documentation with new lifecycle
-/*
-** This is the File Class. It's responsible for storing and parsing metadata for
-** a given page (here, a page is _any_ resource, not just a static object). The
-** methods are written in the order they _should_ be called. Every method has a
-** dependency of all of the previous methods being called. However, if it's
-** closest previous method wasn't called, it will call it, which means you can
-** call a method and not have to worry about dependencies. There are 2
-** exceptions - the constructor (for obvious reasons), and the write method,
-** which depends on the compile method, which needs to be passed the compiler to
-** use.
-**
-** All methods return the instance
-**
-** Lifecycle: Construct ➡ Read ➡ Get YAML ➡ Compile HBS ➡ Compile Markdown ➡ Save
-**
-** The reason we don't export this as 1 function is 2-fold - first, it's much
-** easier to read and understand now, but more importantly, we can stop at any
-** state, which opens possibilities to extend the functionality of exstatic
-*/
+const expHbsLayoutPattern = /{{!<\s+([A-Za-z0-9\._\-\/]+)\s*}}/;
 
 class File {
 	constructor(options = {}) {
@@ -41,15 +20,12 @@ class File {
 		});
 
 		this.dir = normalize(options.directory);
-		this.path = normalize(path.resolve(this.dir, options.location));
+		this.source = normalize(path.resolve(this.dir, options.location));
 		this.writePath = normalize(options.writePath);
 		this.baseUrl = options.url;
 		this.compiler = options.compiler;
 		this.tempDir = normalize(path.resolve(this.dir, options.tempFolder));
-		this.raw = false;
-		this.md = false;
 		this.meta = false;
-		this.hbs = false;
 		this.rendered = false;
 	}
 
@@ -58,151 +34,95 @@ class File {
 			return this;
 		}
 
-		this.raw = (await readFile(this.path, 'utf8')).trim();
+		this.raw = await readFile(this.source);
 		return this;
 	}
 
-	// YAML is used for metadata; this is the `Get YAML` step of the lifecycle
-	async extractMeta() {
-		if (this.hbs && (typeof this.meta === 'object')) {
-			return this;
-		}
+	async compile() {
+		// Step 1: Read contents
+		await this.read();
+		let contents = this.raw.toString().trim();
 
+		// Step 2: Extract metadata from file
 		try {
-			await this.read();
+			this.meta = getYaml(contents);
+			contents = stripYaml(contents);
+		} catch(error) {
+			throw new Error(t('File.yaml_failed', {path: this.source, error}));
+		}
 
-			this.meta = getYaml(this.raw);
-			this.hbs = stripYaml(this.raw);
+		// Step 3: Handle metadata
+		// 3a. Determine what layout to use
+		let layout = this.meta.layout;
 
-			if (this.meta.path) {
-				// @todo: make sure there isn't a zip-slip-like vuln here (that's why there's this
-				// redundant assignment)
-				this.meta.path = this.meta.path;
+		// CASE: Layout was defined in meta
+		if (!layout) {
+			layout = contents.match(expHbsLayoutPattern);
+			// CASE: layout was defined (`{{!> layout}})`)
+			if (layout) {
+				layout = layout[1];
+				// CASE: no layout specified
 			} else {
-				this.meta.path = path.relative(this.dir, this.path);
+				layout = 'default';
 			}
-
-			this.filename = File.generateFileName(this.meta.path);
-			this.meta.path = `/${this.filename.replace('/index.html', '/').replace('index.html', '')}`;
-			// @todo: determine behavior of path.basename for index files
-			this.meta.title = this.meta.title || path.basename(this.meta.path);
-			// The path and filename need to be saved as lowercase, but the title needs to match
-			// the case that was provided
-			this.meta.path = this.meta.path.toLowerCase();
-			this.meta.slug = slugify(this.meta.path);
-			this.filename = normalize(this.filename.toLowerCase());
-			this.tempName = `${this.filename.replace('/index.html', '').replace(/\//g, '-')}.hbs`;
-
-			return this;
-		} catch (error) {
-			throw new Error(t('File.yaml_failed', {path: this.path, error}));
-		}
-	}
-
-	async compileSection() {
-		if (this.md) {
-			return this;
 		}
 
-		await this.extractMeta();
+		// No matter what, the layout definition needs to be removed
+		contents = contents.replace(expHbsLayoutPattern, '');
 
-		const tempFile = path.resolve(this.tempDir, this.tempName);
-		// The temp folder is cleaned up before the process exits so we don't need to delete anything
-		await ensureDir(path.dirname(tempFile));
-		await writeFile(tempFile, this.hbs);
-		this.md = await this.compiler(tempFile, {page: this.meta});
-		return this;
-	}
+		this.meta.layout = layout;
 
-	async buildMarkdown() {
-		if (this.compiledSection) {
-			return this;
-		}
+		// 3b. Determine paths
+		const urlPath = fileUtils.urlPath(this.meta.path, this.dir, this.source);
+		this.meta.title = fileUtils.title(this.meta.title, urlPath);
+		const filePath = fileUtils.fileName(urlPath);
+		this.filename = normalize(path.resolve(this.writePath, filePath));
 
-		await this.compileSection();
-		this.compiledSection = marked(this.md, {
+		const tempPath = path.resolve(
+			this.tempDir,
+			filePath.replace('.html', '.hbs').replace(/\//g, '-')
+		);
+
+		// Step 4: Compile
+		await writeFile(tempPath, contents);
+		contents = await this.compiler(tempPath, {page: this.meta});
+
+		// Build markdown
+		contents = marked(contents, {
 			mangle: false,
 			baseUrl: this.baseUrl
 		});
 
+		// Add layout definition and compile hbs
+
+		contents = `{{!< ${layout}}}\n${contents}`;
+
+		await writeFile(tempPath, this.compiledSection);
+		this.compiled = await this.compiler(tempPath, {page: this.meta});
 		return this;
 	}
 
-	async compileFile() {
-		if (this.rendered) {
+	async save(reWrite = false) {
+		if (this.written && !reWrite) {
 			return this;
 		}
-
-		await this.buildMarkdown();
-
-		const tempFile = path.resolve(this.tempDir, this.tempName);
-
-		// CASE: Layout was explicitly specified
-		// CASE: Layout definition was already defined
-		if (this.meta.layout) {
-			// Meta layout gets preference over markdown layout
-			this.compiledSection = this.compiledSection.replace(expHbsLayoutPattern, '');
-			this.compiledSection = `{{!< ${this.meta.layout}}}\n${this.compiledSection}`;
-			delete this.meta.layout;
-		} else if (!expHbsLayoutPattern.test(this.compiledSection)) {
-			this.compiledSection = `{{!< default}}\n${this.compiledSection}`;
-		}
-
-		await writeFile(tempFile, this.compiledSection);
-		this.rendered = await this.compiler(tempFile, {page: this.meta});
-		return this;
-	}
-
-	async write(force = false) {
-		if (this.wroteTo && !force) {
-			return this;
-		}
-
-		await this.compileFile();
 
 		const saveLocation = path.resolve(this.writePath, this.filename);
 
 		await ensureDir(path.dirname(saveLocation));
 		await writeFile(saveLocation, this.rendered);
-		this.wroteTo = saveLocation;
+		this.written = true;
 		return this;
 	}
 
-	static generateFileName(pagePath) {
-		// Make url-friendly
-		pagePath = slugify(pagePath, {
-			// See https://github.com/simov/slugify/issues/13
-			remove: /[^\w\s$*_+~.()'"!\-:@/\\]/g
-		});
-		// Make sure the file extension is `.html`
-		pagePath = `${pagePath.replace(/\.[^.]{0,}$/, '')}.html`;
-		// Clear slashes
-		pagePath = `${pagePath.replace(/^\/|\/$/, '')}`;
-
-		// Give the path it's own directory
-		if (!pagePath.match(/\/?index\.html$/i)) {
-			pagePath = `${pagePath.replace(/\.html$/i, '')}/index.html`;
-		}
-
-		return pagePath;
-	}
-
 	// @todo: use fs.stat to reload only if the file changed since last read
-	async reload(to) {
-		if (!(typeof this[to] === 'function')) {
-			// This isn't a type error :D
-			throw new Error(`State ${to} is unknown`); /* eslint-disable-line unicorn/prefer-type-error */
-		}
-
+	async reload() {
+		this.meta = {};
 		this.raw = false;
-		this.meta = false;
-		this.hbs = false;
-		this.md = false;
-		this.compiledSection = false;
 		this.rendered = false;
-		this.wroteTo = false;
+		this.written = false;
 
-		await this[to]();
+		await this.read();
 		return this;
 	}
 }
