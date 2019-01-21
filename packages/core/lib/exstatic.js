@@ -117,20 +117,23 @@ class Exstatic {
 	}
 
 	write(force = false) {
-		const writtenList = [];
 		return Promise.mapSeries([this.docs.core, this.docs.files], async fileList => {
-			fileList = await Promise.mapSeries(fileList, file => {
+			fileList = await Promise.map(fileList, file => {
 				log.verbose(t('Exstatic.compile_file', {name: file.source}));
-				// @todo: add duplicate detection
+				return file.compile();
+			});
 
-				/* const originalName = file.filename;
+			const usedFilenames = [];
+			fileList.forEach(file => {
+				const originalName = file.filename;
 				let index = 0;
-				while (writtenList.includes(file.filename)) {
+
+				while (usedFilenames.includes(file.filename)) {
 					log.info(t('Exstatic.duplicate_detected', {path: file.filename}));
 					file.filename = `${originalName}-${++index}`;
-				} */
+				}
 
-				return file.compile();
+				usedFilenames.push(file.filename);
 			});
 
 			fileList = await this.hook.executeHook('pre-write', [], fileList);
