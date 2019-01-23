@@ -26,7 +26,6 @@ class File {
 		this.compiler = options.compiler;
 		this.tempDir = normalize(path.resolve(this.dir, options.tempFolder));
 		this.meta = false;
-		this.rendered = false;
 	}
 
 	async read() {
@@ -77,6 +76,7 @@ class File {
 		this.meta.title = fileUtils.title(this.meta.title, urlPath);
 		const filePath = fileUtils.fileName(urlPath, Boolean(this.meta.path));
 		this.filename = normalize(path.resolve(this.writePath, filePath));
+		this.meta.path = filePath.replace('/index.html', '/');
 
 		const tempPath = path.resolve(
 			this.tempDir,
@@ -97,7 +97,7 @@ class File {
 
 		contents = `{{!< ${layout}}}\n${contents}`;
 
-		await writeFile(tempPath, this.compiledSection);
+		await writeFile(tempPath, contents);
 		this.compiled = await this.compiler(tempPath, {page: this.meta});
 		return this;
 	}
@@ -110,7 +110,7 @@ class File {
 		const saveLocation = path.resolve(this.writePath, this.filename);
 
 		await ensureDir(path.dirname(saveLocation));
-		await writeFile(saveLocation, this.rendered);
+		await writeFile(saveLocation, this.compiled);
 		this.written = true;
 		return this;
 	}
@@ -119,7 +119,6 @@ class File {
 	async reload() {
 		this.meta = {};
 		this.raw = false;
-		this.rendered = false;
 		this.written = false;
 
 		await this.read();
