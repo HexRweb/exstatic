@@ -1,4 +1,5 @@
 const {unlink} = require('fs');
+const Promise = require('bluebird');
 const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
 const File = require('@exstatic/core/lib/file');
