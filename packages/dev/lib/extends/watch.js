@@ -89,6 +89,7 @@ module.exports = function watchForChanges() {
 					log.info(`Rebuilding Page ${removePageRoot(file.source)}`);
 					await file.reload();
 					await file.compile();
+					await this.hook.executeHook('pre-write', [], [file]);
 					return file.save();
 				}
 			});
