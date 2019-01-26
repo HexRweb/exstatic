@@ -118,7 +118,13 @@ class Exstatic {
 
 	write(force = false) {
 		return Promise.mapSeries([this.docs.core, this.docs.files], async fileList => {
-			fileList = await Promise.map(fileList, file => {
+			/*
+			 * Compilation needs to be done in series because we're using a shared compiler -
+			 * due to the current functionality of block helpers, if compilation was done async,
+			 * all of the calls to the `contentFor` block helper in every file would add up and
+			 * only be written to the first file that calls the corresponding `block` helper
+			*/
+			fileList = await Promise.mapSeries(fileList, file => {
 				log.verbose(t('Exstatic.compile_file', {name: file.source}));
 				return file.compile();
 			});
