@@ -84,10 +84,12 @@ module.exports = function watchForChanges() {
 				force = true;
 			}
 
-			this.docs.core.forEach(file => {
-				if (force || file.path === absolutePath) {
-					log.info(`Rebuilding Page ${removePageRoot(file.path)}`);
-					file.reload('write');
+			Promise.mapSeries(this.docs.core, async file => {
+				if (force || file.source === absolutePath) {
+					log.info(`Rebuilding Page ${removePageRoot(file.source)}`);
+					await file.reload();
+					await file.compile();
+					return file.save();
 				}
 			});
 		});
@@ -108,14 +110,14 @@ module.exports = function watchForChanges() {
 
 			if (rebuild) {
 				return this.docs.core.forEach(file => {
-					log.info(`Rebuilding file ${removePageRoot(file.path)}`);
+					log.info(`Rebuilding file ${removePageRoot(file.source)}`);
 					file.reload('write');
 				});
 			}
 
 			let index = -1;
 			this.docs.core.forEach((file, idx) => {
-				if (file.path === absolutePath) {
+				if (file.source === absolutePath) {
 					index = idx;
 				}
 			});
