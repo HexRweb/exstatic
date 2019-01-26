@@ -21,7 +21,7 @@ class HTMLMinifier {
 
 	minifyFiles(fileList) {
 		fileList.forEach(file => {
-			file.rendered = this.minify(file.rendered, this.opts);
+			file.compiled = this.minify(file.compiled, this.opts);
 		});
 
 		return fileList;
