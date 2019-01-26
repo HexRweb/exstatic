@@ -143,7 +143,7 @@ class Exstatic {
 			});
 
 			fileList = await this.hook.executeHook('pre-write', [], fileList);
-			await Promise.mapSeries(fileList, file => {
+			await Promise.map(fileList, file => {
 				log.verbose(t('Exstatic.write_file', {name: file.filename}));
 				return file.save(force);
 			});
