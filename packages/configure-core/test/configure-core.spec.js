@@ -21,11 +21,9 @@ describe('Package > Configure Core', () => {
 	it('class contains required functions', function () {
 		expect(instance.configure).to.be.a('function');
 		expect(instance.registerHooks).to.be.a('function');
-		expect(instance.hookCreated).to.be.a('function');
 		expect(instance.hookWrite).to.be.a('function');
 		expect(instance.addPages).to.be.a('function');
 		expect(instance.registerHelpers).to.be.a('function');
-		expect(instance.pagesCreated).to.be.a('function');
 		expect(instance.write).to.be.a('function');
 	});
 
@@ -39,10 +37,9 @@ describe('Package > Configure Core', () => {
 		const register = sinon.stub();
 		instance.registerHooks(register);
 
-		expect(register.callCount).to.equal(4);
+		expect(register.callCount).to.equal(3);
 		expect(register.calledWith('load-pages')).to.be.true;
 		expect(register.calledWith('register-helpers')).to.be.true;
-		expect(register.calledWith('post-page_generation')).to.be.true;
 		expect(register.calledWith('pre-write')).to.be.true;
 	});
 
@@ -53,18 +50,15 @@ describe('Package > Configure Core', () => {
 		instance.addPages = sinon.stub();
 		instance.registerHelpers = sinon.stub();
 		instance.hookWrite = sinon.stub();
-		instance.hookCreated = sinon.stub();
 
 
-		expect(register.callCount).to.equal(4);
+		expect(register.callCount).to.equal(3);
 
 		register.args[0][1]();
 		expect(instance.addPages.calledOnce).to.be.true;
 		register.args[1][1]();
 		expect(instance.registerHelpers.calledOnce).to.be.true;
 		register.args[2][1]();
-		expect(instance.hookCreated.calledOnce).to.be.true;
-		register.args[3][1]();
 		expect(instance.hookWrite.calledOnce).to.be.true;
 	});
 
@@ -74,22 +68,6 @@ describe('Package > Configure Core', () => {
 
 	it('register helpers', function () {
 		expect(instance.registerHelpers()).to.be.ok;
-	});
-
-	it('created', function () {
-		const fakeFiles = ['File', 'File', 'File'];
-		const newFiles = ['new', 'new'];
-
-		expect(instance.pagesCreated(fakeFiles)).to.deep.equal(fakeFiles);
-
-		instance.pagesCreated = sinon.stub().returns(undefined);
-		expect(instance.hookCreated(fakeFiles)).to.deep.equal(fakeFiles);
-		expect(instance.pagesCreated.calledOnce).to.be.true;
-
-		instance.pagesCreated.reset();
-		instance.pagesCreated.returns(newFiles);
-		expect(instance.hookCreated(fakeFiles)).to.deep.equal(newFiles);
-		expect(instance.pagesCreated.calledOnce).to.be.true;
 	});
 
 	it('pre-write', function () {

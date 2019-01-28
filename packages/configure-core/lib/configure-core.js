@@ -12,14 +12,7 @@ module.exports = class ConfigureCore {
 	registerHooks(registerHook) {
 		registerHook('load-pages', (...args) => this.addPages(...args));
 		registerHook('register-helpers', (...args) => this.registerHelpers(...args));
-		registerHook('post-page_generation', (...args) => this.hookCreated(...args));
 		registerHook('pre-write', (...args) => this.hookWrite(...args));
-	}
-
-	hookCreated(files) {
-		// Add a guard in case write method is not properly implemented
-		let newFiles = this.pagesCreated(files);
-		return newFiles || files;
 	}
 
 	hookWrite(files) {
@@ -52,11 +45,6 @@ module.exports = class ConfigureCore {
 		* noop by default
 		*/
 		return {};
-	}
-
-	pagesCreated(files) {
-		// Modify file list after compilation. One usecase for this is sitemap generation
-		return files;
 	}
 
 	write(files) {

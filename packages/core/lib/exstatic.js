@@ -85,10 +85,9 @@ class Exstatic {
 		log.info(t('Exstatic.reading_files'));
 		const generateFileList = require('./utils/get-all-files');
 
-		const docs = await Promise.resolve(generateFileList(this.files.inputDir, blacklist))
+		this.docs = await Promise.resolve(generateFileList(this.files.inputDir, blacklist))
 			.map(file => this.loadFile(file))
 			.then(core => ({core, files: []}));
-		this.docs = await this.hook.executeHook('post-document_generation', [docs]);
 		log.info(t('Exstatic.files_read'));
 		return this.docs;
 	}

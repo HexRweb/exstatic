@@ -1,7 +1,7 @@
 const HOOKS = [
 	'register_types',
 	'pre-register_helpers',
-	'post-document_generation',
+	'register-helpers',
 	'pre-write'
 ];
 const SYNC_HOOKS = ['pre-write'];
