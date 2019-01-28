@@ -1,6 +1,6 @@
 const HOOKS = [
-	'register_types',
-	'pre-register_helpers',
+	'register-types',
+	'load-pages',
 	'register-helpers',
 	'pre-write'
 ];
