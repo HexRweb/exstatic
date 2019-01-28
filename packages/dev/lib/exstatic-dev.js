@@ -1,7 +1,13 @@
 const EventEmitter = require('events');
-const Promise = require('bluebird')
+const Promise = require('bluebird');
 
+/* eslint-disable import/no-extraneous-dependencies */
 const {Exstatic} = require('@exstatic/core');
+// @todo: make sure this works in first release
+const t = require('@exstatic/core/lib/translations');
+const log = require('@exstatic/core/lib/log');
+const ensureArray = require('@exstatic/core/lib/utils/ensure-array');
+/* eslint-enable import/no-extraneous-dependencies */
 const {watch, build} = require('./extends');
 
 class ExstaticDev extends Exstatic {
@@ -23,7 +29,7 @@ class ExstaticDev extends Exstatic {
 
 	// @todo: add support for relative files
 	async refreshFile(filePath) {
-		log.info(t('Exstatic.refreshing_file', { file: filePath }));
+		log.info(t('Exstatic.refreshing_file', {file: filePath}));
 		let promise = false;
 
 		this.docs.forEach(file => {

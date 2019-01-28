@@ -14,7 +14,6 @@ function urlPath(override = false, root, filePath) {
 	return resolved.replace(/\.hbs$/i, '.html');
 }
 
-
 function title(override = false, urlPath) {
 	if (override) {
 		return override;

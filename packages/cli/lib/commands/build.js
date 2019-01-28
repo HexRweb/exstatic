@@ -1,4 +1,4 @@
-const exstatic = require('@exstatic/dev');
+const exstatic = require('@exstatic/dev'); // eslint-disable-line import/no-extraneous-dependencies
 const Error = require('../exstatic-error');
 const preHandle = require('../base-handler');
 

@@ -17,18 +17,18 @@ module.exports = class ConfigureCore {
 
 	hookWrite(files) {
 		// Add a guard in case write method is not properly implemented
-		let newFiles = this.write(files);
+		const newFiles = this.write(files);
 		return newFiles || files;
 	}
 
 	addPages() {
-		// return an array of pages to add, noop
+		// Return an array of pages to add, noop
 		return [];
 	}
 
 	registerHelpers() {
 		/*
-		* return a list of helpers to register
+		* Return a list of helpers to register
 		* either {helperA(), helperB(), helperC()} for only synchronous helpers
 		* or {
 		*	sync: {
@@ -51,4 +51,4 @@ module.exports = class ConfigureCore {
 		// Modify files before they're written, noop
 		return files;
 	}
-}
+};

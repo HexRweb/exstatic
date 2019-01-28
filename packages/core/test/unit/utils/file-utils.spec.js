@@ -3,7 +3,7 @@ const utils = require('../../../lib/utils/file');
 
 describe.only('Unit > Utils > File', function () {
 	describe('title', function () {
-		const { title } = utils;
+		const {title} = utils;
 
 		it('backslashes', function () {
 			expect(title(undefined, '\\nested\\path')).to.equal('path');
@@ -30,7 +30,7 @@ describe.only('Unit > Utils > File', function () {
 		});
 
 		it('pass in override', function () {
-			expect(title('About Jane Elizabeth Doe', '/author/doe/jane/elizabeth')).to.equal('About Jane Elizabeth Doe')
+			expect(title('About Jane Anne Doe', '/author/doe/jane/anne')).to.equal('About Jane Anne Doe');
 		});
 	});
 

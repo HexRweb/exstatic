@@ -19,6 +19,7 @@
     "lint": "xo"
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "chokidar": "^2.0.4"
   },
   "devDependencies": {

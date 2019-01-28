@@ -1,4 +1,4 @@
-const {Exstatic} = require('@exstatic/core');
+const {Exstatic} = require('@exstatic/core'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = async function watchForChanges() {
 	if (!(this instanceof Exstatic)) {

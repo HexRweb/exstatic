@@ -80,7 +80,7 @@ class Exstatic {
 		const generateFileList = require('./utils/get-all-files');
 
 		this.docs = await Promise.resolve(generateFileList(this.files.inputDir, blacklist))
-			.map(file => this.loadFile(file))
+			.map(file => this.loadFile(file));
 		log.info(t('Exstatic.files_read'));
 		return this.docs;
 	}
@@ -92,7 +92,7 @@ class Exstatic {
 		* all of the calls to the `contentFor` block helper in every file would add up and
 		* only be written to the first file that calls the corresponding `block` helper
 		*/
-		return Promise.mapSeries(fileList, file => {
+		return Promise.mapSeries(this.docs, file => {
 			log.verbose(t('Exstatic.compile_file', {name: file.source}));
 			return file.compile();
 		});
@@ -100,7 +100,7 @@ class Exstatic {
 
 	async write(force = false) {
 		const usedFilenames = [];
-		await compile();
+		await this.compile();
 
 		this.docs.forEach(file => {
 			const originalName = file.filename;
@@ -114,7 +114,10 @@ class Exstatic {
 			usedFilenames.push(file.filename);
 		});
 
-		this.docs = await this.hook.executeHook('pre-write', [], this.docs);
+		// Protect race conditions in hook
+		const {docs} = this;
+
+		this.docs = await this.hook.executeHook('pre-write', [], docs);
 		await Promise.map(this.docs, file => {
 			log.verbose(t('Exstatic.write_file', {name: file.filename}));
 			return file.save(force);

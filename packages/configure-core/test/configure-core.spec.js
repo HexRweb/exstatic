@@ -28,7 +28,7 @@ describe('Package > Configure Core', () => {
 	});
 
 	it('configure is functional', function () {
-		let ctx = {testing: true};
+		const ctx = {testing: true};
 		instance.configure(ctx);
 		expect(instance.options).to.deep.equal(ctx);
 	});
@@ -50,7 +50,6 @@ describe('Package > Configure Core', () => {
 		instance.addPages = sinon.stub();
 		instance.registerHelpers = sinon.stub();
 		instance.hookWrite = sinon.stub();
-
 
 		expect(register.callCount).to.equal(3);
 

@@ -1,4 +1,4 @@
-	const assert = require('assert');
+const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile, ensureDir} = require('fs-extra');
 const marked = require('marked');
@@ -11,7 +11,7 @@ const t = require('./translations');
  * Pattern used by express-hbs to get layout
  * @link https://github.com/barc/express-hbs/blob/master/lib/hbs.js
 */
-const expHbsLayoutPattern = /{{!<\s+([A-Za-z0-9\._\-\/]+)\s*}}/;
+const expHbsLayoutPattern = /{{!<\s+([A-Za-z0-9\._\-\/]+)\s*}}/; // eslint-disable-line no-useless-escape
 
 class File {
 	constructor(options = {}) {

@@ -1,10 +1,13 @@
 const {unlink} = require('fs');
 const Promise = require('bluebird');
 const chokidar = require('chokidar');
+// @todo: make sure this functions properly in first release
+/* eslint-disable import/no-extraneous-dependencies */
 const {Exstatic} = require('@exstatic/core');
 const File = require('@exstatic/core/lib/file');
 const log = require('@exstatic/core/lib/log');
 const normalize = require('@exstatic/core/lib/utils/normalize');
+/* eslint-enable import/no-extraneous-dependencies */
 
 function noSlashes(input) {
 	return input
