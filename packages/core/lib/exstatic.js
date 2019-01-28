@@ -76,10 +76,10 @@ class Exstatic {
 		const blacklist = [this.files.layoutsDir, this.files.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
-
-		this.docs = await Promise.resolve(getAllFiles(this.files.inputDir, blacklist))
-			.map(file => this.loadFile(file));
+		this.docs = await Promise.resolve(getAllFiles(this.files.inputDir, blacklist)).map(file => this.loadFile(file));
+		await this.hook.executeHook('load-pages', this.docs);
 		log.info(t('Exstatic.files_read'));
+
 		return this.docs;
 	}
 
