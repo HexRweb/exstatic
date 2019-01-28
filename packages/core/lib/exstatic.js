@@ -30,12 +30,6 @@ class Exstatic {
 		this.registerExitHooks();
 	}
 
-	async loadFileTypes() {
-		log.verbose(t('Exstatic.registering_types'));
-		const resolverArgs = [{name: 'page'}];
-		this.types = await this.hook.executeHook('register-types', resolverArgs);
-	}
-
 	async initialize(overrides = {}) {
 		let {file, data: config} = await readConfig(this.files.dir);
 		config = Object.assign({}, defaultConfig, config, overrides);
@@ -57,7 +51,7 @@ class Exstatic {
 			}
 		});
 
-		await Promise.all([this._hbs.init(), this.loadFileTypes()]);
+		await this._hbs.init();
 		this._hbs.updateTemplateOptions({data: this.data});
 		return this;
 	}
