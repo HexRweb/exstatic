@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const Promise = require('bluebird')
 
 const {Exstatic} = require('@exstatic/core');
 const {watch, build} = require('./extends');
@@ -15,8 +16,32 @@ class ExstaticDev extends Exstatic {
 		return build.call(this);
 	}
 
+	// @todo: use refreshFile
 	watch() {
 		return watch.call(this);
+	}
+
+	// @todo: add support for relative files
+	async refreshFile(filePath) {
+		log.info(t('Exstatic.refreshing_file', { file: filePath }));
+		let promise = false;
+
+		this.docs.forEach(file => {
+			if (file.path === filePath) {
+				promise = file.reload();
+			}
+		});
+
+		if (promise) {
+			return promise;
+		}
+
+		// @todo: reject if filePath will not be in `this.files.dir`
+		this.docs.push(await this.loadFile(filePath));
+	}
+
+	refreshAll() {
+		return Promise.each(ensureArray(this.docs), file => this.refreshFile(file.path));
 	}
 
 	destroy() {

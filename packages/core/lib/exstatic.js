@@ -91,30 +91,13 @@ class Exstatic {
 		return this.docs;
 	}
 
-	// @todo: add support for relative files
-	async refreshFile(filePath) {
-		log.info(t('Exstatic.refreshing_file', {file: filePath}));
-		let promise = false;
-
-		this.docs.forEach(file => {
-			if (file.path === filePath) {
-				promise = file.reload();
-			}
-		});
-
-		if (promise) {
-			return promise;
-		}
-
-		// @todo: reject if filePath will not be in `this.files.dir`
-		this.docs.push(await this.loadFile(filePath));
-	}
-
-	refreshAll() {
-		return Promise.each(this.docs || [], file => this.refreshFile(file.path));
-	}
-
 	async compile() {
+		/*
+		* Compilation needs to be done in series because we're using a shared compiler -
+		* due to the current functionality of block helpers, if compilation was done async,
+		* all of the calls to the `contentFor` block helper in every file would add up and
+		* only be written to the first file that calls the corresponding `block` helper
+		*/
 		return Promise.mapSeries(fileList, file => {
 			log.verbose(t('Exstatic.compile_file', {name: file.source}));
 			return file.compile();
@@ -123,12 +106,6 @@ class Exstatic {
 
 	async write(force = false) {
 		const usedFilenames = [];
-		/*
-		* Compilation needs to be done in series because we're using a shared compiler -
-		* due to the current functionality of block helpers, if compilation was done async,
-		* all of the calls to the `contentFor` block helper in every file would add up and
-		* only be written to the first file that calls the corresponding `block` helper
-		*/
 		await compile();
 
 		this.docs.forEach(file => {
@@ -143,7 +120,7 @@ class Exstatic {
 			usedFilenames.push(file.filename);
 		});
 
-		fileList = await this.hook.executeHook('pre-write', [], fileList);
+		this.docs = await this.hook.executeHook('pre-write', [], this.docs);
 		await Promise.map(this.docs, file => {
 			log.verbose(t('Exstatic.write_file', {name: file.filename}));
 			return file.save(force);
