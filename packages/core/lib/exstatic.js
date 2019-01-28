@@ -35,7 +35,7 @@ class Exstatic {
 		this.files.config = file;
 		this.hbs.update();
 
-		this.hbs.data.site = config.site;
+		this.hbs.data('site', config.site);
 
 		ensureArray(config.plugins).forEach(pluginName => {
 			pluginName = pluginName.replace('{cwd}', this.files.dir);
@@ -50,7 +50,6 @@ class Exstatic {
 		});
 
 		await this.hbs.init();
-		this.hbs.updateTemplateOptions({data: this.hbs.data});
 		return this;
 	}
 
@@ -59,7 +58,7 @@ class Exstatic {
 			location,
 			directory: this.files.inputDir,
 			writePath: this.files.outputDir,
-			url: this.hbs.data.site.url,
+			url: this.hbs.data('site.url'),
 			tempFolder: this.files.tempDir,
 			compiler: this.hbs.generateCompiler.bind(this.hbs)
 		});
@@ -135,7 +134,6 @@ class Exstatic {
 			const message = gracefully ? 'Exstatic.exiting' : 'Exstatic.terminating';
 			log.info(t(message));
 			empty(tempDir);
-			log.info('Goodbye');
 			process.exit();
 		};
 		/* eslint-enable unicorn/no-process-exit */

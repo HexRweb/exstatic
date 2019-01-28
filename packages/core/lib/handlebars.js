@@ -4,6 +4,8 @@ const Promise = require('bluebird');
 const log = require('./log');
 const t = require('./translations');
 const hbs = require('express-hbs');
+const get = require('lodash.get');
+const set = require('lodash.set');
 
 class HandlebarsCompiler {
 	constructor(exstaticInstance, {cache = false}) {
@@ -19,7 +21,7 @@ class HandlebarsCompiler {
 		};
 		this._hbs = hbs.create();
 		this._hbs.handlebars.logger.level = 0;
-		this.data = {};
+		this._data = {};
 	}
 
 	update() {
@@ -94,6 +96,23 @@ class HandlebarsCompiler {
 
 	updateTemplateOptions(...args) {
 		return this._hbs.updateTemplateOptions(...args);
+	}
+
+	updateData() {
+		return this._hbs.updateTemplateOptions({data: this._data});
+	}
+
+	get data(path = false) {
+		if (!path) {
+			return this._data;
+		}
+
+		return get(this._data, path);
+	}
+
+	set data(path, value) {
+		set(this._data, path, value);
+		this.updateData();
 	}
 
 	get SafeString() {
