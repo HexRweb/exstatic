@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const Base = require('../lib/source-base');
 
-describe('Test > Source Base', function () {
+describe('Package > Source Base', function () {
 	let instance;
 
 	beforeEach(() => {
