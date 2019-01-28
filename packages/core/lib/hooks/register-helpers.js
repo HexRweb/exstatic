@@ -1,4 +1,4 @@
-const mergeHelpers = require('../utils/merge-helpers');
+const {mergeHelpers} = require('../utils');
 
 module.exports = function preRegisterHook(hookResults, helpers) {
 	/*

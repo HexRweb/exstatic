@@ -4,8 +4,7 @@ const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
 const File = require('./file');
-const ensureArray = require('./utils/ensure-array');
-const readConfig = require('./utils/read-config');
+const {ensureArray, readConfig, getAllFiles} = require('./utils');
 const log = require('./log');
 const t = require('./translations');
 const registerHooks = require('./hooks');
@@ -77,9 +76,8 @@ class Exstatic {
 		const blacklist = [this.files.layoutsDir, this.files.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
-		const generateFileList = require('./utils/get-all-files');
 
-		this.docs = await Promise.resolve(generateFileList(this.files.inputDir, blacklist))
+		this.docs = await Promise.resolve(getAllFiles(this.files.inputDir, blacklist))
 			.map(file => this.loadFile(file));
 		log.info(t('Exstatic.files_read'));
 		return this.docs;

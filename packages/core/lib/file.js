@@ -2,11 +2,10 @@ const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile, ensureDir} = require('fs-extra');
 const marked = require('marked');
-const {stripYaml, getYaml} = require('./utils/yaml-parser');
-const normalize = require('./utils/normalize');
-const fileUtils = require('./utils/file');
+const {normalize, file: fileUtils, yamlParser} = require('./utils');
 const t = require('./translations');
 
+const {stripYaml, getYaml} = yamlParser;
 /*
  * Pattern used by express-hbs to get layout
  * @link https://github.com/barc/express-hbs/blob/master/lib/hbs.js

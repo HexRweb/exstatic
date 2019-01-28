@@ -1,6 +1,6 @@
 const {resolve} = require('path');
 const {ensureDirSync: ensureDir} = require('fs-extra');
-const normalize = require('./utils/normalize');
+const {normalize} = require('./utils');
 
 module.exports = class FileManager {
 	constructor({
