@@ -1,4 +1,4 @@
-const HOOK_NAME = 'pre-register_helpers';
+const HOOK_NAME = 'register-helpers';
 
 const Promise = require('bluebird');
 const log = require('./log');
