@@ -3,6 +3,7 @@ const HOOK_NAME = 'register-helpers';
 const Promise = require('bluebird');
 const log = require('./log');
 const t = require('./translations');
+const hbs = require('express-hbs');
 
 class HandlebarsCompiler {
 	constructor(exstaticInstance, {cache = false}) {
@@ -16,8 +17,9 @@ class HandlebarsCompiler {
 				partialsDir: this.instance.files.partialsDir
 			}
 		};
-		this._hbs = require('express-hbs').create();
+		this._hbs = hbs.create();
 		this._hbs.handlebars.logger.level = 0;
+		this.data = {};
 	}
 
 	update() {

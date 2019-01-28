@@ -22,9 +22,8 @@ class Exstatic {
 		this.files = new FileManager(options);
 		this.hook = new HookManager();
 		// HandlebarsCompiler must be initialized after FileManager
-		this._hbs = new HandlebarsCompiler(this, {cache});
+		this.hbs = new HandlebarsCompiler(this, {cache});
 		this.docs = false;
-		this.data = {};
 		registerHooks(this.hook);
 		this.registerExitHooks();
 	}
@@ -34,9 +33,9 @@ class Exstatic {
 		config = Object.assign({}, defaultConfig, config, overrides);
 		this.files.init(config);
 		this.files.config = file;
-		this._hbs.update();
+		this.hbs.update();
 
-		this.data.site = config.site;
+		this.hbs.data.site = config.site;
 
 		ensureArray(config.plugins).forEach(pluginName => {
 			pluginName = pluginName.replace('{cwd}', this.files.dir);
@@ -50,8 +49,8 @@ class Exstatic {
 			}
 		});
 
-		await this._hbs.init();
-		this._hbs.updateTemplateOptions({data: this.data});
+		await this.hbs.init();
+		this.hbs.updateTemplateOptions({data: this.hbs.data});
 		return this;
 	}
 
@@ -60,9 +59,9 @@ class Exstatic {
 			location,
 			directory: this.files.inputDir,
 			writePath: this.files.outputDir,
-			url: this.data.site.url,
+			url: this.hbs.data.site.url,
 			tempFolder: this.files.tempDir,
-			compiler: this._hbs.generateCompiler.bind(this._hbs)
+			compiler: this.hbs.generateCompiler.bind(this.hbs)
 		});
 
 		return file.read();
