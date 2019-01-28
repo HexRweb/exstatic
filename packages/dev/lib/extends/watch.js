@@ -68,7 +68,7 @@ module.exports = function watchForChanges() {
 			});
 
 			file.write();
-			this.docs.core.push(file);
+			this.docs.push(file);
 		});
 
 		watcher.on('change', absolutePath => {
@@ -88,7 +88,7 @@ module.exports = function watchForChanges() {
 				force = true;
 			}
 
-			Promise.mapSeries(this.docs.core, async file => {
+			Promise.mapSeries(this.docs, async file => {
 				if (force || file.source === absolutePath) {
 					log.info(`Rebuilding Page ${removePageRoot(file.source)}`);
 					await file.reload();
@@ -114,14 +114,14 @@ module.exports = function watchForChanges() {
 			}
 
 			if (rebuild) {
-				return this.docs.core.forEach(file => {
+				return this.docs.forEach(file => {
 					log.info(`Rebuilding file ${removePageRoot(file.source)}`);
 					file.reload('write');
 				});
 			}
 
 			let index = -1;
-			this.docs.core.forEach((file, idx) => {
+			this.docs.forEach((file, idx) => {
 				if (file.source === absolutePath) {
 					index = idx;
 				}
@@ -129,13 +129,13 @@ module.exports = function watchForChanges() {
 
 			if (index > 0) {
 				log.info(`Removed ${removePageRoot(absolutePath)}`);
-				const {wroteTo} = this.docs.core[index];
+				const {wroteTo} = this.docs[index];
 				if (wroteTo) {
 					unlink(wroteTo, () => true);
 					// @todo: remove directory if empty
 				}
 
-				this.docs.core.splice(index, 1);
+				this.docs.splice(index, 1);
 			}
 		});
 
