@@ -33,7 +33,7 @@ class Exstatic {
 	async loadFileTypes() {
 		log.verbose(t('Exstatic.registering_types'));
 		const resolverArgs = [{name: 'page'}];
-		this.types = await this.hook.executeHook('register_types', resolverArgs);
+		this.types = await this.hook.executeHook('register-types', resolverArgs);
 	}
 
 	async initialize(overrides = {}) {
@@ -87,7 +87,6 @@ class Exstatic {
 
 		this.docs = await Promise.resolve(generateFileList(this.files.inputDir, blacklist))
 			.map(file => this.loadFile(file))
-			.then(core => ({core, files: []}));
 		log.info(t('Exstatic.files_read'));
 		return this.docs;
 	}
@@ -97,7 +96,7 @@ class Exstatic {
 		log.info(t('Exstatic.refreshing_file', {file: filePath}));
 		let promise = false;
 
-		[...this.docs.core, ...this.docs.files].forEach(file => {
+		this.docs.forEach(file => {
 			if (file.path === filePath) {
 				promise = file.reload();
 			}
@@ -108,44 +107,46 @@ class Exstatic {
 		}
 
 		// @todo: reject if filePath will not be in `this.files.dir`
-		this.docs.core.push(await this.loadFile(filePath));
+		this.docs.push(await this.loadFile(filePath));
 	}
 
 	refreshAll() {
-		return Promise.each(this.docs.core || [], file => this.refreshFile(file.path));
+		return Promise.each(this.docs || [], file => this.refreshFile(file.path));
 	}
 
-	write(force = false) {
-		return Promise.mapSeries([this.docs.core, this.docs.files], async fileList => {
-			/*
-			 * Compilation needs to be done in series because we're using a shared compiler -
-			 * due to the current functionality of block helpers, if compilation was done async,
-			 * all of the calls to the `contentFor` block helper in every file would add up and
-			 * only be written to the first file that calls the corresponding `block` helper
-			*/
-			fileList = await Promise.mapSeries(fileList, file => {
-				log.verbose(t('Exstatic.compile_file', {name: file.source}));
-				return file.compile();
-			});
+	async compile() {
+		return Promise.mapSeries(fileList, file => {
+			log.verbose(t('Exstatic.compile_file', {name: file.source}));
+			return file.compile();
+		});
+	}
 
-			const usedFilenames = [];
-			fileList.forEach(file => {
-				const originalName = file.filename;
-				let index = 0;
+	async write(force = false) {
+		const usedFilenames = [];
+		/*
+		* Compilation needs to be done in series because we're using a shared compiler -
+		* due to the current functionality of block helpers, if compilation was done async,
+		* all of the calls to the `contentFor` block helper in every file would add up and
+		* only be written to the first file that calls the corresponding `block` helper
+		*/
+		await compile();
 
-				while (usedFilenames.includes(file.filename)) {
-					log.info(t('Exstatic.duplicate_detected', {path: file.filename}));
-					file.filename = `${originalName}-${++index}`;
-				}
+		this.docs.forEach(file => {
+			const originalName = file.filename;
+			let index = 0;
 
-				usedFilenames.push(file.filename);
-			});
+			while (usedFilenames.includes(file.filename)) {
+				log.info(t('Exstatic.duplicate_detected', {path: file.filename}));
+				file.filename = `${originalName}-${++index}`;
+			}
 
-			fileList = await this.hook.executeHook('pre-write', [], fileList);
-			await Promise.map(fileList, file => {
-				log.verbose(t('Exstatic.write_file', {name: file.filename}));
-				return file.save(force);
-			});
+			usedFilenames.push(file.filename);
+		});
+
+		fileList = await this.hook.executeHook('pre-write', [], fileList);
+		await Promise.map(this.docs, file => {
+			log.verbose(t('Exstatic.write_file', {name: file.filename}));
+			return file.save(force);
 		});
 	}
 
