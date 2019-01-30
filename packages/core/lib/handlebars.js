@@ -16,8 +16,8 @@ class HandlebarsCompiler {
 			preventIndent: true,
 			strict: true,
 			settings: {
-				layoutsDir: this.instance.files.layoutsDir,
-				partialsDir: this.instance.files.partialsDir
+				layoutsDir: this.instance.fm.layoutsDir,
+				partialsDir: this.instance.fm.partialsDir
 			}
 		};
 		this._hbs = hbs.create();
@@ -26,8 +26,8 @@ class HandlebarsCompiler {
 	}
 
 	update() {
-		this.compileOptions.settings.layoutsDir = this.instance.files.layoutsDir;
-		this.compileOptions.settings.partialsDir = this.instance.files.partialsDir;
+		this.compileOptions.settings.layoutsDir = this.instance.fm.layoutsDir;
+		this.compileOptions.settings.partialsDir = this.instance.fm.partialsDir;
 	}
 
 	async init() {

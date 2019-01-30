@@ -18,7 +18,7 @@ const defaultConfig = {
 class Exstatic {
 	constructor(options = {}) {
 		const {cache} = options;
-		this.fm = new FileManager(options);
+		this.fm = new FileManager(options, this);
 		this.hook = new HookManager();
 		// HandlebarsCompiler must be initialized after FileManager
 		this.hbs = new HandlebarsCompiler(this, {cache});
@@ -56,15 +56,14 @@ class Exstatic {
 	}
 
 	async loadFiles() {
-		if (this.fm.files) {
+		if (this.fm.files.length) {
 			return;
 		}
 
 		const blacklist = [this.fm.layoutsDir, this.fm.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
-		this.fm.files = await Promise.resolve(getAllFiles(this.fm.inputDir, blacklist))
-			.map(file => this.fm.addFile(file, true));
+		await Promise.resolve(getAllFiles(this.fm.inputDir, blacklist)).map(file => this.fm.addFile(file, true));
 		await this.hook.executeHook('load-pages', this.fm.files);
 		log.info(t('Exstatic.files_read'));
 	}

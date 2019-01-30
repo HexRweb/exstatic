@@ -19,7 +19,6 @@ class File extends AbstractFile {
 
 		this.writeProperty = 'compiled';
 
-		assert.ok(options.url);
 		assert.ok(options.compiler);
 
 		this.source = normalize(path.resolve(this.input, this.source));

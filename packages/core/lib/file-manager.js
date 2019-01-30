@@ -65,7 +65,8 @@ module.exports = class FileManager {
 
 		const newFile = new File({
 			source,
-			compiler: this.hbs.generateCompiler.bind(this.hbs)
+			fileManager: this,
+			compiler: this.instance.hbs.generateCompiler.bind(this.instance.hbs)
 		});
 
 		this.files.push(newFile);
