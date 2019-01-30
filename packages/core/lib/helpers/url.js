@@ -13,6 +13,6 @@ module.exports = function url(location) {
 		location = location.replace(/\/index\.html$/, '/');
 	}
 
-	location = encodeURI(`${this.instance.data.site.url}${location}`);
+	location = encodeURI(`${this.instance.hbs.data('site.url')}${location}`);
 	return new SafeString(location);
 };
