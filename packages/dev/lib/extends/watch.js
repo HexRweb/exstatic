@@ -64,7 +64,7 @@ module.exports = function watchForChanges() {
 				writePath: this.files.outputDir,
 				url: this.data.site.url,
 				tempFolder: this.files.tempDir,
-				compiler: this._hbs.generateCompiler.bind(this._hbs)
+				compiler: this.hbs.generateCompiler.bind(this.hbs)
 			});
 
 			file.write();

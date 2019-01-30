@@ -1,7 +1,7 @@
 // @todo: add support for relative urls
 // @todo: add support for stripping text
 module.exports = function url(location) {
-	const {SafeString} = this.instance._hbs;
+	const {SafeString} = this.instance.hbs;
 
 	location = decodeURI(location);
 
