@@ -3,7 +3,6 @@ const {emptyDirSync: empty} = require('fs-extra');
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
-const {File} = require('./file');
 const {ensureArray, readConfig, getAllFiles} = require('./utils');
 const log = require('./log');
 const t = require('./translations');
@@ -19,26 +18,25 @@ const defaultConfig = {
 class Exstatic {
 	constructor(options = {}) {
 		const {cache} = options;
-		this.files = new FileManager(options);
+		this.fm = new FileManager(options);
 		this.hook = new HookManager();
 		// HandlebarsCompiler must be initialized after FileManager
 		this.hbs = new HandlebarsCompiler(this, {cache});
-		this.docs = false;
 		registerHooks(this.hook);
 		this.registerExitHooks();
 	}
 
 	async initialize(overrides = {}) {
-		let {file, data: config} = await readConfig(this.files.dir);
+		let {file, data: config} = await readConfig(this.fm.dir);
 		config = Object.assign({}, defaultConfig, config, overrides);
-		this.files.init(config);
-		this.files.config = file;
+		this.fm.init(config);
+		this.fm.config = file;
 		this.hbs.update();
 
 		this.hbs.data('site', config.site);
 
 		ensureArray(config.plugins).forEach(pluginName => {
-			pluginName = pluginName.replace('{cwd}', this.files.dir);
+			pluginName = pluginName.replace('{cwd}', this.fm.dir);
 			let plugin;
 			try {
 				plugin = require(pluginName);
@@ -57,32 +55,18 @@ class Exstatic {
 		return this.hbs.data('site.url');
 	}
 
-	loadFile(location) {
-		const file = new File({
-			location,
-			directory: this.files.inputDir,
-			writePath: this.files.outputDir,
-			url: this.hbs.data('site.url'),
-			tempFolder: this.files.tempDir,
-			compiler: this.hbs.generateCompiler.bind(this.hbs)
-		});
-
-		return file.read();
-	}
-
 	async loadFiles() {
-		if (this.docs) {
-			return this.docs;
+		if (this.fm.files) {
+			return;
 		}
 
-		const blacklist = [this.files.layoutsDir, this.files.partialsDir];
+		const blacklist = [this.fm.layoutsDir, this.fm.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
-		this.docs = await Promise.resolve(getAllFiles(this.files.inputDir, blacklist)).map(file => this.loadFile(file));
-		await this.hook.executeHook('load-pages', this.docs);
+		this.fm.files = await Promise.resolve(getAllFiles(this.fm.inputDir, blacklist))
+			.map(file => this.fm.addFile(file, true));
+		await this.hook.executeHook('load-pages', this.fm.files);
 		log.info(t('Exstatic.files_read'));
-
-		return this.docs;
 	}
 
 	async compile() {
@@ -92,7 +76,7 @@ class Exstatic {
 		* all of the calls to the `contentFor` block helper in every file would add up and
 		* only be written to the first file that calls the corresponding `block` helper
 		*/
-		return Promise.mapSeries(this.docs, file => {
+		return Promise.mapSeries(this.fm.files, file => {
 			log.verbose(t('Exstatic.compile_file', {name: file.source}));
 			return file.compile();
 		});
@@ -102,7 +86,7 @@ class Exstatic {
 		const usedFilenames = [];
 		await this.compile();
 
-		this.docs.forEach(file => {
+		this.fm.files.forEach(file => {
 			const originalName = file.filename;
 			let index = 0;
 
@@ -115,10 +99,10 @@ class Exstatic {
 		});
 
 		// Protect race conditions in hook
-		const {docs} = this;
+		const {files} = this.fm;
 
-		this.docs = await this.hook.executeHook('pre-write', [], docs);
-		await Promise.map(this.docs, file => {
+		this.fm.files = await this.hook.executeHook('pre-write', [], files);
+		await Promise.map(this.fm.files, file => {
 			log.verbose(t('Exstatic.write_file', {name: file.filename}));
 			return file.save(force);
 		});
@@ -132,7 +116,7 @@ class Exstatic {
 	}
 
 	registerExitHooks() {
-		const {tempDir} = this.files;
+		const {tempDir} = this.fm;
 		/* eslint-disable unicorn/no-process-exit */
 		this.onBeforeExit = (gracefully = false) => {
 			const message = gracefully ? 'Exstatic.exiting' : 'Exstatic.terminating';

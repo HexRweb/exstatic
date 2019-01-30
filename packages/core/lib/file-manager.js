@@ -1,6 +1,7 @@
 const {resolve} = require('path');
 const {ensureDirSync: ensureDir} = require('fs-extra');
 const {normalize} = require('./utils');
+const {File, VirtualFile} = require('./file');
 
 module.exports = class FileManager {
 	constructor({
@@ -12,6 +13,7 @@ module.exports = class FileManager {
 		this.instance = instance;
 		this.init({inputDir, outputDir, layoutsDir, partialsDir});
 		ensureDir(this.tempDir);
+		this.files = [];
 	}
 
 	init({
@@ -48,5 +50,28 @@ module.exports = class FileManager {
 	// Proxy method for file instances to use
 	get url() {
 		return this.instance.url;
+	}
+
+	file(path) {
+		path = resolve(this.inputDir, path);
+
+		return this.files.find(file => file.source === path);
+	}
+
+	addFile(source, load = false) {
+		if (this.file(source)) {
+			return false;
+		}
+
+		const newFile = new File({
+			source,
+			compiler: this.hbs.generateCompiler.bind(this.hbs)
+		});
+
+		this.files.push(newFile);
+
+		if (load) {
+			return newFile.read();
+		}
 	}
 };
