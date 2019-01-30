@@ -1,9 +1,10 @@
 const assert = require('assert');
 const path = require('path');
-const {readFile, writeFile, ensureDir} = require('fs-extra');
+const {readFile, writeFile} = require('fs-extra');
 const marked = require('marked');
-const {normalize, file: fileUtils, yamlParser} = require('./utils');
-const t = require('./translations');
+const AbstractFile = require('./abstract-file');
+const {normalize, file: fileUtils, yamlParser} = require('../utils');
+const t = require('../translations');
 
 const {stripYaml, getYaml} = yamlParser;
 /*
@@ -12,15 +13,15 @@ const {stripYaml, getYaml} = yamlParser;
 */
 const expHbsLayoutPattern = /{{!<\s+([A-Za-z0-9\._\-\/]+)\s*}}/; // eslint-disable-line no-useless-escape
 
-class File {
+class File extends AbstractFile {
 	constructor(options = {}) {
-		['location', 'directory', 'url', 'compiler', 'tempFolder', 'writePath'].forEach(requiredOpt => {
+		super(options);
+
+		['directory', 'url', 'compiler', 'tempFolder'].forEach(requiredOpt => {
 			assert.ok(options[requiredOpt], `Option "${requiredOpt}" is missing`);
 		});
 
 		this.dir = normalize(options.directory);
-		this.source = normalize(path.resolve(this.dir, options.location));
-		this.writePath = normalize(options.writePath);
 		this.baseUrl = options.url;
 		this.compiler = options.compiler;
 		this.tempDir = normalize(path.resolve(this.dir, options.tempFolder));
@@ -101,26 +102,12 @@ class File {
 		return this;
 	}
 
-	async save(reWrite = false) {
-		if (this.written && !reWrite) {
-			return this;
-		}
-
-		const saveLocation = path.resolve(this.writePath, this.filename);
-
-		await ensureDir(path.dirname(saveLocation));
-		await writeFile(saveLocation, this.compiled);
-		this.written = true;
-		return this;
-	}
-
 	// @todo: use fs.stat to reload only if the file changed since last read
 	async reload() {
 		this.meta = {};
 		this.raw = false;
-		this.written = false;
 
-		await this.read();
+		await AbstractFile.prototype.reload.call(this);
 		return this;
 	}
 }
