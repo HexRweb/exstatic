@@ -45,7 +45,7 @@ module.exports = function watchForChanges() {
 	const watcher = chokidar.watch(foldersToWatch, {persistent: true});
 
 	watcher.on('ready', () => {
-		watcher.on('add', absolutePath => {
+		watcher.on('add', async absolutePath => {
 			absolutePath = normalize(absolutePath);
 
 			if (isLayout(absolutePath)) {
@@ -58,17 +58,8 @@ module.exports = function watchForChanges() {
 
 			log.info(`Page added: ${removePageRoot(absolutePath)}`);
 
-			const file = new File({
-				location: absolutePath,
-				directory: this.files.inputDir,
-				writePath: this.files.outputDir,
-				url: this.data.site.url,
-				tempFolder: this.files.tempDir,
-				compiler: this.hbs.generateCompiler.bind(this.hbs)
-			});
-
-			file.write();
-			this.docs.push(file);
+			await this.fm.addFile(absolutePath);
+			this.fm.file(absolutePath).write();
 		});
 
 		watcher.on('change', absolutePath => {
@@ -88,7 +79,7 @@ module.exports = function watchForChanges() {
 				force = true;
 			}
 
-			Promise.mapSeries(this.docs, async file => {
+			Promise.mapSeries(this.fm.files, async file => {
 				if (force || file.source === absolutePath) {
 					log.info(`Rebuilding Page ${removePageRoot(file.source)}`);
 					await file.reload();
@@ -114,14 +105,14 @@ module.exports = function watchForChanges() {
 			}
 
 			if (rebuild) {
-				return this.docs.forEach(file => {
+				return this.fm.files.forEach(file => {
 					log.info(`Rebuilding file ${removePageRoot(file.source)}`);
-					file.reload('write');
+					file.reload();
 				});
 			}
 
 			let index = -1;
-			this.docs.forEach((file, idx) => {
+			this.fm.files.forEach((file, idx) => {
 				if (file.source === absolutePath) {
 					index = idx;
 				}
@@ -135,7 +126,7 @@ module.exports = function watchForChanges() {
 					// @todo: remove directory if empty
 				}
 
-				this.docs.splice(index, 1);
+				this.fm.files.splice(index, 1);
 			}
 		});
 

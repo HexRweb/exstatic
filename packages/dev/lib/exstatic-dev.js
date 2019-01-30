@@ -2,13 +2,13 @@ const EventEmitter = require('events');
 const Promise = require('bluebird');
 
 /* eslint-disable import/no-extraneous-dependencies */
-const {Exstatic} = require('@exstatic/core');
+const { Exstatic } = require('@exstatic/core');
 // @todo: make sure this works in first release
 const t = require('@exstatic/core/lib/translations');
 const log = require('@exstatic/core/lib/log');
 const ensureArray = require('@exstatic/core/lib/utils/ensure-array');
 /* eslint-enable import/no-extraneous-dependencies */
-const {watch, build} = require('./extends');
+const { watch, build } = require('./extends');
 
 class ExstaticDev extends Exstatic {
 	constructor(...args) {
@@ -29,25 +29,19 @@ class ExstaticDev extends Exstatic {
 
 	// @todo: add support for relative files
 	async refreshFile(filePath) {
-		log.info(t('Exstatic.refreshing_file', {file: filePath}));
-		let promise = false;
+		log.info(t('Exstatic.refreshing_file', { file: filePath }));
+		const file = this.fm.file(filePath);
 
-		this.docs.forEach(file => {
-			if (file.path === filePath) {
-				promise = file.reload();
-			}
-		});
-
-		if (promise) {
-			return promise;
+		if (file) {
+			return file.reload();
 		}
 
 		// @todo: reject if filePath will not be in `this.files.dir`
-		this.docs.push(await this.loadFile(filePath));
+		return this.fm.addFile(filePath, true);
 	}
 
 	refreshAll() {
-		return Promise.each(ensureArray(this.docs), file => this.refreshFile(file.path));
+		return Promise.each(this.fm.files, file => file.reload());
 	}
 
 	destroy() {
