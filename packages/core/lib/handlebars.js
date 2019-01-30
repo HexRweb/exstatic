@@ -6,6 +6,7 @@ const t = require('./translations');
 const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
+const noVal = Symbol('__hbs__no_val');
 
 class HandlebarsCompiler {
 	constructor(exstaticInstance, {cache = false}) {
@@ -102,17 +103,20 @@ class HandlebarsCompiler {
 		return this._hbs.updateTemplateOptions({data: this._data});
 	}
 
-	get data(path = false) {
+	data(path = false, value = noVal) {
 		if (!path) {
 			return this._data;
 		}
 
+		if (value === noVal) {
 		return get(this._data, path);
 	}
 
-	set data(path, value) {
 		set(this._data, path, value);
+
+		if (this.compiler) {
 		this.updateData();
+	}
 	}
 
 	get SafeString() {
