@@ -15,6 +15,7 @@ module.exports = class AbstractFile {
 		this.filename = normalize(path.resolve(this.output, fileName(this.source)));
 	}
 
+	// Proxy methods for fs-related directories
 	get input() {
 		return this.parent.inputDir;
 	}

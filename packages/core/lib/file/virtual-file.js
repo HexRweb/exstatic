@@ -3,7 +3,9 @@ const AbstractFile = require('./abstract-file');
 
 module.exports = class VirtualFile extends AbstractFile {
 	constructor(options = {}) {
-		assert.ok(this.meta);
+		super();
+
+		assert.ok(options.meta);
 		this.meta = options.meta;
 	}
-}
+};

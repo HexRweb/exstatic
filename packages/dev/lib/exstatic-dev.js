@@ -2,13 +2,12 @@ const EventEmitter = require('events');
 const Promise = require('bluebird');
 
 /* eslint-disable import/no-extraneous-dependencies */
-const { Exstatic } = require('@exstatic/core');
+const {Exstatic} = require('@exstatic/core');
 // @todo: make sure this works in first release
 const t = require('@exstatic/core/lib/translations');
 const log = require('@exstatic/core/lib/log');
-const ensureArray = require('@exstatic/core/lib/utils/ensure-array');
 /* eslint-enable import/no-extraneous-dependencies */
-const { watch, build } = require('./extends');
+const {watch, build} = require('./extends');
 
 class ExstaticDev extends Exstatic {
 	constructor(...args) {
@@ -35,7 +34,7 @@ class ExstaticDev extends Exstatic {
 
 		if (!file) {
 			// @todo: reject if filePath will not be in `this.files.dir`
-			return (await this.fm.addFile(filePath, true)).save();
+			return (await this.fm.addFile(file, true)).save();
 		}
 
 		log.info(t('Exstatic.refreshing_file', {file: file.source}));

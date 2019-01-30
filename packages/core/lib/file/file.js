@@ -2,9 +2,9 @@ const assert = require('assert');
 const path = require('path');
 const {readFile, writeFile} = require('fs-extra');
 const marked = require('marked');
-const AbstractFile = require('./abstract-file');
 const {normalize, file: fileUtils, yamlParser} = require('../utils');
 const t = require('../translations');
+const AbstractFile = require('./abstract-file');
 
 const {stripYaml, getYaml} = yamlParser;
 /*

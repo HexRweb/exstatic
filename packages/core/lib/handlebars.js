@@ -1,12 +1,12 @@
 const HOOK_NAME = 'register-helpers';
+const noVal = Symbol('__hbs__no_val');
 
 const Promise = require('bluebird');
-const log = require('./log');
-const t = require('./translations');
 const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
-const noVal = Symbol('__hbs__no_val');
+const log = require('./log');
+const t = require('./translations');
 
 class HandlebarsCompiler {
 	constructor(exstaticInstance, {cache = false}) {
@@ -109,14 +109,14 @@ class HandlebarsCompiler {
 		}
 
 		if (value === noVal) {
-		return get(this._data, path);
-	}
+			return get(this._data, path);
+		}
 
 		set(this._data, path, value);
 
 		if (this.compiler) {
-		this.updateData();
-	}
+			this.updateData();
+		}
 	}
 
 	get SafeString() {

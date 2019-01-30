@@ -1,7 +1,7 @@
 const {resolve} = require('path');
 const {ensureDirSync: ensureDir} = require('fs-extra');
 const {normalize} = require('./utils');
-const {File, VirtualFile} = require('./file');
+const {File} = require('./file');
 
 module.exports = class FileManager {
 	constructor({
