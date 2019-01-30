@@ -23,7 +23,6 @@ class File extends AbstractFile {
 		assert.ok(options.compiler);
 
 		this.source = normalize(path.resolve(this.input, this.source));
-		this.baseUrl = options.url;
 		this.compiler = options.compiler;
 		this.meta = false;
 	}
@@ -90,7 +89,7 @@ class File extends AbstractFile {
 		// Build markdown
 		contents = marked(contents, {
 			mangle: false,
-			baseUrl: this.baseUrl
+			baseUrl: this.parent.url
 		});
 
 		// Add layout definition and compile hbs

@@ -53,6 +53,10 @@ class Exstatic {
 		return this;
 	}
 
+	get url() {
+		return this.hbs.data('site.url');
+	}
+
 	loadFile(location) {
 		const file = new File({
 			location,

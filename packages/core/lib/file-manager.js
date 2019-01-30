@@ -44,4 +44,9 @@ module.exports = class FileManager {
 	get config() {
 		return this._config;
 	}
+
+	// Proxy method for file instances to use
+	get url() {
+		return this.instance.url;
+	}
 };
