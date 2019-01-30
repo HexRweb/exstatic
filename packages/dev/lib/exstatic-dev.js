@@ -27,21 +27,27 @@ class ExstaticDev extends Exstatic {
 		return watch.call(this);
 	}
 
-	// @todo: add support for relative files
-	async refreshFile(filePath) {
-		log.info(t('Exstatic.refreshing_file', { file: filePath }));
-		const file = this.fm.file(filePath);
-
-		if (file) {
-			return file.reload();
+	async refreshFile(fileOrPath) {
+		let file = fileOrPath;
+		if (typeof fileOrPath === 'string') {
+			file = this.fm.file(fileOrPath);
 		}
 
-		// @todo: reject if filePath will not be in `this.files.dir`
-		return this.fm.addFile(filePath, true);
+		if (!file) {
+			// @todo: reject if filePath will not be in `this.files.dir`
+			return (await this.fm.addFile(filePath, true)).save();
+		}
+
+		log.info(t('Exstatic.refreshing_file', {file: file.source}));
+
+		await file.reload();
+		await file.compile();
+		await this.hook.executeHook('pre-write', [], [file]);
+		return file.save();
 	}
 
 	refreshAll() {
-		return Promise.each(this.fm.files, file => file.reload());
+		return Promise.mapSeries(this.fm.files, this.refreshFile);
 	}
 
 	destroy() {

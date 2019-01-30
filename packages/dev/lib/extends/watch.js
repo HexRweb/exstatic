@@ -64,7 +64,7 @@ module.exports = function watchForChanges() {
 
 		watcher.on('change', absolutePath => {
 			absolutePath = normalize(absolutePath);
-			let force = false;
+			let globalChange = false;
 
 			if (isConfig(absolutePath)) {
 				log.info('Config file changed, reloading');
@@ -73,21 +73,17 @@ module.exports = function watchForChanges() {
 
 			if (isLayout(absolutePath)) {
 				log.info(`Layout ${removeLayoutRoot(absolutePath)} changed; rebuilding everything`);
-				force = true;
+				globalChange = true;
 			} else if (isPartial(absolutePath)) {
 				log.info(`Partial ${removePartialRoot(absolutePath)} changed; rebuilding everything`);
-				force = true;
+				globalChange = true;
 			}
 
-			Promise.mapSeries(this.fm.files, async file => {
-				if (force || file.source === absolutePath) {
-					log.info(`Rebuilding Page ${removePageRoot(file.source)}`);
-					await file.reload();
-					await file.compile();
-					await this.hook.executeHook('pre-write', [], [file]);
-					return file.save();
-				}
-			});
+			if (globalChange) {
+				return this.refreshAll();
+			}
+
+			return this.refreshFile(absolutePath);
 		});
 
 		watcher.on('unlink', absolutePath => {
