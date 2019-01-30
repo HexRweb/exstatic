@@ -5,16 +5,30 @@ const {normalize, file: {fileName}} = require('../utils');
 
 module.exports = class AbstractFile {
 	constructor(options = {}) {
-		assert.ok(options.writePath);
-		assert.ok(options.location);
+		assert.ok(options.source);
+		assert.ok(options.fileManager);
 		this.written = false;
+		this.writeProperty = 'rendered';
 
-		this.writePath = normalize(options.writePath);
-		this.source = normalize(path.resolve(this.dir, options.location));
-		this.filename = normalize(path.resolve(this.writePath, fileName(this.source)));
+		this.parent = options.fileManager;
+		this.source = options.source;
+		this.filename = normalize(path.resolve(this.output, fileName(this.source)));
+	}
+
+	get input() {
+		return this.parent.inputDir;
+	}
+
+	get temp() {
+		return this.parent.tempDir;
+	}
+
+	get output() {
+		return this.parent.outputDir;
 	}
 
 	read() {
+		this.rendered = '';
 		return this;
 	}
 
@@ -27,10 +41,10 @@ module.exports = class AbstractFile {
 			return this;
 		}
 
-		const saveLocation = path.resolve(this.writePath, this.filename);
+		const saveLocation = path.resolve(this.output, this.filename);
 
 		await ensureDir(path.dirname(saveLocation));
-		await writeFile(saveLocation, this.compiled);
+		await writeFile(saveLocation, this[this.writeProperty]);
 		this.written = true;
 		return this;
 	}

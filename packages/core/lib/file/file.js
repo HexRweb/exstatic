@@ -17,14 +17,14 @@ class File extends AbstractFile {
 	constructor(options = {}) {
 		super(options);
 
-		['directory', 'url', 'compiler', 'tempFolder'].forEach(requiredOpt => {
-			assert.ok(options[requiredOpt], `Option "${requiredOpt}" is missing`);
-		});
+		this.writeProperty = 'compiled';
 
-		this.dir = normalize(options.directory);
+		assert.ok(options.url);
+		assert.ok(options.compiler);
+
+		this.source = normalize(path.resolve(this.input, this.source));
 		this.baseUrl = options.url;
 		this.compiler = options.compiler;
-		this.tempDir = normalize(path.resolve(this.dir, options.tempFolder));
 		this.meta = false;
 	}
 
@@ -72,14 +72,14 @@ class File extends AbstractFile {
 		this.meta.layout = layout;
 
 		// 3b. Determine paths
-		const urlPath = fileUtils.urlPath(this.meta.path, this.dir, this.source);
+		const urlPath = fileUtils.urlPath(this.meta.path, this.input, this.source);
 		this.meta.title = fileUtils.title(this.meta.title, urlPath);
 		const filePath = fileUtils.fileName(urlPath, Boolean(this.meta.path));
-		this.filename = normalize(path.resolve(this.writePath, filePath));
+		this.filename = normalize(path.resolve(this.output, filePath));
 		this.meta.path = filePath.replace('/index.html', '/');
 
 		const tempPath = path.resolve(
-			this.tempDir,
+			this.temp,
 			filePath.replace('.html', '.hbs').replace(/\//g, '-')
 		);
 
