@@ -18,26 +18,26 @@ module.exports = function watchForChanges() {
 		throw new TypeError('Incorrect usage of watch - did not received Exstatic instance');
 	}
 
-	const isLayout = fullPath => fullPath.includes(this.files.layoutsDir);
-	const isPartial = fullPath => fullPath.includes(this.files.partialsDir);
-	const isConfig = fullPath => fullPath.includes(this.files.config);
+	const isLayout = fullPath => fullPath.includes(this.fm.layoutsDir);
+	const isPartial = fullPath => fullPath.includes(this.fm.partialsDir);
+	const isConfig = fullPath => fullPath.includes(this.fm.config);
 
-	const removeLayoutRoot = fullPath => noSlashes(fullPath.replace(this.files.layoutsDir, ''));
-	const removePartialRoot = fullPath => noSlashes(fullPath.replace(this.files.partialsDir, ''));
-	const removePageRoot = fullPath => noSlashes(fullPath.replace(this.files.inputDir, ''));
+	const removeLayoutRoot = fullPath => noSlashes(fullPath.replace(this.fm.layoutsDir, ''));
+	const removePartialRoot = fullPath => noSlashes(fullPath.replace(this.fm.partialsDir, ''));
+	const removePageRoot = fullPath => noSlashes(fullPath.replace(this.fm.inputDir, ''));
 
-	const foldersToWatch = [this.files.inputDir];
+	const foldersToWatch = [this.fm.inputDir];
 
-	if (!this.files.layoutsDir.includes(this.files.inputDir)) {
-		foldersToWatch.push(this.files.layoutsDir);
+	if (!this.fm.layoutsDir.includes(this.fm.inputDir)) {
+		foldersToWatch.push(this.fm.layoutsDir);
 	}
 
-	if (!this.files.partialsDir.includes(this.files.inputDir)) {
-		foldersToWatch.push(this.files.partialsDir);
+	if (!this.fm.partialsDir.includes(this.fm.inputDir)) {
+		foldersToWatch.push(this.fm.partialsDir);
 	}
 
-	if (this.files.config) {
-		foldersToWatch.push(this.files.config);
+	if (this.fm.config) {
+		foldersToWatch.push(this.fm.config);
 	}
 
 	const watcher = chokidar.watch(foldersToWatch, {persistent: true});
