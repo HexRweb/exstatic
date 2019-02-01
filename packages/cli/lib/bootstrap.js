@@ -16,16 +16,16 @@ module.exports = yargs
 			return console.error(err.message);
 		}
 
-		if (msg.indexOf('Did you mean ') === 0) {
+		if (msg && msg.indexOf('Did you mean ') === 0) {
 			yargs.showHelp();
 			return console.log('\n\nCommand not found.', msg);
 		}
 
-		if (msg === 'SHOW_HELP') {
+		if (msg && msg === 'SHOW_HELP') {
 			return yargs.showHelp();
 		}
 
-		console.log(msg);
+		console.log(msg || err.message);
 	})
 	.demandCommand(1, 'SHOW_HELP')
 	.showHelpOnFail(true)
