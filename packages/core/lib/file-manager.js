@@ -53,14 +53,15 @@ module.exports = class FileManager {
 	}
 
 	file(path) {
-		path = resolve(this.inputDir, path);
+		path = normalize(resolve(this.inputDir, path));
 
 		return this.files.find(file => file.source === path);
 	}
 
 	addFile(source, load = false) {
-		if (this.file(source)) {
-			return false;
+		let existingFile = this.file(source);
+		if (existingFile) {
+			return existingFile;
 		}
 
 		const newFile = new File({

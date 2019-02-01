@@ -34,7 +34,9 @@ class ExstaticDev extends Exstatic {
 
 		if (!file) {
 			// @todo: reject if filePath will not be in `this.files.dir`
-			return (await this.fm.addFile(file, true)).save();
+			const file = await this.fm.addFile(fileOrPath, true)
+			await file.compile();
+			return file.save();
 		}
 
 		log.info(t('Exstatic.refreshing_file', {file: file.source}));
@@ -46,7 +48,7 @@ class ExstaticDev extends Exstatic {
 	}
 
 	refreshAll() {
-		return Promise.mapSeries(this.fm.files, this.refreshFile);
+		return Promise.mapSeries(this.fm.files, () => this.refreshFile);
 	}
 
 	destroy() {
