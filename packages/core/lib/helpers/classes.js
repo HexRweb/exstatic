@@ -8,8 +8,9 @@ module.exports = function classes() {
 		classes.push(slugify(`layout-${this.page.layout}`));
 	}
 
-	let pageClass = this.page.path.replace(/^\/|\/$/, '');
-	pageClass = `page-${pageClass.replace(/\//g, '-').toLowerCase()}`;
+	let pageClass = this.page.path.replace(/^\/|\/$/, '').replace(/index\.html$/, 'index');
+
+	pageClass = `page-${pageClass.replace(/\/|\./g, '-').toLowerCase()}`;
 	classes.push(slugify(pageClass));
 
 	return new SafeString(classes.join(' '));
