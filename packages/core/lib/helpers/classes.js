@@ -2,7 +2,7 @@ const slugify = require('slugify');
 
 module.exports = function classes() {
 	const {SafeString} = this.instance.hbs;
-	let classes = [];
+	const classes = [];
 
 	if (this.page.layout) {
 		classes.push(slugify(`layout-${this.page.layout}`));

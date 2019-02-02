@@ -34,7 +34,7 @@ class ExstaticDev extends Exstatic {
 
 		if (!file) {
 			// @todo: reject if filePath will not be in `this.files.dir`
-			const file = await this.fm.addFile(fileOrPath, true)
+			const file = await this.fm.addFile(fileOrPath, true);
 			await file.compile();
 			return file.save();
 		}

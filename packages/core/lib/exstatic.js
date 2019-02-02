@@ -56,7 +56,7 @@ class Exstatic {
 	}
 
 	async loadFiles() {
-		if (this.fm.files.length) {
+		if (this.fm.files.length > 0) {
 			return;
 		}
 

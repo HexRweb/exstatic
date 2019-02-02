@@ -59,7 +59,7 @@ module.exports = class FileManager {
 	}
 
 	addFile(source, load = false) {
-		let existingFile = this.file(source);
+		const existingFile = this.file(source);
 		if (existingFile) {
 			return existingFile;
 		}
