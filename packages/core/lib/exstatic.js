@@ -31,8 +31,6 @@ class Exstatic {
 		config = Object.assign({}, defaultConfig, config, overrides);
 		this.fm.init(config);
 		this.fm.config = file;
-		this.hbs.update();
-
 		this.hbs.data('site', config.site);
 
 		ensureArray(config.plugins).forEach(pluginName => {

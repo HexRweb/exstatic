@@ -25,12 +25,10 @@ class HandlebarsCompiler {
 		this._data = {};
 	}
 
-	update() {
+	async init() {
 		this.compileOptions.settings.layoutsDir = this.instance.fm.layoutsDir;
 		this.compileOptions.settings.partialsDir = this.instance.fm.partialsDir;
-	}
 
-	async init() {
 		this.compiler = Promise.promisify(this._hbs.express4(this.compileOptions.settings));
 		log.verbose(t('Exstatic.registering_helpers'));
 		const resolverArgs = [require('./helpers')];
@@ -50,6 +48,7 @@ class HandlebarsCompiler {
 		});
 
 		log.verbose(t('Exstatic.helpers_registered'));
+		this.updateData();
 	}
 
 	registerHelperType(helperType, helperName, helperAction) {
