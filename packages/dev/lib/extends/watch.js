@@ -56,8 +56,8 @@ module.exports = function watchForChanges() {
 
 			log.info(`Page added: ${removePageRoot(absolutePath)}`);
 
-			await this.fm.addFile(absolutePath);
-			this.fm.file(absolutePath).write();
+			const file = this.fm.addFile(absolutePath);
+			this.refreshFile(file);
 		});
 
 		watcher.on('change', absolutePath => {
@@ -114,7 +114,7 @@ module.exports = function watchForChanges() {
 
 			if (index > 0) {
 				log.info(`Removed ${removePageRoot(absolutePath)}`);
-				const {wroteTo} = this.docs[index];
+				const {wroteTo} = this.fm.files[index];
 				if (wroteTo) {
 					unlink(wroteTo, () => true);
 					// @todo: remove directory if empty

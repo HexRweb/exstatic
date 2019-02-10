@@ -75,5 +75,7 @@ module.exports = class FileManager {
 		if (load) {
 			return newFile.read();
 		}
+
+		return newFile;
 	}
 };
