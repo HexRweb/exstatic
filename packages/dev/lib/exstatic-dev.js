@@ -48,7 +48,7 @@ class ExstaticDev extends Exstatic {
 	}
 
 	refreshAll() {
-		return Promise.mapSeries(this.fm.files, () => this.refreshFile);
+		return Promise.mapSeries(this.fm.files, file => this.refreshFile(file));
 	}
 
 	destroy() {
