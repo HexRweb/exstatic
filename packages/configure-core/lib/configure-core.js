@@ -15,9 +15,9 @@ module.exports = class ConfigureCore {
 		registerHook('pre-write', (...args) => this.hookWrite(...args));
 	}
 
-	hookWrite(files) {
+	async hookWrite(files) {
 		// Add a guard in case write method is not properly implemented
-		const newFiles = this.write(files);
+		const newFiles = await this.write(files);
 		return newFiles || files;
 	}
 

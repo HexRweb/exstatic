@@ -12,7 +12,7 @@ const defaultConfig = {
 	site: {
 		url: 'http://localhost'
 	},
-	plugins: ['../plugins/minify-html.js']
+	plugins: ['../plugins/minify-html.js', '../plugins/sitemap.js']
 };
 
 class Exstatic {
