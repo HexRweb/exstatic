@@ -1,3 +1,4 @@
+const TAB = '  ';
 const HOOKS = [
 	'load-pages',
 	'register-helpers',
@@ -7,6 +8,23 @@ const SYNC_HOOKS = ['pre-write'];
 
 const resolvers = {};
 
+const proxy = fn => (result, ...args) => {
+	if (result.errors.length > 0) {
+		const error = Error('Some hooks failed');
+		error.stack = error.stack.split('\n').shift();
+		error.stack = '\n' + error.stack;
+		result.errors.forEach((hookError, index) => {
+			error.stack += '\n\n';
+			error.stack += `Error ${index+1}: \n${TAB}`;
+			error.stack += hookError.stack.replace(/\n/g, `\n${TAB}`);
+		});
+		error.stack += '\n';
+		throw error;
+	}
+
+	return fn(result.results, ...args);
+}
+
 function resolverFor(hookName) {
 	hookName = hookName.replace(/_/g, '-');
 
@@ -14,7 +32,7 @@ function resolverFor(hookName) {
 		return resolvers[hookName];
 	}
 
-	resolvers[hookName] = require(`./${hookName}`);
+	resolvers[hookName] = proxy(require(`./${hookName}`));
 
 	return resolvers[hookName];
 }
