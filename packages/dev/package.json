@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.3",
-    "chokidar": "^2.0.4"
+    "chokidar": "^2.1.1"
   },
   "devDependencies": {
     "xo": "^0.24.0"
