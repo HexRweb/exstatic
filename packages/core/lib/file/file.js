@@ -96,7 +96,7 @@ class File extends AbstractFile {
 		contents = `{{!< ${layout}}}\n${contents}`;
 
 		await writeFile(tempPath, contents);
-		this.compiled = await this.compiler(tempPath, {page: this.meta});
+		this.compiled = Buffer.from(await this.compiler(tempPath, {page: this.meta}));
 		return this;
 	}
 
