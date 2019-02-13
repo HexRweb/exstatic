@@ -10,6 +10,12 @@ module.exports = function classes() {
 
 	let pageClass = this.page.path.replace(/^\/|\/$/, '').replace(/index\.html$/, 'index');
 
+	// CASE: explicit url set (`/`)
+	// @todo: check url resolution in file class. Relative paths shouldn't exist
+	if (pageClass === '.') {
+		pageClass = 'index';
+	}
+
 	pageClass = `page-${pageClass.replace(/\/|\./g, '-').toLowerCase()}`;
 	classes.push(slugify(pageClass));
 
