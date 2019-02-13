@@ -8,6 +8,8 @@ class HTMLMinifier {
 
 	init(options = {}) {
 		this.opts = Object.assign({
+			minifyCSS: true,
+			minifyJS: true,
 			collapseWhitespace: true,
 			removeComments: true
 		}, options);
@@ -21,7 +23,7 @@ class HTMLMinifier {
 
 	minifyFiles(fileList) {
 		fileList.forEach(file => {
-			file.compiled = this.minify(file.compiled, this.opts);
+			file.compiled = Buffer.from(this.minify(file.compiled.toString(), this.opts));
 		});
 
 		return fileList;

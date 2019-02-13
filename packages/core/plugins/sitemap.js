@@ -46,7 +46,6 @@ class Sitemap extends ConfigureCore {
 			data: sitemap
 		});
 
-			console.log(fileList);
 		fileList.push(sitemapFile);
 		return fileList;
 	}
