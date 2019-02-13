@@ -1,10 +1,7 @@
-const {promisify} = require('util');
-const {stat: _stat} = require('fs');
+const {stat} = require('fs-extra');
 const ConfigureCore = require('@exstatic/configure-core');
 const {url} = require('../lib/utils');
 const File = require('../lib/file/virtual-file.js');
-
-const stat = promisify(_stat);
 
 class Sitemap extends ConfigureCore {
 	static date(unstructuredDate) {
