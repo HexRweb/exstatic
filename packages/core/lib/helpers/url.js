@@ -1,18 +1,12 @@
+const {url} = require('../utils');
 // @todo: add support for relative urls
 // @todo: add support for stripping text
-module.exports = function url(location) {
+module.exports = function urlHelper(location) {
 	const {SafeString} = this.instance.hbs;
 
 	location = decodeURI(location);
-
-	if (!location.match(/^\//)) {
-		location = `/${location}`;
-	}
-
-	if (location.endsWith('/index.html')) {
-		location = location.replace(/\/index\.html$/, '/');
-	}
-
-	location = encodeURI(`${this.instance.hbs.data('site.url')}${location}`);
+	location = url(this.instance.url, location);
+	// @todo: determine if this is necessary
+	location = encodeURI(location);
 	return new SafeString(location);
 };

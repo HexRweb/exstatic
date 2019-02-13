@@ -5,5 +5,6 @@ module.exports = {
 	mergeHelpers: require('./merge-helpers'),
 	normalize: require('./normalize'),
 	readConfig: require('./read-config'),
-	yamlParser: require('./yaml-parser')
+	yamlParser: require('./yaml-parser'),
+	url: require('./url')
 };

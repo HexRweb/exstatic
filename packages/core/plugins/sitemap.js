@@ -1,16 +1,12 @@
 const {promisify} = require('util');
 const {stat: _stat} = require('fs');
-const libURL = require('url');
 const ConfigureCore = require('@exstatic/configure-core');
+const {url} = require('../lib/utils');
 const File = require('../lib/file/virtual-file.js');
 
 const stat = promisify(_stat);
 
 class Sitemap extends ConfigureCore {
-	static url(file) {
-		return libURL.resolve(file.parent.instance.url, file.meta.path);
-	}
-
 	static date(unstructuredDate) {
 		return new Date(unstructuredDate).toISOString();
 	}
@@ -29,7 +25,7 @@ class Sitemap extends ConfigureCore {
 
 			sitemap += `
 			<url>
-				<loc>${Sitemap.url(file)}</loc>
+				<loc>${url(file.meta.path, file.parent.instance.url)}</loc>
 				<lastmod>${Sitemap.date(file.meta.sitemap.lastModified)}</lastmod>
 			</url>
 			`;
