@@ -21,7 +21,6 @@ class Sitemap extends ConfigureCore {
 		let sitemap = '';
 
 		await Promise.all(filesInSitemap.map(async file => {
-			console.log(file);
 			const fileMeta = await stat(file.source);
 
 			file.meta.sitemap = Object.assign({
