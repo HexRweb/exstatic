@@ -22,7 +22,7 @@ class Sitemap extends ConfigureCore {
 
 			sitemap += `
 			<url>
-				<loc>${url(file.meta.path, file.parent.instance.url)}</loc>
+				<loc>${url(file.parent.instance.url, file.meta.path)}</loc>
 				<lastmod>${Sitemap.date(file.meta.sitemap.lastModified)}</lastmod>
 			</url>
 			`;
@@ -46,6 +46,7 @@ class Sitemap extends ConfigureCore {
 			data: sitemap
 		});
 
+			console.log(fileList);
 		fileList.push(sitemapFile);
 		return fileList;
 	}
