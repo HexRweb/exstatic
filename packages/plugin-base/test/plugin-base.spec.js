@@ -1,17 +1,17 @@
 const sinon = require('sinon');
 const {expect} = require('chai');
 
-const Core = require('../lib/configure-core');
+const Base = require('../lib/plugin-base');
 
-describe('Package > Configure Core', () => {
+describe('Package > Plugin Base', () => {
 	let instance;
 
 	beforeEach(() => {
-		instance = new Core();
+		instance = new Base();
 	});
 
-	it('index exports core', function () {
-		expect(require('../index.js')).to.equal(Core); // eslint-disable-line unicorn/import-index
+	it('index exports base', function () {
+		expect(require('../index.js')).to.equal(Base); // eslint-disable-line unicorn/import-index
 	});
 
 	it('constructs', function () {
@@ -69,19 +69,19 @@ describe('Package > Configure Core', () => {
 		expect(instance.registerHelpers()).to.be.ok;
 	});
 
-	it('pre-write', function () {
+	it('pre-write', async function () {
 		const fakeFiles = ['File', 'File', 'File'];
 		const newFiles = ['new', 'new'];
 
 		expect(instance.write(fakeFiles)).to.deep.equal(fakeFiles);
 
 		instance.write = sinon.stub().returns(undefined);
-		expect(instance.hookWrite(fakeFiles)).to.deep.equal(fakeFiles);
+		expect(await instance.hookWrite(fakeFiles)).to.deep.equal(fakeFiles);
 		expect(instance.write.calledOnce).to.be.true;
 
 		instance.write.reset();
 		instance.write.returns(newFiles);
-		expect(instance.hookWrite(fakeFiles)).to.deep.equal(newFiles);
+		expect(await instance.hookWrite(fakeFiles)).to.deep.equal(newFiles);
 		expect(instance.write.calledOnce).to.be.true;
 	});
 });

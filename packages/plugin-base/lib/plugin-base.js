@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class ConfigureCore {
+module.exports = class PluginBase {
 	constructor(options) {
 		this.configure(options);
 	}

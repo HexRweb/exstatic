@@ -1,9 +1,9 @@
 const {stat} = require('fs-extra');
-const ConfigureCore = require('@exstatic/configure-core');
+const PluginBase = require('@exstatic/plugin-base');
 const {url} = require('../lib/utils');
 const File = require('../lib/file/virtual-file.js');
 
-class Sitemap extends ConfigureCore {
+class Sitemap extends PluginBase {
 	static date(unstructuredDate) {
 		return new Date(unstructuredDate).toISOString();
 	}

@@ -1,5 +1,5 @@
 {
-  "name": "@exstatic/configure-core",
+  "name": "@exstatic/plugin-base",
   "version": "0.0.1",
   "description": "Configuration class to make exstatic logic cleaner",
   "author": "HexR <hello@hexr.org>",
