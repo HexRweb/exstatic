@@ -1,9 +1,10 @@
 const slugify = require('slugify');
+const ExstaticError = require('../error');
 
 module.exports = function navigation({fn}) {
 	const navigation = this.instance.hbs.data('site.navigation');
 	if (!Array.isArray(navigation)) {
-		throw new Error('Navigation does not exist');
+		throw new ExstaticError('Navigation helper was called, but navigation does not exist');
 	}
 
 	let output = '';
