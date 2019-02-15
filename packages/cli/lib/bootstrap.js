@@ -11,17 +11,19 @@ module.exports = yargs
 		global: true
 	})
 	.commandDir('./commands')
-	.fail((msg, err, yargs) => {
+	.fail((msg = '', err, yargs) => {
+		err = err || new Error(msg);
+
 		if (err instanceof ExstaticError) {
 			return console.error(err.message);
 		}
 
-		if (msg && msg.indexOf('Did you mean ') === 0) {
+		if (msg.indexOf('Did you mean ') === 0) {
 			yargs.showHelp();
 			return console.log('\n\nCommand not found.', msg);
 		}
 
-		if (msg && msg === 'SHOW_HELP') {
+		if (msg === 'SHOW_HELP') {
 			return yargs.showHelp();
 		}
 
