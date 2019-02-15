@@ -5,6 +5,7 @@
 		"execution_failed": "Failed to execute \"%{hook}\" hook for plugin \"%{plugin}\" - %{error}"
 	},
 	"Exstatic": {
+        "namespaceCollision": "Namespace collision - the namespace '%{namespace}' was previously used. Failed configuring plugin %{path}",
 		"registering_types": "Registering content types",
 		"registering_helpers": "Registering helpers",
 		"registering_helper": "Registering %{type} Helper: %{name}",

@@ -7,6 +7,10 @@ class PluginMinifyHtml extends PluginBase {
 		this.minify = minify;
 	}
 
+	get name() {
+		return 'minify-html';
+	}
+
 	configure(options = {}) {
 		this.options = Object.assign({
 			minifyCSS: true,

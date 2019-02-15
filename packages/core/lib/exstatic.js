@@ -7,6 +7,7 @@ const {ensureArray, readConfig, getAllFiles} = require('./utils');
 const log = require('./log');
 const t = require('./translations');
 const registerHooks = require('./hooks');
+const ExstaticError = require('./error');
 
 const defaultConfig = {
 	site: {
@@ -32,15 +33,32 @@ class Exstatic {
 		this.fm.init(config);
 		this.fm.config = file;
 		this.hbs.data('site', config.site);
+		let namespaces = [];
 
 		ensureArray(config.plugins).forEach(pluginName => {
 			pluginName = pluginName.replace('{cwd}', this.fm.dir);
 			let plugin;
 			try {
 				plugin = require(pluginName);
+
+				if (plugin.name && config[plugin.name] && typeof plugin.configure === 'function') {
+					if (namespaces.includes(plugin.name)) {
+						throw new ExstaticError(t('Exstatic.namespaceCollision', {
+							namespace: plugin.name,
+							path: pluginName
+						}));
+					}
+
+					plugin.configure(config[plugin.name]);
+				}
+
 				plugin.registerHooks(this.hook.generateHookRegisterer(pluginName));
 				log.verbose(t('Exstatic.plugin_loaded', {name: pluginName}));
 			} catch (error) {
+				if (error instanceof ExstaticError) {
+					throw error;
+				}
+
 				log.error(t('Exstatic.plugin_loading_failed', {name: pluginName, error}));
 			}
 		});
