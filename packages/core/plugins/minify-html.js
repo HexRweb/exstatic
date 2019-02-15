@@ -1,33 +1,28 @@
 const {minify} = require('html-minifier');
+const PluginBase = require('@exstatic/plugin-base');
 
-class HTMLMinifier {
+class PluginMinifyHtml extends PluginBase {
 	constructor(options) {
+		super(options);
 		this.minify = minify;
-		this.init(options);
 	}
 
-	init(options = {}) {
-		this.opts = Object.assign({
+	configure(options = {}) {
+		this.options = Object.assign({
 			minifyCSS: true,
 			minifyJS: true,
 			collapseWhitespace: true,
 			removeComments: true
 		}, options);
-
-		return this.opts;
 	}
 
-	registerHooks(registerHook) {
-		registerHook('pre-write', this.minifyFiles.bind(this));
-	}
-
-	minifyFiles(fileList) {
+	write(fileList) {
 		fileList.forEach(file => {
-			file.compiled = Buffer.from(this.minify(file.compiled.toString(), this.opts));
+			file.compiled = Buffer.from(this.minify(file.compiled.toString(), this.options));
 		});
 
 		return fileList;
 	}
 }
 
-module.exports = new HTMLMinifier();
+module.exports = new PluginMinifyHtml();
