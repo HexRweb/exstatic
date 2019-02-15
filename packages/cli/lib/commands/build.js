@@ -12,7 +12,7 @@ module.exports = {
 			await instance.build();
 		} catch (error) {
 			console.error(error.stack);
-			throw new Error(`Build failed! Stack was dumped.`);
+			throw new Error('Build failed! Stack was dumped.');
 		}
 	}
 };

@@ -28,7 +28,7 @@ class ExstaticSource {
 	register() {
 		return {
 			async: {
-				[this.name]: (...args) => this.run.apply(this, args)
+				[this.name]: (...args) => this.run(...args)
 			}
 		};
 	}

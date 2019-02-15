@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@hexr/hookit": "^0.2.0",
+    "@exstatic/plugin-base": "*",
     "bluebird": "^3.5.2",
     "express-hbs": "1.0.4",
     "fs-extra": "^7.0.0",
