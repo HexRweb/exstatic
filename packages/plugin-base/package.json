@@ -22,7 +22,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
-    "sinon": "^7.2.2",
+    "sinon": "^7.2.4",
     "xo": "^0.24.0"
   },
   "xo": {
