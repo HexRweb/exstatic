@@ -1,5 +1,5 @@
 const Promise = require('bluebird');
-const {emptyDirSync: empty} = require('fs-extra');
+const {emptyDirSync: empty} = require('@exstatic/utils').fs;
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');

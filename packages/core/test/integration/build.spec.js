@@ -1,6 +1,6 @@
 const path = require('path');
 const {expect} = require('chai');
-const {emptyDir, exists, readFile} = require('fs-extra');
+const {emptyDir, exists, readFile} = require('@exstatic/utils').fs;
 const hash = require('../utils/hash');
 
 process.env.EXSTATIC_LOG_LEVEL = 'error';

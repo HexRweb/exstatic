@@ -1,5 +1,5 @@
 const {resolve} = require('path');
-const {readFile} = require('fs-extra');
+const {readFile} = require('@exstatic/utils').fs;
 const log = require('../log');
 const t = require('../translations');
 

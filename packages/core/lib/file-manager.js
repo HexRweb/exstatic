@@ -1,5 +1,5 @@
 const {resolve} = require('path');
-const {ensureDirSync: ensureDir} = require('fs-extra');
+const {ensureDirSync: ensureDir} = require('@exstatic/utils').fs;
 const {normalize} = require('./utils');
 const {File} = require('./file');
 

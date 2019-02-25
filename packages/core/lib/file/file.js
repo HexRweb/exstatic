@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const {readFile, writeFile} = require('fs-extra');
+const {readFile, writeFile} = require('@exstatic/utils').fs;
 const marked = require('marked');
 const {normalize, file: fileUtils, yamlParser} = require('../utils');
 const t = require('../translations');

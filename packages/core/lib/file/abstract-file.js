@@ -1,6 +1,6 @@
 const path = require('path');
 const assert = require('assert');
-const {ensureDir, writeFile} = require('fs-extra');
+const {ensureDir, writeFile} = require('@exstatic/utils').fs;
 const {normalize, file: {fileName}} = require('../utils');
 
 module.exports = class AbstractFile {

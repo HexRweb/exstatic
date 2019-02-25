@@ -1,4 +1,4 @@
-const {stat} = require('fs-extra');
+const {stat} = require('@exstatic/utils').fs;
 const PluginBase = require('@exstatic/plugin-base');
 const {url} = require('../lib/utils');
 const File = require('../lib/file/virtual-file.js');

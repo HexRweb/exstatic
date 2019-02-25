@@ -22,12 +22,11 @@
     "test:integration": "mocha --recursive test/integration"
   },
   "dependencies": {
-    "@hexr/hookit": "^0.2.0",
     "@exstatic/plugin-base": "*",
     "@exstatic/utils": "*",
+    "@hexr/hookit": "^0.2.0",
     "bluebird": "^3.5.2",
     "express-hbs": "1.0.4",
-    "fs-extra": "^7.0.0",
     "html-minifier": "^3.5.20",
     "js-yaml": "^3.12.0",
     "lodash.get": "^4.4.2",
