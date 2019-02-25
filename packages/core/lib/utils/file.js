@@ -11,6 +11,8 @@ function urlPath(override = false, root, filePath) {
 		resolved = path.relative(root, filePath);
 	}
 
+	// @note: the value is intentionally not normalized because this function is designed to be an intermediary
+	// between user-supplied input and program-defined output. The program output is expected to be normalized.
 	return resolved.replace(/\.hbs$/i, '.html');
 }
 
