@@ -2,11 +2,26 @@ const {ensureArray, url, normalizePath: normalize} = require('@exstatic/utils');
 
 module.exports = {
 	ensureArray,
-	file: require('./file'),
-	getAllFiles: require('./get-all-files'),
-	mergeHelpers: require('./merge-helpers'),
 	normalize,
-	readConfig: require('./read-config'),
-	yamlParser: require('./yaml-parser'),
-	url
+	url,
+
+	get file() {
+		return require('./file');
+	},
+
+	get getAllFiles() {
+		return require('./get-all-files');
+	},
+
+	get mergeHelpers() {
+		return require('./merge-helpers');
+	},
+
+	get readConfig() {
+		return require('./read-config');
+	},
+
+	get yamlParser() {
+		return require('./yaml-parser');
+	}
 };
