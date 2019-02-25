@@ -33,7 +33,7 @@ class Exstatic {
 		this.fm.init(config);
 		this.fm.config = file;
 		this.hbs.data('site', config.site);
-		let namespaces = [];
+		const namespaces = [];
 
 		ensureArray(config.plugins).forEach(pluginName => {
 			pluginName = pluginName.replace('{cwd}', this.fm.dir);
