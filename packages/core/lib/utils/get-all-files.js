@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 const readdir = Promise.promisify(require('readdirp'));
-const normalize = require('./normalize');
+const {normalize} = require('.');
 
 // @todo: don't hardcode extensions
 const ALLOWED_EXTENSIONS = ['hbs', 'md'];

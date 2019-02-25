@@ -1,6 +1,6 @@
 const path = require('path');
 const slugify = require('slugify');
-const normalize = require('./normalize');
+const {normalize} = require('.');
 
 function urlPath(override = false, root, filePath) {
 	let resolved = override;
