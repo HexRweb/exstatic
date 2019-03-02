@@ -26,8 +26,6 @@
     "@exstatic/utils": "*",
     "yargs": "^13.2.1"
   },
-  "devDependencies": {
-    "xo": "^0.24.0"
-  },
+  "devDependencies": {},
   "xo": false
 }

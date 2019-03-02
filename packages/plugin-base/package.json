@@ -20,10 +20,6 @@
     "test": "nyc --all --reporter=html --reporter=text mocha --recursive test"
   },
   "dependencies": {},
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "sinon": "^7.2.4",
-    "xo": "^0.24.0"
-  },
+  "devDependencies": {},
   "xo": false
 }

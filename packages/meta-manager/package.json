@@ -22,12 +22,6 @@
   "dependencies": {
     "@exstatic/utils": "*"
   },
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.0.2",
-    "nyc": "^13.3.0",
-    "sinon": "^7.2.5",
-    "xo": "^0.24.0"
-  },
+  "devDependencies": {},
   "xo": false
 }

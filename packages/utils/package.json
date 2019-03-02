@@ -21,8 +21,6 @@
   "dependencies": {
     "fs-extra": "^7.0.1"
   },
-  "devDependencies": {
-    "xo": "^0.24.0"
-  },
+  "devDependencies": {},
   "xo": false
 }
