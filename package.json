@@ -22,7 +22,7 @@
     },
     "overrides": [
       {
-        "files": "packages/**/test/**/*.js",
+        "files": "{packages/**/test,test}/**/*.spec.js",
         "envs": [
           "node",
           "mocha"

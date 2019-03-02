@@ -44,28 +44,5 @@
     "nyc": "^13.3.0",
     "sinon": "^7.2.4"
   },
-  "xo": {
-    "rules": {
-      "func-names": [
-        "error",
-        "as-needed"
-      ],
-      "prefer-object-spread": "off",
-      "no-use-extend-native/no-use-extend-native": "off"
-    },
-    "overrides": [
-      {
-        "files": "test/**/*.spec.js",
-        "envs": [
-          "node",
-          "mocha"
-        ],
-        "rules": {
-          "func-names": "off",
-          "prefer-arrow-callback": "off",
-          "no-unused-expressions": "off"
-        }
-      }
-    ]
-  }
+  "xo": false
 }
