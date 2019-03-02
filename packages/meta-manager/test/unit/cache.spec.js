@@ -8,7 +8,7 @@ const expectError = require('../../../../test-utils/expect-error');
 
 const root = path.resolve(__dirname, '../fixtures/cache');
 
-describe('Unit: .exstatic > cache', function () {
+describe('Unit: meta-manager > cache', function () {
 	it('Exports correct data', function () {
 		expect(Cache.error).to.equal(error);
 		expect(Cache.InvalidString).to.be.ok;
