@@ -1,0 +1,57 @@
+{
+  "name": "@exstatic/.exstatic",
+  "version": "0.0.1",
+  "description": ".exstatic folder meta management for Exstatic",
+  "author": "HexR <hello@hexr.org>",
+  "license": "MIT",
+  "repository": "https://github.com/hexrweb/exstatic.git",
+  "main": "lib/.exstatic.js",
+  "engines": {
+    "node": "^8.9.0 || ^10.12.0"
+  },
+  "files": [
+    "lib",
+    "yarn.lock"
+  ],
+  "bugs": "https://github.com/hexrweb/exstatic/issues",
+  "homepage": "https://github.com/hexrweb/exstatic",
+  "scripts": {
+    "lint": "xo",
+    "test:unit": "nyc --all --reporter=html --reporter=text mocha --recursive test/unit"
+  },
+  "dependencies": {
+    "@exstatic/utils": "*"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.5",
+    "xo": "^0.24.0"
+  },
+  "xo": {
+    "rules": {
+      "func-names": [
+        "error",
+        "as-needed"
+      ],
+      "prefer-object-spread": "off",
+      "no-use-extend-native/no-use-extend-native": "off",
+      "unicorn/no-process-exit": "off"
+    },
+    "overrides": [
+      {
+        "files": "test/**/*.spec.js",
+        "envs": [
+          "node",
+          "mocha"
+        ],
+        "rules": {
+          "func-names": "off",
+          "prefer-arrow-callback": "off",
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
+  }
+}

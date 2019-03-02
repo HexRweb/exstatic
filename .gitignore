@@ -26,5 +26,11 @@ _peekaboo
 *.code-workspace
 
 .exstatic
+!packages/.exstatic/
+packages/exstatic/node_modules
+packages/.exstatic/.nyc_output/
+packages/.exstatic/node_modules/
+packages/.exstatic/coverage/
+
 built
 testing
