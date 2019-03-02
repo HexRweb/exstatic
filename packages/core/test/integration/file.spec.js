@@ -1,7 +1,7 @@
 const path = require('path');
 const sinon = require('sinon');
 const {expect} = require('chai');
-const hash = require('../utils/hash');
+const hash = require('../../../../test-utils/hash');
 
 const File = require('../../lib/file');
 
