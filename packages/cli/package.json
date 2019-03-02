@@ -22,7 +22,6 @@
     "exstatic": "./bin/exstatic"
   },
   "dependencies": {
-    "bluebird": "^3.5.3",
     "yargs": "^13.2.1"
   },
   "devDependencies": {
