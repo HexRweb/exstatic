@@ -22,6 +22,8 @@
     "exstatic": "./bin/exstatic"
   },
   "dependencies": {
+    "@exstatic/dev": "*",
+    "@exstatic/utils": "*",
     "yargs": "^13.2.1"
   },
   "devDependencies": {

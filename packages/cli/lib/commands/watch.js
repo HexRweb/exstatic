@@ -1,5 +1,5 @@
-const {ExstaticDev} = require('@exstatic/dev'); // eslint-disable-line import/no-extraneous-dependencies
-const Error = require('../exstatic-error');
+const {ExstaticDev} = require('@exstatic/dev');
+const {error: Error} = require('@exstatic/utils');
 const preHandle = require('../base-handler');
 
 module.exports = {

@@ -1,5 +1,5 @@
 const yargs = require('yargs');
-const ExstaticError = require('./exstatic-error');
+const {error: ExError} = require('@exstatic/utils');
 
 module.exports = yargs
 	.usage('$0 <action>')
@@ -14,7 +14,7 @@ module.exports = yargs
 	.fail((msg = '', err, yargs) => {
 		err = err || new Error(msg);
 
-		if (err instanceof ExstaticError) {
+		if (err instanceof ExError) {
 			return console.error(err.message);
 		}
 
