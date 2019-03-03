@@ -1,10 +1,9 @@
-const {unlink} = require('fs');
 const chokidar = require('chokidar');
 // @todo: make sure this functions properly in first release
 /* eslint-disable import/no-extraneous-dependencies */
 const {Exstatic} = require('@exstatic/core');
 const log = require('@exstatic/core/lib/log');
-const {normalize} = require('@exstatic/core/lib/utils');
+const {normalize, fs} = require('@exstatic/core/lib/utils');
 /* eslint-enable import/no-extraneous-dependencies */
 
 function noSlashes(input) {
@@ -84,7 +83,7 @@ module.exports = function watchForChanges() {
 			return this.refreshFile(absolutePath);
 		});
 
-		watcher.on('unlink', absolutePath => {
+		watcher.on('unlink', async absolutePath => {
 			absolutePath = normalize(absolutePath);
 			let rebuild = false;
 
@@ -114,9 +113,11 @@ module.exports = function watchForChanges() {
 
 			if (index > 0) {
 				log.info(`Removed ${removePageRoot(absolutePath)}`);
-				const {wroteTo} = this.fm.files[index];
-				if (wroteTo) {
-					unlink(wroteTo, () => true);
+			const file = this.fm.files[index];
+			this.fm.files.splice(index, 1);
+
+			if (file.filename) {
+				await unlink(file.filename).catch(() => true);
 					// @todo: remove directory if empty
 				}
 
