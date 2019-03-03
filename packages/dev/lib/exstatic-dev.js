@@ -1,12 +1,8 @@
 const EventEmitter = require('events');
 const Promise = require('bluebird');
-
-/* eslint-disable import/no-extraneous-dependencies */
 const {Exstatic} = require('@exstatic/core');
-// @todo: make sure this works in first release
 const t = require('@exstatic/core/lib/translations');
 const log = require('@exstatic/core/lib/log');
-/* eslint-enable import/no-extraneous-dependencies */
 const {watch, build} = require('./extends');
 
 class ExstaticDev extends Exstatic {
@@ -55,6 +51,7 @@ class ExstaticDev extends Exstatic {
 		process.removeListener('SIGINT', this.realOnBeforeExit)
 			.removeListener('SIGTERM', this.realOnBeforeExit);
 		this.exitActions.forEach(action => action());
+		this.fm.temp.releaseAll();
 	}
 
 	registerExitHooks(...args) {
