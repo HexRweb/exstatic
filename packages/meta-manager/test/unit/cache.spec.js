@@ -261,6 +261,11 @@ describe('Unit: meta-manager > cache', function () {
 
 			expect((await instance.getContents('test')).trim()).to.equal('test.cache');
 			expect(await instance.getContents('invalid-etag')).to.be.instanceOf(Cache.InvalidString);
+
+			instance.valueCache.push('dead-file');
+			const removeEtag = sinon.stub(instance, 'removeEtag');
+			expect(await instance.getContents('dead-file')).to.be.instanceOf(Cache.InvalidString);
+			expect(removeEtag.calledOnce).to.be.true;
 		});
 	});
 });

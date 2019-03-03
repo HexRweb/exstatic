@@ -128,7 +128,12 @@ module.exports = class ExstaticCacheFileManager {
 
 	getContents(etag) {
 		if (this.hasEtag(etag)) {
-			return fs.readFile(this.etagPath(etag), 'utf8');
+			return fs.readFile(this.etagPath(etag), 'utf8').catch(async error => {
+				if (error.code === 'ENOENT') { // For whatever reason the etag doesn't exist
+					await this.removeEtag(etag);
+					return new InvalidString();
+		}
+			});
 		}
 
 		return new InvalidString();
