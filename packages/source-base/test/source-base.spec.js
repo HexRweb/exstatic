@@ -6,7 +6,7 @@ const Base = require('../lib/source-base');
 
 class FunctionalBase extends Base {
 	get name() {
-		return 'test'
+		return 'test';
 	}
 }
 
@@ -23,7 +23,7 @@ describe('Package > Source Base', function () {
 
 	it('requires name to be implemented', function () {
 		try {
-			const instance = new Base(); // eslint-disable-line no-unused-vars
+			instance = new Base();
 			expectError();
 		} catch (error) {
 			expect(error.message).to.equal('Name was not implemented');
