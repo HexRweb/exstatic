@@ -104,22 +104,20 @@ module.exports = function watchForChanges() {
 				});
 			}
 
-			let index = -1;
-			this.fm.files.forEach((file, idx) => {
-				if (file.source === absolutePath) {
-					index = idx;
-				}
-			});
+			const index = this.fm.files.findIndex(file => file.source === absolutePath);
 
-			if (index > 0) {
-				log.info(`Removed ${removePageRoot(absolutePath)}`);
+			if (index < 0) {
+				return;
+			}
+
+			log.info(`Removed ${removePageRoot(absolutePath)}`);
 			const file = this.fm.files[index];
 			this.fm.files.splice(index, 1);
 
 			if (file.filename) {
 				await unlink(file.filename).catch(() => true);
-					// @todo: remove directory if empty
-				}
+				// @todo: remove directory if empty
+			}
 
 			if (file.tempContext) {
 				await file.temp.release(file.tempContext);
