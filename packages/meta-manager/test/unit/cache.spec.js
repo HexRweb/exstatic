@@ -172,17 +172,17 @@ describe('Unit: meta-manager > cache', function () {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
-			const unlinkStub = sinon.stub(fs, 'unlink').resolves();
+			const removeStub = sinon.stub(fs, 'remove').resolves();
 			const scheduled = sinon.stub(instance, 'scheduleSave');
 
 			try {
 				expect(await instance.removeItem('/testing', 'test')).to.be.true;
-				expect(unlinkStub.calledOnce).to.be.true;
+				expect(removeStub.calledOnce).to.be.true;
 				expect(scheduled.calledOnce).to.be.true;
 				expect(Object.keys(instance.manifest.data)).to.be.empty;
 				expect(instance.valueCache).to.be.empty;
 			} finally {
-				unlinkStub.restore();
+				removeStub.restore();
 			}
 		});
 

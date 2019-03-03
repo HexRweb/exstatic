@@ -88,7 +88,7 @@ module.exports = class ExstaticCacheFileManager {
 	}
 
 	async removeItem(path, etag) {
-		await fs.unlink(this.etagPath(etag));
+		await fs.remove(this.etagPath(etag));
 		delete this.manifest.data[path];
 		this.valueCache = Object.values(this.manifest.data);
 		this.scheduleSave();
