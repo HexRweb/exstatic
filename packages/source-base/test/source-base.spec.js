@@ -17,17 +17,13 @@ describe('Package > Source Base', function () {
 		instance = new FunctionalBase();
 	});
 
-	it('index exports base', function () {
-		expect(require('../index.js')).to.equal(Base); // eslint-disable-line unicorn/import-index
-	});
-
 	it('constructs', function () {
 		expect(instance).to.be.ok;
 	});
 
 	it('requires name to be implemented', function () {
 		try {
-			const instance = new Base(); // eslint-disable-line prefer-destructuring, no-unused-vars
+			const instance = new Base(); // eslint-disable-line no-unused-vars
 			expectError();
 		} catch (error) {
 			expect(error.message).to.equal('Name was not implemented');

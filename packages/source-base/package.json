@@ -5,13 +5,12 @@
   "author": "HexR <hello@hexr.org>",
   "license": "MIT",
   "repository": "https://github.com/hexrweb/exstatic.git",
-  "main": "index.js",
+  "main": "lib/source-base.js",
   "engines": {
     "node": "^8.9.0 || ^10.12.0"
   },
   "files": [
     "lib",
-    "index.js",
     "yarn.lock"
   ],
   "bugs": "https://github.com/HexRweb/exstatic/issues",
