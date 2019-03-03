@@ -19,8 +19,15 @@ module.exports = class FileContext {
 		return this.data;
 	}
 
-	write(data = '') {
-		this.data = data;
+	write(data = false) {
+		if (data) {
+			this.data = data;
+		}
+
+		if (!this.data) {
+			return false;
+		}
+
 		return writeFile(this.file, this.data);
 	}
 

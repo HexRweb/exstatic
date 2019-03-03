@@ -115,7 +115,7 @@ module.exports = function watchForChanges() {
 			this.fm.files.splice(index, 1);
 
 			if (file.filename) {
-				await unlink(file.filename).catch(() => true);
+				await fs.unlink(file.filename).catch(() => true);
 				// @todo: remove directory if empty
 			}
 

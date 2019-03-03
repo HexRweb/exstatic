@@ -57,7 +57,7 @@ module.exports = class ExstaticTempFileManager {
 	releaseAll() {
 		const promises = [];
 
-		for (const context of this.fileList) {
+		for (const [_, context] of this.fileList) {
 			promises.push(context.destroy());
 		}
 
