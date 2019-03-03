@@ -121,7 +121,8 @@ module.exports = function watchForChanges() {
 					// @todo: remove directory if empty
 				}
 
-				this.fm.files.splice(index, 1);
+			if (file.tempContext) {
+				await file.temp.release(file.tempContext);
 			}
 		});
 
