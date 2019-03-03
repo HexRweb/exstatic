@@ -11,8 +11,9 @@ module.exports = yargs
 		global: true
 	})
 	.commandDir('./commands')
-	.fail((msg = '', err, yargs) => {
+	.fail((msg, err, yargs) => {
 		err = err || new Error(msg);
+		msg = msg || '';
 
 		if (err instanceof ExError) {
 			return console.error(err.message);
