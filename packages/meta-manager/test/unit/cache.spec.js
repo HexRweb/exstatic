@@ -154,6 +154,7 @@ describe('Unit: meta-manager > cache', function () {
 			await instance.init();
 
 			const writeStub = sinon.stub(fs, 'writeFile').resolves();
+			const scheduled = sinon.stub(instance, 'scheduleSave');
 
 			try {
 				await instance.add('/add-test', 'abc123', 'abc123CONTENTS');
@@ -161,6 +162,7 @@ describe('Unit: meta-manager > cache', function () {
 				expect(writeStub.args[0][1]).to.equal('abc123CONTENTS');
 				expect(instance.manifest.data['/add-test']).to.equal('abc123');
 				expect(instance.valueCache).to.include('abc123');
+				expect(scheduled.calledOnce).to.be.true;
 			} finally {
 				writeStub.restore();
 			}

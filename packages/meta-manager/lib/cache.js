@@ -83,6 +83,7 @@ module.exports = class ExstaticCacheFileManager {
 		await fs.writeFile(this.etagPath(etag), contents);
 		this.manifest.data[path] = etag;
 		this.valueCache.push(etag);
+		this.scheduleSave();
 		return true;
 	}
 
