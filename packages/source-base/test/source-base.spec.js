@@ -1,13 +1,20 @@
 const {expect} = require('chai');
 const sinon = require('sinon');
 
+const expectError = require('../../../test-utils/expect-error');
 const Base = require('../lib/source-base');
+
+class FunctionalBase extends Base {
+	get name() {
+		return 'test'
+	}
+}
 
 describe('Package > Source Base', function () {
 	let instance;
 
 	beforeEach(() => {
-		instance = new Base();
+		instance = new FunctionalBase();
 	});
 
 	it('index exports base', function () {
@@ -18,30 +25,24 @@ describe('Package > Source Base', function () {
 		expect(instance).to.be.ok;
 	});
 
-	it('getting name throws an error by default', function () {
+	it('requires name to be implemented', function () {
 		try {
-			const name = instance.name; // eslint-disable-line prefer-destructuring, no-unused-vars
-			throw new Error('expected an error to be thrown');
+			const instance = new Base(); // eslint-disable-line prefer-destructuring, no-unused-vars
+			expectError();
 		} catch (error) {
 			expect(error.message).to.equal('Name was not implemented');
 		}
 	});
 
 	it('setting name does not do anything', function () {
-		instance.name = 'test';
-
-		try {
-			const {name} = instance; // eslint-disable-line no-unused-vars
-			throw new Error('expected an error to be thrown');
-		} catch (error) {
-			expect(error.message).to.equal('Name was not implemented');
-		}
+		instance.name = 'fake-test';
+		expect(instance.name).to.equal('test');
 	});
 
 	it('configure throws an error by default', function () {
 		try {
 			instance.configure();
-			throw new Error('expected an error to be thrown');
+			expectError();
 		} catch (error) {
 			expect(error.message).to.equal('Configure was not implemented');
 		}
@@ -50,7 +51,7 @@ describe('Package > Source Base', function () {
 	it('run throws an error by default', function () {
 		try {
 			instance.run();
-			throw new Error('expected an error to be thrown');
+			expectError();
 		} catch (error) {
 			expect(error.message).to.equal('Run was not implemented');
 		}
