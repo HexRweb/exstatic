@@ -76,9 +76,8 @@ class File extends AbstractFile {
 		this.filename = normalize(path.resolve(this.output, filePath));
 		this.meta.path = filePath.replace('/index.html', '/');
 
-		const tempFile = this.temp.acquire(
-			filePath.replace('.html', '.hbs').replace(/\//g, '-')
-		);
+		this.tempContext = this.tempContext || filePath.replace('.html', '.hbs').replace(/\//g, '-');
+		const tempFile = this.temp.acquire(this.tempContext);
 
 		// Step 4: Compile
 		await tempFile.write(contents);
