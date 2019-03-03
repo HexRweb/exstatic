@@ -7,6 +7,13 @@ class ExstaticSource {
 		this.store = new Cache({namespace: this.name});
 	}
 
+	static replaceParams(string, params) {
+		return Object.entries(params).reduce(
+			(str, [key, value]) => str.replace(new RegExp(`:${key}`, 'g'), value),
+			string
+		);
+	}
+
 	get defaults() {
 		return ExstaticSource.defaults;
 	}
@@ -22,6 +29,7 @@ class ExstaticSource {
 		throw new Error('Name was not implemented');
 	}
 
+	/* istanbul ignore next */
 	set name(_) {
 		return false;
 	}

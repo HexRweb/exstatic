@@ -53,6 +53,13 @@ describe('Package > Source Base', function () {
 		}
 	});
 
+	it('replaceParams', function () {
+		const params = {test: 'yes', sleep: 'for-the-weak'};
+		const response = '/is/sleep/for-the-weak/?answer=yes';
+		expect(Base.replaceParams('/is/sleep/:sleep/?answer=:test', params)).to.equal(response);
+		expect(Base.replaceParams('/:a/:b/:c', {})).to.equal('/:a/:b/:c');
+	});
+
 	it('properly registers helper hook', function () {
 		instance.register = sinon.stub();
 		const registerHook = sinon.stub();
