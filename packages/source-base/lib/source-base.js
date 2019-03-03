@@ -3,8 +3,19 @@ const {cache: Cache} = require('@exstatic/meta-manager');
 
 class ExstaticSource {
 	constructor() {
-		this.request = axios.create();
+		this.request = axios.create(this.defaults);
 		this.store = new Cache({namespace: this.name});
+	}
+
+	get defaults() {
+		return ExstaticSource.defaults;
+	}
+
+	static get defaults() {
+		return {
+			'user-agent': 'exstatic-source-bot https://github.com/hexrweb/exstatic',
+			responseType: 'json'
+		};
 	}
 
 	get name() {
