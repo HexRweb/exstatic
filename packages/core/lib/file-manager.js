@@ -1,5 +1,5 @@
 const {resolve} = require('path');
-const {ensureDirSync: ensureDir} = require('@exstatic/utils').fs;
+const {tmp: TempManager} = require('@exstatic/meta-manager');
 const {normalize} = require('./utils');
 const {File} = require('./file');
 
@@ -11,17 +11,16 @@ module.exports = class FileManager {
 		partialsDir = 'src/views/partials'
 	}, instance) {
 		this.instance = instance;
-		this.init({inputDir, outputDir, layoutsDir, partialsDir});
-		ensureDir(this.tempDir);
+		this.initSyncOnly({inputDir, outputDir, layoutsDir, partialsDir});
 		this.files = [];
 	}
 
-	init({
+	initSyncOnly({
 		inputDir,
 		outputDir,
 		layoutsDir,
 		partialsDir
-	}) {
+	} = {}) {
 		inputDir = inputDir || this.inputDir;
 		outputDir = outputDir || this.outputDir;
 		layoutsDir = layoutsDir || this.layoutsDir;
@@ -31,12 +30,28 @@ module.exports = class FileManager {
 		partialsDir = partialsDir.replace('{input}', inputDir);
 
 		this.dir = process.cwd();
-
-		this.tempDir = normalize(resolve(this.dir, '.exstatic'));
 		this.inputDir = normalize(resolve(this.dir, inputDir));
 		this.outputDir = normalize(resolve(this.dir, outputDir));
 		this.layoutsDir = normalize(resolve(this.dir, layoutsDir));
 		this.partialsDir = normalize(resolve(this.dir, partialsDir));
+	}
+
+	async init(options) {
+		this.initSyncOnly(options);
+		const tempDir = normalize(resolve(this.dir, '.exstatic'));
+
+		if (this.temp) {
+			await this.temp.releaseAll();
+		}
+
+		this.temp = new TempManager({root: tempDir});
+		return this.temp.init();
+	}
+
+	shutdown() {
+		if (this.temp) {
+			return this.temp.releaseAll();
+		}
 	}
 
 	set config(value) {

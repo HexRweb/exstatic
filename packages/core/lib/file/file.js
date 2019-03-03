@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const {readFile, writeFile} = require('@exstatic/utils').fs;
+const {readFile} = require('@exstatic/utils').fs;
 const marked = require('marked');
 const {normalize, file: fileUtils, yamlParser} = require('../utils');
 const t = require('../translations');
@@ -76,14 +76,13 @@ class File extends AbstractFile {
 		this.filename = normalize(path.resolve(this.output, filePath));
 		this.meta.path = filePath.replace('/index.html', '/');
 
-		const tempPath = path.resolve(
-			this.temp,
+		const tempFile = this.temp.acquire(
 			filePath.replace('.html', '.hbs').replace(/\//g, '-')
 		);
 
 		// Step 4: Compile
-		await writeFile(tempPath, contents);
-		contents = await this.compiler(tempPath, {page: this.meta});
+		await tempFile.write(contents);
+		contents = await this.compiler(tempFile.path, {page: this.meta});
 
 		// Build markdown
 		contents = marked(contents, {
@@ -95,8 +94,8 @@ class File extends AbstractFile {
 
 		contents = `{{!< ${layout}}}\n${contents}`;
 
-		await writeFile(tempPath, contents);
-		this.compiled = Buffer.from(await this.compiler(tempPath, {page: this.meta}));
+		await tempFile.write(contents);
+		this.compiled = Buffer.from(await this.compiler(tempFile.path, {page: this.meta}));
 		return this;
 	}
 

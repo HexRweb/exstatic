@@ -1,5 +1,4 @@
 const Promise = require('bluebird');
-const {emptyDirSync: empty} = require('@exstatic/utils').fs;
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
@@ -63,7 +62,7 @@ class Exstatic {
 			}
 		});
 
-		await this.hbs.init();
+		await Promise.all([this.hbs.init(), this.fm.init()]);
 		return this;
 	}
 
@@ -136,7 +135,7 @@ class Exstatic {
 		this.onBeforeExit = (gracefully = false) => {
 			const message = gracefully ? 'Exstatic.exiting' : 'Exstatic.terminating';
 			log.info(t(message));
-			empty(tempDir);
+			this.fm.shutdown();
 			process.exit();
 		};
 		/* eslint-enable unicorn/no-process-exit */

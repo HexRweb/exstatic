@@ -21,7 +21,7 @@ module.exports = class AbstractFile {
 	}
 
 	get temp() {
-		return this.parent.tempDir;
+		return this.parent.temp;
 	}
 
 	get output() {
