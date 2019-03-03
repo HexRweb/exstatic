@@ -1,8 +1,10 @@
 const axios = require('axios');
+const {cache: Cache} = require('@exstatic/meta-manager');
 
 class ExstaticSource {
 	constructor() {
 		this.request = axios.create();
+		this.store = new Cache({namespace: this.name});
 	}
 
 	get name() {
