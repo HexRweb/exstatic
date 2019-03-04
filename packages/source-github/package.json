@@ -20,7 +20,6 @@
     "test": "nyc --all --reporter=html --reporter=text mocha --recursive test"
   },
   "dependencies": {
-    "@exstatic/logging": "*",
     "@exstatic/source-base": "*"
   },
   "devDependencies": {},

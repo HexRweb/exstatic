@@ -1,14 +1,27 @@
 const axios = require('axios');
+const {debug} = require('@exstatic/logging');
 const {cache: Cache} = require('@exstatic/meta-manager');
 
 class ExstaticSource {
 	constructor() {
 		this.request = axios.create(this.defaults);
 		this.store = new Cache({namespace: this.name});
+		this.httpDebug = debug(`http:source-${this.name}`);
+		this.debug = debug(`source-${this.name}`);
 	}
 
 	init() {
 		return this.store.init();
+	}
+
+	async updateStoreIfNeeded(apiResponse, currentEtag) {
+		if (currentEtag && apiResponse.status === 304) {
+			this.httpDebug('Reading content from cache');
+			apiResponse.data = await this.store.getContents(currentEtag);
+		} else if (apiResponse.status === 200) {
+			this.httpDebug('Got new content from github');
+			await this.store.removeEtag(currentEtag);
+		}
 	}
 
 	static replaceParams(string, params) {
