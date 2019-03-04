@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
-const log = require('./log');
+const {log} = require('@exstatic/logging');
 const t = require('./translations');
 
 class HandlebarsCompiler {

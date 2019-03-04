@@ -1,9 +1,9 @@
 const Promise = require('bluebird');
+const {log} = require('@exstatic/logging');
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
 const {ensureArray, readConfig, getAllFiles} = require('./utils');
-const log = require('./log');
 const t = require('./translations');
 const registerHooks = require('./hooks');
 const ExstaticError = require('./error');
@@ -130,7 +130,6 @@ class Exstatic {
 	}
 
 	registerExitHooks() {
-		const {tempDir} = this.fm;
 		/* eslint-disable unicorn/no-process-exit */
 		this.onBeforeExit = (gracefully = false) => {
 			const message = gracefully ? 'Exstatic.exiting' : 'Exstatic.terminating';

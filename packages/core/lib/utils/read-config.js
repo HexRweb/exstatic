@@ -1,6 +1,6 @@
 const {resolve} = require('path');
+const {log} = require('@exstatic/logging');
 const {readFile} = require('@exstatic/utils').fs;
-const log = require('../log');
 const t = require('../translations');
 
 module.exports = async function readConfig(basedir) {
