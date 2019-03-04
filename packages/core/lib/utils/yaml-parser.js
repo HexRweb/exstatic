@@ -2,6 +2,12 @@
 // Javascript doesn't support \A so the parsing is a bit more complicated :(
 const YML_REGEX = new RegExp(/^(?:---\s*\n.*?\n?)(?:([\s\S]+)?)^(?:---\s*$\n?)/, 'm');
 const yaml = require('js-yaml');
+const {fs} = require('.');
+
+async function loadYaml(filename) {
+	const contents = await fs.readFile(filename, 'utf8');
+	return yaml.safeLoad(contents);
+}
 
 function getYaml(data) {
 	// No need to trim the data because it's trimmed when it's read in the
@@ -50,6 +56,7 @@ function stripYaml(data) {
 }
 
 module.exports = {
+	loadYaml,
 	getYaml,
 	stripYaml
 };

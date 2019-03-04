@@ -2,6 +2,7 @@ const {resolve} = require('path');
 const {log} = require('@exstatic/logging');
 const {readFile} = require('@exstatic/utils').fs;
 const t = require('../translations');
+const {loadYaml} = require('.');
 
 module.exports = async function readConfig(basedir) {
 	let data;
@@ -20,31 +21,22 @@ module.exports = async function readConfig(basedir) {
 		}
 	}
 
-	const yaml = require('js-yaml');
+	/* eslint-disable no-await-in-loop */
+	for (const ext of ['yml', 'yaml']) {
+		const file = resolve(basedir, `./_config.${ext}`);
+		try {
+			data = await loadYaml(file);
+			log.info(t('Exstatic.using_config', {ext}));
+			return {data, file};
+		} catch (error) {
+			const {code} = error;
 
-	try {
-		file = resolve(basedir, './_config.yml');
-		data = await readFile(file);
-		data = yaml.safeLoad(data);
-		log.info(t('Exstatic.using_config', {ext: 'yml'}));
-		return {data, file};
-	} catch (error) {
-		if (error.code !== 'ENOENT') {
-			log.error(t('Exstatic.config_parsing_failed', {ext: 'yml', code: error.code}));
+			if (code !== 'ENOENT') {
+				log.error(t('Exstatic.config_parsing_failed', {ext, code}));
+			}
 		}
 	}
-
-	try {
-		file = resolve(basedir, './_config.yaml');
-		data = await readFile(file);
-		data = yaml.safeLoad(data);
-		log.info(t('Exstatic.using_config', {ext: 'yaml'}));
-		return {data, file};
-	} catch (error) {
-		if (error.code !== 'ENOENT') {
-			log.error(t('Exstatic.config_parsing_failed', {ext: 'yaml', code: error.code}));
-		}
-	}
+	/* eslint-enable no-await-in-loop */
 
 	return {
 		data: {},
