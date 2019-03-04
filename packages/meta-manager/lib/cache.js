@@ -26,20 +26,43 @@ module.exports = class ExstaticCacheFileManager {
 		this.wd = path.resolve(this.wd, options.namespace);
 		this.manifestLocation = path.resolve(this.wd, 'cache-manifest.json');
 		this.saveScheduled = false;
+		this.dirty = false;
 		this.lastSaved = -1;
+		this.__save = () => this.forceSave();
+	}
+
+	async forceSave(sync = false) {
+		if (!this.dirty) {
+			return false;
+		}
+
+		const contents = JSON.stringify(this.manifest, null, 2);
+
+		if (sync) {
+			fs.writeFileSync(this.manifestLocation, contents);
+		} else {
+			await fs.writeFile(this.manifestLocation, contents);
+		}
+
+		this.dirty = false;
+		this.lastSaved = Date.now();
+		this.saveScheduled = false;
 	}
 
 	scheduleSave() {
-		// Don't schedule a save if there's one scheduled, and rate-limit saving to every 2.5 seconds
-		if (this.saveScheduled || (Date.now() - this.lastSaved) <= 2500) {
+		// Don't schedule a save if there's one scheduled
+		if (this.saveScheduled) {
 			return this.saveScheduled;
 		}
 
-		process.nextTick(async () => {
-			await fs.writeFile(this.manifestLocation, JSON.stringify(this.manifest, null, 2));
-			this.lastSaved = Date.now();
-			this.saveScheduled = false;
-		});
+		this.dirty = true;
+
+		// Rate-limit saving to every 2.5 seconds
+		if ((Date.now() - this.lastSaved) <= 2500) {
+			return this.saveScheduled;
+		}
+
+		process.nextTick(this.__save);
 
 		this.saveScheduled = true;
 		return true;
@@ -56,6 +79,14 @@ module.exports = class ExstaticCacheFileManager {
 
 	async init() {
 		await fs.ensureDir(this.wd);
+
+		if (!this.exitScheduled) {
+			this.exitScheduled = true;
+			process.on('SIGINT', this.__save)
+				.on('SIGTERM', this.__save)
+				.on('beforeExit', this.__save)
+				.on('exit', () => this.forceSave(true));
+		}
 
 		try {
 			this.manifest = JSON.parse(await fs.readFile(this.manifestLocation, 'utf8'));
@@ -132,7 +163,9 @@ module.exports = class ExstaticCacheFileManager {
 				if (error.code === 'ENOENT') { // For whatever reason the etag doesn't exist
 					await this.removeEtag(etag);
 					return new InvalidString();
-		}
+				}
+
+				throw error;
 			});
 		}
 

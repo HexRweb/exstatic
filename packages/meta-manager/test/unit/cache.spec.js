@@ -9,6 +9,16 @@ const expectError = require('../../../../test-utils/expect-error');
 const root = path.resolve(__dirname, '../fixtures/cache');
 
 describe('Unit: meta-manager > cache', function () {
+	let procStub;
+
+	beforeEach(() => {
+		procStub = sinon.stub(process, 'on').returns(process);
+	});
+
+	afterEach(() => {
+		procStub.restore();
+	});
+
 	it('Exports correct data', function () {
 		expect(Cache.error).to.equal(error);
 		expect(Cache.InvalidString).to.be.ok;
@@ -69,32 +79,82 @@ describe('Unit: meta-manager > cache', function () {
 				instance.saveScheduled = false;
 				instance.lastSaved = Date.now() + 10000;
 				expect(instance.scheduleSave()).to.be.false;
+				expect(instance.dirty).to.be.true;
 				expect(ntStub.calledOnce).to.be.false;
 			});
 
-			it('saves', async function () {
+			it('saves', function () {
+				instance.lastSaved = -1;
+				instance.saveScheduled = false;
+
+				expect(instance.scheduleSave()).to.be.true;
+				expect(ntStub.calledOnce).to.be.true;
+				expect(ntStub.args[0][0]).to.equal(instance.__save);
+			});
+		});
+
+		describe('forceSave', function () {
+			it('clean', async function () {
+				const instance = new Cache({root, namespace: 'working'});
+				const writeStub = sinon.stub(fs, 'writeFile').resolves();
+				try {
+					await instance.forceSave();
+					expect(writeStub.called).to.be.false;
+				} finally {
+					writeStub.restore();
+				}
+			});
+
+			it('sync', function () {
+				const instance = new Cache({root, namespace: 'working'});
+				instance.dirty = true;
+				const writeStub = sinon.stub(fs, 'writeFile').resolves();
+				const writeSyncStub = sinon.stub(fs, 'writeFileSync');
+				try {
+					instance.forceSave(true);
+					expect(writeStub.called).to.be.false;
+					expect(writeSyncStub.calledOnce).to.be.true;
+				} finally {
+					writeStub.restore();
+					writeSyncStub.restore();
+				}
+			});
+
+			it('async', async function () {
+				const instance = new Cache({root, namespace: 'working'});
+				instance.dirty = true;
+				const writeStub = sinon.stub(fs, 'writeFile').resolves();
+				const writeSyncStub = sinon.stub(fs, 'writeFileSync');
+				try {
+					await instance.forceSave();
+					expect(writeStub.called).to.be.true;
+					expect(writeSyncStub.calledOnce).to.be.false;
+				} finally {
+					writeStub.restore();
+					writeSyncStub.restore();
+				}
+			});
+
+			// @todo
+			it('updates properties', async function () {
+				const instance = new Cache({root, namespace: 'working'});
 				const writeStub = sinon.stub(fs, 'writeFile').resolves();
 				const dateStub = sinon.stub(Date, 'now').returns(123321);
+				instance.dirty = true;
 				instance.lastSaved = -1;
 				instance.saveScheduled = false;
 
 				try {
-					expect(instance.scheduleSave()).to.be.true;
-					expect(ntStub.calledOnce).to.be.true;
-
-					const fn = ntStub.args[0][0];
-
-					await fn();
-
-					expect(writeStub.calledOnce).to.be.true;
+					await instance.forceSave();
+					expect(instance.dirty).to.be.false
 					expect(instance.saveScheduled).to.be.false;
 					expect(instance.lastSaved).to.equal(123321);
-					expect(writeStub.calledWithExactly(instance.manifestLocation, '{}')).to.be.true;
+					expect(writeStub.calledOnce).to.be.true;
 				} finally {
 					writeStub.restore();
 					dateStub.restore();
 				}
-			});
+			})
 		});
 
 		describe('init', function () {
@@ -146,6 +206,22 @@ describe('Unit: meta-manager > cache', function () {
 					expect(error).to.be.instanceof(Cache.error);
 					expect(error.code).to.equal('EX_BAD_MANIFEST');
 				}
+			});
+
+			it('schedules exit hook', async function () {
+				const instance = new Cache({root, namespace: 'working'});
+				await instance.init();
+
+				expect(instance.exitScheduled).to.be.true;
+				expect(procStub.callCount).to.equal(4);
+
+				expect(procStub.args[0][0]).to.equal('SIGINT');
+				expect(procStub.args[1][0]).to.equal('SIGTERM');
+				expect(procStub.args[2][0]).to.equal('beforeExit');
+				expect(procStub.args[3][0]).to.equal('exit');
+
+				await instance.init();
+				expect(procStub.callCount).to.equal(4);
 			});
 		});
 
@@ -266,6 +342,17 @@ describe('Unit: meta-manager > cache', function () {
 			const removeEtag = sinon.stub(instance, 'removeEtag');
 			expect(await instance.getContents('dead-file')).to.be.instanceOf(Cache.InvalidString);
 			expect(removeEtag.calledOnce).to.be.true;
+
+			const readStub = sinon.stub(fs, 'readFile').rejects(new Error('catch me'));
+
+			try {
+				await instance.getContents('test');
+				expectError();
+			} catch (error) {
+				expect(error.message).to.equal('catch me');
+			} finally {
+				readStub.restore();
+			}
 		});
 	});
 });
