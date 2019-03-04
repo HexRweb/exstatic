@@ -1,0 +1,27 @@
+{
+  "name": "@exstatic/logging",
+  "version": "0.0.1",
+  "description": "Shared logging for exstatic",
+  "author": "HexR <hello@hexr.org>",
+  "license": "MIT",
+  "repository": "https://github.com/hexrweb/exstatic.git",
+  "main": "lib/logging.js",
+  "engines": {
+    "node": "^8.9.0 || ^10.12.0"
+  },
+  "files": [
+    "lib",
+    "yarn.lock"
+  ],
+  "bugs": "https://github.com/hexrweb/exstatic/issues",
+  "homepage": "https://github.com/hexrweb/exstatic",
+  "scripts": {
+    "lint": "xo"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {},
+  "xo": false
+}
