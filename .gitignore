@@ -28,3 +28,4 @@ _peekaboo
 .exstatic
 built
 testing
+!packages/meta-manager/test/fixtures/.exstatic
