@@ -1,6 +1,5 @@
 const axios = require('axios');
 const {cache: Cache} = require('@exstatic/meta-manager');
-const {error} = require('@exstatic/utils');
 
 class ExstaticSource {
 	constructor() {
@@ -61,5 +60,10 @@ class ExstaticSource {
 }
 
 module.exports = ExstaticSource;
-module.exports.Error = class SourceError extends ExstaticError {};
 module.exports.InvalidString = Cache.InvalidString;
+module.exports.Error = class SourceError extends Error {
+	constructor(msg, code) {
+		super(msg);
+		this.code = code;
+	}
+};

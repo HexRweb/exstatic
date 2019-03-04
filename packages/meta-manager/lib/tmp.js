@@ -57,7 +57,7 @@ module.exports = class ExstaticTempFileManager {
 	releaseAll() {
 		const promises = [];
 
-		for (const [_, context] of this.fileList) {
+		for (const [_, context] of this.fileList) { // eslint-disable-line no-unused-vars
 			promises.push(context.destroy());
 		}
 

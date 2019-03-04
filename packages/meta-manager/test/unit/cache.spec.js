@@ -146,7 +146,7 @@ describe('Unit: meta-manager > cache', function () {
 
 				try {
 					await instance.forceSave();
-					expect(instance.dirty).to.be.false
+					expect(instance.dirty).to.be.false;
 					expect(instance.saveScheduled).to.be.false;
 					expect(instance.lastSaved).to.equal(123321);
 					expect(writeStub.calledOnce).to.be.true;
@@ -154,7 +154,7 @@ describe('Unit: meta-manager > cache', function () {
 					writeStub.restore();
 					dateStub.restore();
 				}
-			})
+			});
 		});
 
 		describe('init', function () {
