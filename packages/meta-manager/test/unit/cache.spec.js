@@ -6,7 +6,7 @@ const {fs, error} = require('@exstatic/utils');
 const Cache = require('../../lib/cache');
 const expectError = require('../../../../test-utils/expect-error');
 
-const root = path.resolve(__dirname, '../fixtures/cache');
+const root = path.resolve(__dirname, '../fixtures/');
 
 describe('Unit: meta-manager > cache', function () {
 	let procStub;
@@ -36,7 +36,7 @@ describe('Unit: meta-manager > cache', function () {
 				const instance = new Cache({root, namespace: 'working'});
 				expect(instance.saveScheduled).to.be.false;
 				expect(instance.lastSaved).to.equal(-1);
-				expect(instance.wd).to.equal(path.resolve(root, 'working'));
+				expect(instance.wd).to.equal(path.resolve(root, '.exstatic/cache/working'));
 			});
 
 			it('constructor requires namespace', function () {
@@ -52,7 +52,7 @@ describe('Unit: meta-manager > cache', function () {
 
 			it('defaults wd to cwd', function () {
 				const instance = new Cache({namespace: 'test'});
-				expect(instance.wd).to.equal(path.resolve(process.cwd(), 'test'));
+				expect(instance.wd).to.equal(path.resolve(process.cwd(), '.exstatic/cache/test'));
 			});
 		});
 
@@ -161,7 +161,7 @@ describe('Unit: meta-manager > cache', function () {
 			it('creates folder if needed', async function () {
 				const instance = new Cache({root, namespace: 'fake'});
 				const ensureStub = sinon.stub(fs, 'ensureDir');
-				const folder = path.resolve(root, 'fake');
+				const folder = path.resolve(root, '.exstatic/cache/fake');
 				sinon.stub(instance, 'scheduleSave');
 
 				try {

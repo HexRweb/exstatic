@@ -23,7 +23,7 @@ module.exports = class ExstaticCacheFileManager {
 
 		options.namespace = normalizePath(options.namespace);
 
-		this.wd = path.resolve(this.wd, options.namespace);
+		this.wd = path.resolve(this.wd, '.exstatic', 'cache', options.namespace);
 		this.manifestLocation = path.resolve(this.wd, 'cache-manifest.json');
 		this.saveScheduled = false;
 		this.dirty = false;
