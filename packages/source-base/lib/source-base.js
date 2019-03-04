@@ -1,10 +1,15 @@
 const axios = require('axios');
 const {cache: Cache} = require('@exstatic/meta-manager');
+const {error} = require('@exstatic/utils');
 
 class ExstaticSource {
 	constructor() {
 		this.request = axios.create(this.defaults);
 		this.store = new Cache({namespace: this.name});
+	}
+
+	init() {
+		return this.store.init();
 	}
 
 	static replaceParams(string, params) {
@@ -56,3 +61,5 @@ class ExstaticSource {
 }
 
 module.exports = ExstaticSource;
+module.exports.Error = class SourceError extends ExstaticError {};
+module.exports.InvalidString = Cache.InvalidString;
