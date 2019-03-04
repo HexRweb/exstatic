@@ -1,8 +1,8 @@
 const EventEmitter = require('events');
 const Promise = require('bluebird');
 const {Exstatic} = require('@exstatic/core');
+const {log} = require('@exstatic/logging');
 const t = require('@exstatic/core/lib/translations');
-const log = require('@exstatic/core/lib/log');
 const {watch, build} = require('./extends');
 
 class ExstaticDev extends Exstatic {

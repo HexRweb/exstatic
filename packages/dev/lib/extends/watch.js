@@ -1,6 +1,6 @@
 const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
-const log = require('@exstatic/core/lib/log');
+const {log} = require('@exstatic/logging');
 const {normalize, fs} = require('@exstatic/core/lib/utils');
 
 function noSlashes(input) {

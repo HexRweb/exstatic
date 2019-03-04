@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@exstatic/core": "*",
+    "@exstatic/logging": "*",
     "bluebird": "^3.5.3",
     "chokidar": "^2.1.2"
   },
