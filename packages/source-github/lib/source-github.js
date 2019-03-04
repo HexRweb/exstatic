@@ -1,37 +1,10 @@
+const API_URL = 'https://api.github.com';
 const debug = require('@exstatic/logging').debug('source-github');
 const httpDebug = require('@exstatic/logging').debug('http:source-github');
 const SourceBase = require('@exstatic/source-base');
-
-const API_URL = 'https://api.github.com';
-const GET_REPO_ID = '/repos/:user/:project';
-const GET_CONTENTS = '/repositories/:id/contents/:path';
-
-class GError extends SourceBase.Error {}
-
-function urlFor(what, parts) {
-	switch (what) {
-		case 'meta': {
-			const {user, project} = parts;
-			if (!user || !project) {
-				throw new GError('urlFor meta: user and project must be provided', 'ESG_META_URL_MISSING_PARTS');
-			}
-
-			return SourceBase.replaceParams(GET_REPO_ID, {user, project}).replace(/\/\/+/g, '/');
-		}
-
-		case 'contents': {
-			const {id, path} = parts;
-			if (!id || !path) {
-				throw new GError('urlFor contents: id and path must be provided', 'ESG_CONTENTS_URL_MISSING_PARTS');
-			}
-
-			return SourceBase.replaceParams(GET_CONTENTS, {id, path}).replace(/\/\/+/g, '/');
-		}
-
-		default:
-			throw new GError(`urlFor type ${what} not supported`, 'ESG_UNKNOWN_URL');
-	}
-}
+const GError = require('./error');
+const transformConfig = require('./transform-config');
+const urlFor = require('./get-url');
 
 function handlePossibleRateLimit(error) {
 	if (!error.response) {
@@ -92,17 +65,9 @@ module.exports = class SourceGithub extends SourceBase {
 
 	async getSingle(config = {}) {
 		debug('get single: ', JSON.stringify(config));
-		if (config.repository) {
-			[config.user, config.project] = config.repository.split('/');
-			delete config.repository;
-		}
+		transformConfig(config, ['user', 'project', 'path']);
 
 		const {user, project, path} = config;
-
-		if (!user || !project || !path) {
-			throw new GError('GET: user, project and path must be supplied', 'ESG_GET_MISSING_PARAMS');
-		}
-
 		const key = `${user}/${project}/${path}`.replace(/\/\/+/g, '/');
 		const savedEtag = this.store.getEtagFromPath(key);
 		const id = await this.getRepoId(user, project);
@@ -157,5 +122,5 @@ module.exports = class SourceGithub extends SourceBase {
 		return options;
 	}
 };
+
 module.exports.GithubError = GError;
-module.exports.urlFor = urlFor;
