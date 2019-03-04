@@ -81,15 +81,15 @@ module.exports = class SourceGithub extends SourceBase {
 
 		if (savedEtag && result.status === 304) {
 			httpDebug('Reading content from cache');
-			const results = await this.store.getContents(savedEtag);
+			const cachedResult = await this.store.getContents(savedEtag);
 
 			// CASE: file access issue - we already verified that the etag exists.
 			// If this is the case, the store will remove the etag it saved
-			if (results instanceof SourceBase.InvalidString) {
+			if (cachedResult instanceof SourceBase.InvalidString) {
 				return this.getSingle(config);
 			}
 
-			result.data = JSON.parse(await this.store.getContents(savedEtag));
+			result.data = JSON.parse(cachedResult);
 		} else if (result.status === 200) {
 			httpDebug('Got new content from github');
 			await this.store.removeEtag(savedEtag);
