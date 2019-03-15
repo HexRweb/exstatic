@@ -103,11 +103,15 @@ module.exports = class SourceGithub extends SourceBase {
 
 		if (Array.isArray(data)) {
 			this.debug(key, 'is a dir');
-			return Promise.all(data.map(({path}) => this.getSingle({user, project, path})));
+			const children = await Promise.all(data.map(({path}) => this.getSingle({user, project, path})));
+			return children.reduce((flatChild, child) => flatChild.concat(child), []);
 		}
 
 		this.debug(key, 'is a file');
-		return Buffer.from(data.content, 'base64').toString();
+		return {
+			path,
+			data: Buffer.from(data.content, 'base64')
+		};
 	}
 
 	run() {
