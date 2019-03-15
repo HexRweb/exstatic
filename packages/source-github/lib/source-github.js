@@ -73,7 +73,7 @@ module.exports = class SourceGithub extends SourceBase {
 		let {data, headers: {etag: newEtag}} = result;
 		newEtag = newEtag.replace(/^"|"$/g, '');
 		// Add unique identifier to etag - etags in github can be duplicated
-		newEtag =  `${sha1.hex(key)}-${newEtag}`;
+		newEtag = `${sha1.hex(key)}-${newEtag}`;
 
 		if (savedEtag !== newEtag) {
 			this.debug('New etag for', key, 'from', savedEtag, 'to', newEtag);

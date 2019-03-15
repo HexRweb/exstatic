@@ -13,7 +13,6 @@ const removePageRoot = (instance, fullPath) => replaceAndNormalize(fullPath, ins
 const removeLayoutRoot = (instance, fullPath) => replaceAndNormalize(fullPath, instance.fm.layoutsDir);
 const removePartialRoot = (instance, fullPath) => replaceAndNormalize(fullPath, instance.fm.partialsDir);
 
-
 async function handleAdd(absolutePath) {
 	absolutePath = normalize(absolutePath);
 

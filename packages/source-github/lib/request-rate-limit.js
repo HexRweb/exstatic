@@ -18,4 +18,4 @@ module.exports = function handlePossibleRateLimit(error) {
 	}
 
 	throw new GError(`Rate limited.${rateLimitResetMessage}`, 'EGS_RATE_LIMITED');
-}
+};
