@@ -2,28 +2,9 @@ const API_URL = 'https://api.github.com';
 const SourceBase = require('@exstatic/source-base');
 const {sha1} = require('@exstatic/utils');
 const GError = require('./error');
-const transformConfig = require('./transform-config');
 const urlFor = require('./get-url');
-
-function handlePossibleRateLimit(error) {
-	if (!error.response) {
-		throw error;
-	}
-
-	const {headers} = error.response;
-	if (!headers || headers['x-ratelimit-remaining'] !== '0') {
-		throw error;
-	}
-
-	let rateLimitResetMessage = headers['x-ratelimit-reset'] || '';
-	if (rateLimitResetMessage) {
-		let resetTime = new Date(parseInt(rateLimitResetMessage, 10));
-		resetTime = `${resetTime.getHours() + 1}:${resetTime.getMinutes().toString().padStart(2, '0')}`;
-		rateLimitResetMessage = ` Rate limit resets at ${resetTime}`;
-	}
-
-	throw new GError(`Rate limited.${rateLimitResetMessage}`, 'EGS_RATE_LIMITED');
-}
+const handlePossibleRateLimit = require('./request-rate-limit');
+const transformConfig = require('./transform-config');
 
 module.exports = class SourceGithub extends SourceBase {
 	get defaults() {
