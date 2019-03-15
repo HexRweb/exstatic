@@ -4,5 +4,6 @@ module.exports = {
 	fs: require('fs-extra'),
 	normalizePath: require('./normalize-path'),
 	random: require('./random'),
+	sha1: require('./sha1'),
 	url: require('./url')
 };

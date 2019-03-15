@@ -1,5 +1,6 @@
 const API_URL = 'https://api.github.com';
 const SourceBase = require('@exstatic/source-base');
+const {sha1} = require('@exstatic/utils');
 const GError = require('./error');
 const transformConfig = require('./transform-config');
 const urlFor = require('./get-url');
@@ -64,13 +65,14 @@ module.exports = class SourceGithub extends SourceBase {
 		transformConfig(config, ['user', 'project', 'path']);
 
 		const {user, project, path} = config;
-		const key = `${user}/${project}/${path}`.replace(/\/\/+/g, '/');
+		const key = `${user}/${project}/${path}`.replace(/\/\/+/g, '/').toLowerCase();
 		const savedEtag = this.store.getEtagFromPath(key);
 		const id = await this.getRepoId(user, project);
 
 		const headers = {};
 		if (savedEtag) {
-			headers['if-none-match'] = `"${savedEtag}"`;
+			const originalEtag = savedEtag.replace(sha1.hex(key), '').replace(/^-/, '');
+			headers['if-none-match'] = `"${originalEtag}"`;
 		}
 
 		const result = await this.request(urlFor('contents', {id, path}), {headers}).catch(handlePossibleRateLimit);
@@ -80,15 +82,17 @@ module.exports = class SourceGithub extends SourceBase {
 		// If this is the case, the store will remove the etag it saved
 		if (result.data instanceof SourceBase.InvalidString) {
 			return this.getSingle(config);
-		// CASE: read from store, need to parse the content as JSON
 		}
 
+		// CASE: read from store, need to parse the content as JSON
 		if (typeof result.data === 'string') {
 			result.data = JSON.parse(result.data);
 		}
 
 		let {data, headers: {etag: newEtag}} = result;
 		newEtag = newEtag.replace(/^"|"$/g, '');
+		// Add unique identifier to etag - etags in github can be duplicated
+		newEtag =  `${sha1.hex(key)}-${newEtag}`;
 
 		if (savedEtag !== newEtag) {
 			this.debug('New etag for', key, 'from', savedEtag, 'to', newEtag);
