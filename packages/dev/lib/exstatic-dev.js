@@ -39,7 +39,7 @@ class ExstaticDev extends Exstatic {
 
 		await file.reload();
 		await file.compile();
-		await this.hook.executeHook('pre-write', [], [file]);
+		await this.hook.executeHook('pre-write', [], [file], true);
 		return file.save();
 	}
 

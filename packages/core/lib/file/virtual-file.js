@@ -16,4 +16,8 @@ module.exports = class VirtualFile extends AbstractFile {
 		this.rendered = options.data;
 		this.filename = normalize(path.resolve(this.output, fileName(this.source, Boolean(this.meta.path))));
 	}
+
+	read() {
+		return this;
+	}
 };

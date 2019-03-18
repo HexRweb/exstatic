@@ -1,3 +1,4 @@
+const VirtualFile = require('../lib/file/virtual-file');
 const {minify} = require('html-minifier');
 const PluginBase = require('@exstatic/plugin-base');
 
@@ -22,6 +23,10 @@ class PluginMinifyHtml extends PluginBase {
 
 	write(fileList) {
 		fileList.forEach(file => {
+			if ((file instanceof VirtualFile && !file.meta.minify) || file.meta.minify === false) {
+				return;
+			}
+
 			file.compiled = Buffer.from(this.minify(file.compiled.toString(), this.options));
 		});
 

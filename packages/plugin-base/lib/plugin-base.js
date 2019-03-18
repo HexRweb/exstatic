@@ -15,9 +15,9 @@ module.exports = class PluginBase {
 		registerHook('pre-write', (...args) => this.hookWrite(...args));
 	}
 
-	async hookWrite(files) {
+	async hookWrite(files, ...args) {
 		// Add a guard in case write method is not properly implemented
-		const newFiles = await this.write(files);
+		const newFiles = await this.write(files, ...args);
 		return newFiles || files;
 	}
 

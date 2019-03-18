@@ -8,9 +8,23 @@ class Sitemap extends PluginBase {
 		return new Date(unstructuredDate).toISOString();
 	}
 
-	async write(fileList) {
+	async write(fileList, isPartialRebuild = false) {
+		// CASE: we don't have access to the entire file list context => don't update sitemap
+		// @todo: store files as sitemap nodes we can traverse the nodes on a partial rebuild
+		if (isPartialRebuild) {
+			return;
+		}
+
 		// @todo: limit entries per sitemap to 1000
-		const filesInSitemap = fileList.filter(file => file.meta.sitemap !== false);
+		let sitemapFile;
+		const filesInSitemap = fileList.filter(file => {
+			if (file.meta.path === '/sitemap.xml') {
+				sitemapFile = file;
+				return false;
+			}
+
+			return file.meta.sitemap !== false
+		});
 		let sitemap = '';
 
 		await Promise.all(filesInSitemap.map(async file => {
@@ -37,16 +51,21 @@ class Sitemap extends PluginBase {
 			</urlset>
 		`.replace(/[\n\t]/g, '');
 
-		const sitemapFile = new File({
-			source: '/sitemap.xml',
-			meta: {
-				path: '/sitemap.xml'
-			},
-			fileManager: fileList[0].parent,
-			data: sitemap
-		});
+		if (!sitemapFile) {
+			sitemapFile = new File({
+				source: '/sitemap.xml',
+				meta: {
+					path: '/sitemap.xml'
+				},
+				fileManager: fileList[0].parent,
+				data: sitemap
+			});
 
-		fileList.push(sitemapFile);
+			fileList.push(sitemapFile);
+		} else {
+			sitemapFile.rendered = sitemap;
+		}
+
 		return fileList;
 	}
 }
