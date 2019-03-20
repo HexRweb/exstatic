@@ -29,6 +29,7 @@ class Exstatic {
 	async initialize(overrides = {}) {
 		let {file, data: config} = await readConfig(this.fm.dir);
 		config = Object.assign({}, defaultConfig, config, overrides);
+		this.__config = config;
 		this.fm.init(config);
 		this.fm.config = file;
 		this.hbs.data('site', config.site);

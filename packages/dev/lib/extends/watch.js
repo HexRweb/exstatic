@@ -1,3 +1,4 @@
+const path = require('path');
 const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
 const {log} = require('@exstatic/logging');
@@ -8,6 +9,7 @@ const replaceAndNormalize = (input, bad) => input.replace(bad, '').replace(/^\/+
 const isConfig = (instance, fullPath) => fullPath.includes(instance.fm.config);
 const isLayout = (instance, fullPath) => fullPath.includes(instance.fm.layoutsDir);
 const isPartial = (instance, fullPath) => fullPath.includes(instance.fm.partialsDir);
+const isPage = (instance, fullPath) => fullPath.includes(instance.fm.inputDir);
 
 const removePageRoot = (instance, fullPath) => replaceAndNormalize(fullPath, instance.fm.inputDir);
 const removeLayoutRoot = (instance, fullPath) => replaceAndNormalize(fullPath, instance.fm.layoutsDir);
@@ -24,10 +26,14 @@ async function handleAdd(absolutePath) {
 		return log.info(`Partial added: ${removePartialRoot(this, absolutePath)}`);
 	}
 
-	log.info(`Page added: ${removePageRoot(this, absolutePath)}`);
+	if (isPage(absolutePath)) {
+		log.info(`Page added: ${removePageRoot(this, absolutePath)}`);
+		const file = this.fm.addFile(absolutePath);
+		this.refreshFile(file);
+		return;
+	}
 
-	const file = this.fm.addFile(absolutePath);
-	this.refreshFile(file);
+	this.events.emit('file_modified', {modification: 'added', absolutePath});
 }
 
 function handleChange(absolutePath) {
@@ -48,8 +54,12 @@ function handleChange(absolutePath) {
 		return this.refreshAll();
 	}
 
-	log.info(`Refreshing page ${removePartialRoot(this, absolutePath)}`);
-	return this.refreshFile(absolutePath);
+	if (isPage(this, absolutePath)) {
+		log.info(`Refreshing page ${removePartialRoot(this, absolutePath)}`);
+		return this.refreshFile(absolutePath);
+	}
+
+	this.events.emit('file_modified', {modification: 'changed', absolutePath});
 }
 
 async function handleUnlink(absolutePath) {
@@ -59,7 +69,7 @@ async function handleUnlink(absolutePath) {
 
 	if (layoutChanged || partialChanged) {
 		const meta = layoutChanged ? `Layout ${removeLayoutRoot(this, absolutePath)}` :
-			`Partial ${removePartialRoot(this, absolutePath)}`;
+		`Partial ${removePartialRoot(this, absolutePath)}`;
 		log.info(`${meta} removed; rebuilding everything`);
 
 		return Promise.all(this.fm.files.map(file => {
@@ -68,24 +78,30 @@ async function handleUnlink(absolutePath) {
 		}));
 	}
 
-	const index = this.fm.files.findIndex(file => file.source === absolutePath);
+	if (isPage(this, absolutePath)) {
+		const index = this.fm.files.findIndex(file => file.source === absolutePath);
 
-	if (index < 0) {
+		if (index < 0) {
+			return;
+		}
+
+		log.info(`Removed ${removePageRoot(this, absolutePath)}`);
+		const file = this.fm.files[index];
+		this.fm.files.splice(index, 1);
+
+		if (file.filename) {
+			await fs.unlink(file.filename).catch(() => true);
+			// @todo: remove directory if empty
+		}
+
+		if (file.tempContext) {
+			await file.temp.release(file.tempContext);
+		}
+
 		return;
 	}
 
-	log.info(`Removed ${removePageRoot(this, absolutePath)}`);
-	const file = this.fm.files[index];
-	this.fm.files.splice(index, 1);
-
-	if (file.filename) {
-		await fs.unlink(file.filename).catch(() => true);
-		// @todo: remove directory if empty
-	}
-
-	if (file.tempContext) {
-		await file.temp.release(file.tempContext);
-	}
+	this.events.emit('file_modified', {modification: 'removed', absolutePath});
 }
 
 module.exports = function watchForChanges() {
@@ -94,6 +110,19 @@ module.exports = function watchForChanges() {
 	}
 
 	const foldersToWatch = [this.fm.inputDir];
+
+	const addToWatch = thingToWatch => {
+		// @todo: make sure the file / folder exists
+		thingToWatch = thingToWatch.replace('{input}', this.fm.inputDir);
+		thingToWatch = path.resolve(thingToWatch);
+		foldersToWatch.push(normalize(thingToWatch));
+	}
+
+	if (Array.isArray(this.__config.watch)) {
+		this.__config.watch.forEach(addToWatch);
+	} else if (typeof this.__config.watch === 'string') {
+		addToWatch(this.__config.watch);
+	}
 
 	if (!this.fm.layoutsDir.includes(this.fm.inputDir)) {
 		foldersToWatch.push(this.fm.layoutsDir);
@@ -117,6 +146,7 @@ module.exports = function watchForChanges() {
 		log.info(`Watching:\n\t- ${foldersToWatch.join('\n\t- ')}`);
 		log.info('Waiting for changes');
 	});
+
 
 	this.exitActions.push(() => watcher.close());
 	return this;
