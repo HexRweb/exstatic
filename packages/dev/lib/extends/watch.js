@@ -69,7 +69,7 @@ async function handleUnlink(absolutePath) {
 
 	if (layoutChanged || partialChanged) {
 		const meta = layoutChanged ? `Layout ${removeLayoutRoot(this, absolutePath)}` :
-		`Partial ${removePartialRoot(this, absolutePath)}`;
+			`Partial ${removePartialRoot(this, absolutePath)}`;
 		log.info(`${meta} removed; rebuilding everything`);
 
 		return Promise.all(this.fm.files.map(file => {
@@ -116,7 +116,7 @@ module.exports = function watchForChanges() {
 		thingToWatch = thingToWatch.replace('{input}', this.fm.inputDir);
 		thingToWatch = path.resolve(thingToWatch);
 		foldersToWatch.push(normalize(thingToWatch));
-	}
+	};
 
 	if (Array.isArray(this.__config.watch)) {
 		this.__config.watch.forEach(addToWatch);
@@ -146,7 +146,6 @@ module.exports = function watchForChanges() {
 		log.info(`Watching:\n\t- ${foldersToWatch.join('\n\t- ')}`);
 		log.info('Waiting for changes');
 	});
-
 
 	this.exitActions.push(() => watcher.close());
 	return this;

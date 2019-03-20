@@ -1,6 +1,6 @@
-const VirtualFile = require('../lib/file/virtual-file');
 const {minify} = require('html-minifier');
 const PluginBase = require('@exstatic/plugin-base');
+const VirtualFile = require('../lib/file/virtual-file');
 
 class PluginMinifyHtml extends PluginBase {
 	constructor(options) {

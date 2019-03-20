@@ -1,5 +1,5 @@
 const exstatic = require('@exstatic/dev');
-const {errror: Error} = require('@exstatic/utils');
+const {error: Error} = require('@exstatic/utils');
 const preHandle = require('../base-handler');
 
 module.exports = {

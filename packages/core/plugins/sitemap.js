@@ -23,7 +23,7 @@ class Sitemap extends PluginBase {
 				return false;
 			}
 
-			return file.meta.sitemap !== false
+			return file.meta.sitemap !== false;
 		});
 		let sitemap = '';
 
@@ -51,7 +51,9 @@ class Sitemap extends PluginBase {
 			</urlset>
 		`.replace(/[\n\t]/g, '');
 
-		if (!sitemapFile) {
+		if (sitemapFile) {
+			sitemapFile.rendered = sitemap;
+		} else {
 			sitemapFile = new File({
 				source: '/sitemap.xml',
 				meta: {
@@ -62,8 +64,6 @@ class Sitemap extends PluginBase {
 			});
 
 			fileList.push(sitemapFile);
-		} else {
-			sitemapFile.rendered = sitemap;
 		}
 
 		return fileList;
