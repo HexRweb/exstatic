@@ -113,9 +113,9 @@ module.exports = function watchForChanges() {
 
 	const addToWatch = thingToWatch => {
 		// @todo: make sure the file / folder exists
-		thingToWatch = thingToWatch.replace('{input}', this.fm.inputDir);
-		thingToWatch = path.resolve(thingToWatch);
-		foldersToWatch.push(normalize(thingToWatch));
+		foldersToWatch.push(
+			normalize(path.resolve(this.fm.dir, thingToWatch))
+		);
 	};
 
 	if (Array.isArray(this.__config.watch)) {
