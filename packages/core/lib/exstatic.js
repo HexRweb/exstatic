@@ -64,6 +64,21 @@ class Exstatic {
 		});
 
 		await Promise.all([this.hbs.init(), this.fm.init()]);
+		if (config['on-init']) {
+			const path = require('path');
+			const absolutePath = path.resolve(this.fm.dir, config['on-init']);
+			let fn;
+			try {
+				fn = require(absolutePath);
+			} catch (error) {
+				log.warn(`Failed to register on-init module - ${error.message}`);
+			}
+
+			if (typeof fn === 'function') {
+				this.hook.generateHookRegisterer('project')('initialized', fn);
+			}
+		}
+
 		await this.hook.executeHook('initialized', [], this);
 		return this;
 	}
