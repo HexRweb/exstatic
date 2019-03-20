@@ -42,3 +42,5 @@ module.exports = function registerHooks(manager) {
 		hook => manager.addHook(hook, SYNC_HOOKS.includes(hook), resolverFor(hook))
 	);
 };
+
+module.exports.hooks = HOOKS;

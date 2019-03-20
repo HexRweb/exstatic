@@ -3,7 +3,7 @@ const {log} = require('@exstatic/logging');
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
-const {ensureArray, readConfig, getAllFiles} = require('./utils');
+const {ensureArray, readConfig, getAllFiles, registerFileHooks} = require('./utils');
 const t = require('./translations');
 const registerHooks = require('./hooks');
 const ExstaticError = require('./error');
@@ -33,8 +33,10 @@ class Exstatic {
 		this.fm.init(config);
 		this.fm.config = file;
 		this.hbs.data('site', config.site);
-		const namespaces = [];
 
+		registerFileHooks(this.hook.generateHookRegisterer('project'), this);
+
+		const namespaces = [];
 		ensureArray(config.plugins).forEach(pluginName => {
 			pluginName = pluginName.replace('{cwd}', this.fm.dir);
 			let plugin;
@@ -64,21 +66,6 @@ class Exstatic {
 		});
 
 		await Promise.all([this.hbs.init(), this.fm.init()]);
-		if (config['on-init']) {
-			const path = require('path');
-			const absolutePath = path.resolve(this.fm.dir, config['on-init']);
-			let fn;
-			try {
-				fn = require(absolutePath);
-			} catch (error) {
-				log.warn(`Failed to register on-init module - ${error.message}`);
-			}
-
-			if (typeof fn === 'function') {
-				this.hook.generateHookRegisterer('project')('initialized', fn);
-			}
-		}
-
 		await this.hook.executeHook('initialized', [], this);
 		return this;
 	}

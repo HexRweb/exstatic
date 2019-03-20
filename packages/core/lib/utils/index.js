@@ -9,6 +9,10 @@ module.exports = {
 		return require('./file');
 	},
 
+	get registerFileHooks() {
+		return require('./file-hook');
+	},
+
 	get getAllFiles() {
 		return require('./get-all-files');
 	},
