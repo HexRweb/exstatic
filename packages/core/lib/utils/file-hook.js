@@ -1,5 +1,6 @@
 const path = require('path');
 const {log} = require('@exstatic/logging');
+const t = require('../translations/');
 const {hooks} = require('../hooks');
 
 function defaultFileName(hook) {
@@ -32,7 +33,7 @@ function loadFn(absolutePath) {
 
 module.exports = function addFsHooks(register, instance) {
 	hooks.forEach(hook => {
-		log.verbose(`Loading project hook: ${hook}`);
+		log.verbose(t('FileHook.loading', {hook}));
 		const defaultName = defaultFileName(hook);
 		const configHookName = `on-${defaultName}`;
 		const defaultFilePath = `./exstatic-${defaultName}`;
@@ -47,18 +48,18 @@ module.exports = function addFsHooks(register, instance) {
 
 			// CASE: Failed to load module - warn and try to load default module
 			if (fn instanceof Error) {
-				log.warn(`Failed to load on-${configHookName} module - ${fn.message}`);
+				log.warn(t('FileHook.loading_error', {message: fn.message, hook: configHookName}));
 				// CASE: default module IS the configured module - trying to load the default module would be pointless
 				if (defaultFile === configuredFile) {
 					return;
 				}
 			// CASE: Module was properly defined - register the hook and go to next
 			} else if (typeof fn === 'function') {
-				log.info(`Adding ${hook} hook for ${configValue}`);
+				log.info(t('FileHook.adding_module', {hook: defaultName, path: configValue}));
 				return register(hook, fn);
 			// CASE: Successfully loaded module, but it didn't export a function
 			} else {
-				log.warn(`${configHookName} module is not valid. It exported a(n) ${typeof fn}, but should have exported a function.`);
+				log.warn(t('FileHook.module_not_fn', {module: configHookName, type: (typeof fn)}));
 				if (defaultFile === configuredFile) {
 					return;
 				}
@@ -73,10 +74,10 @@ module.exports = function addFsHooks(register, instance) {
 		}
 
 		if (typeof fn === 'function') {
-			log.info(`Adding ${hook} hook for ${defaultFilePath}`);
+			log.info(t('FileHook.adding_module', {hook: defaultName, path: defaultFilePath}));
 			return register(hook, fn);
 		}
 
-		log.warn(`${configHookName} module is not valid. It exported a(n) ${typeof fn}, but should have exported a function.`);
+		log.warn(t('FileHook.module_not_fn', {module: configHookName, type: (typeof fn)}));
 	});
 };

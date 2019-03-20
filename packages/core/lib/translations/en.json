@@ -25,5 +25,11 @@
   },
   "File": {
     "yaml_failed": "Failed parsing metadata for %{path} - %{error}"
+  },
+  "FileHook": {
+    "loading": "Loading project hook: %{hook}",
+    "loading_error": "Failed to load %{hook} module - %{message}",
+    "adding_module": "Adding %{hook} hook for %{path}",
+    "module_not_fn": "%{module} module is not valid. It exported a(n) %{type}, but should have exported a function."
   }
 }
