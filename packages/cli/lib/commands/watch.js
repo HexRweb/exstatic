@@ -11,6 +11,7 @@ module.exports = {
 
 		async function startInstance() {
 			instance = new ExstaticDev();
+			instance.COMMAND = 'watch';
 
 			instance.events.on('TRIGGER_RESTART', () => {
 				instance.destroy();

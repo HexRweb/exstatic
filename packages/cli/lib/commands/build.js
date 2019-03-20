@@ -7,6 +7,7 @@ module.exports = {
 	async handler(argv) {
 		preHandle(argv);
 		const instance = exstatic();
+		instance.COMMAND = 'build';
 
 		try {
 			await instance.build();
