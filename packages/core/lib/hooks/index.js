@@ -1,5 +1,6 @@
 const TAB = '  ';
 const HOOKS = [
+	'initialized',
 	'load-pages',
 	'register-helpers',
 	'pre-write'

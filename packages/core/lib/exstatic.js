@@ -64,6 +64,7 @@ class Exstatic {
 		});
 
 		await Promise.all([this.hbs.init(), this.fm.init()]);
+		await this.hook.executeHook('initialized', [], this);
 		return this;
 	}
 
