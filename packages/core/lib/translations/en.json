@@ -1,29 +1,29 @@
 {
-	"HookManager": {
-		"registered_unknown_hook": "Plugin \"%{plugin}\" attempted to register unknown hook \"%{hook}\"",
-		"called_unknown_hook": "Attempted to execute unknown hook \"%{hook}\"",
-		"execution_failed": "Failed to execute \"%{hook}\" hook for plugin \"%{plugin}\" - %{error}"
-	},
-	"Exstatic": {
-        "namespaceCollision": "Namespace collision - the namespace '%{namespace}' was previously used. Failed configuring plugin %{path}",
-		"registering_types": "Registering content types",
-		"registering_helpers": "Registering helpers",
-		"registering_helper": "Registering %{type} Helper: %{name}",
-		"helpers_registered": "Done registering helpers",
-		"using_config": "Using config file: _config.%{ext}",
-		"config_parsing_failed": "Failed parsing config file _config.%{ext} - %{code}",
-		"plugin_loaded": "Plugin loaded: \"%{name}\"",
-		"plugin_loading_failed": "Failed to load plugin: \"%{name}\" - %{error}",
-		"reading_files": "Generating file list",
-		"files_read": "Done generating file list",
-		"refreshing_file": "Attempting to refresh file %{file}",
-		"compile_file": "Compiling file: %{name}",
-		"write_file": "Writing file: %{name}",
-		"duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
-		"exiting": "Cleaning up temp directory before exiting...",
-		"terminating": "Detected exit request; cleaning up temp dir..."
-	},
-	"File": {
-		"yaml_failed": "Failed parsing metadata for %{path} - %{error}"
-	}
+  "HookManager": {
+    "registered_unknown_hook": "Plugin \"%{plugin}\" attempted to register unknown hook \"%{hook}\"",
+    "called_unknown_hook": "Attempted to execute unknown hook \"%{hook}\"",
+    "execution_failed": "Failed to execute \"%{hook}\" hook for plugin \"%{plugin}\" - %{error}"
+  },
+  "Exstatic": {
+    "namespaceCollision": "Namespace collision - the namespace '%{namespace}' was previously used. Failed configuring plugin %{path}",
+    "registering_types": "Registering content types",
+    "registering_helpers": "Registering helpers",
+    "registering_helper": "Registering %{type} Helper: %{name}",
+    "helpers_registered": "Done registering helpers",
+    "using_config": "Using config file: _config.%{ext}",
+    "config_parsing_failed": "Failed parsing config file _config.%{ext} - %{code}",
+    "plugin_loaded": "Plugin loaded: \"%{name}\"",
+    "plugin_loading_failed": "Failed to load plugin: \"%{name}\" - %{error}",
+    "reading_files": "Generating file list",
+    "files_read": "Done generating file list",
+    "refreshing_file": "Attempting to refresh file %{file}",
+    "compile_file": "Compiling file: %{name}",
+    "write_file": "Writing file: %{name}",
+    "duplicate_detected": "Warning: Multiple files need to be written to %{path} - Renaming the file...",
+    "exiting": "Cleaning up temp directory before exiting...",
+    "terminating": "Detected exit request; cleaning up temp dir..."
+  },
+  "File": {
+    "yaml_failed": "Failed parsing metadata for %{path} - %{error}"
+  }
 }
