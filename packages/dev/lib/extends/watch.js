@@ -2,7 +2,7 @@ const path = require('path');
 const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
 const {log} = require('@exstatic/logging');
-const {normalizePath: normalize, fs} = require('@exstatic/utils');
+const {normalizePath: normalize, fs, ensureArray} = require('@exstatic/utils');
 
 const replaceAndNormalize = (input, bad) => input.replace(bad, '').replace(/^\/+/, '').replace(/\/+$/, '');
 
@@ -111,17 +111,12 @@ module.exports = function watchForChanges() {
 
 	const foldersToWatch = [this.fm.inputDir];
 
-	const addToWatch = thingToWatch => {
+	const additionalItems = ensureArray(this.__config.watch);
+	for (const additionalItem of additionalItems) {
 		// @todo: make sure the file / folder exists
 		foldersToWatch.push(
-			normalize(path.resolve(this.fm.dir, thingToWatch))
+			normalize(this.fm.resolve(additionalItem))
 		);
-	};
-
-	if (Array.isArray(this.__config.watch)) {
-		this.__config.watch.forEach(addToWatch);
-	} else if (typeof this.__config.watch === 'string') {
-		addToWatch(this.__config.watch);
 	}
 
 	if (!this.fm.layoutsDir.includes(this.fm.inputDir)) {
