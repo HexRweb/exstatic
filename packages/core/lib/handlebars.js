@@ -77,7 +77,6 @@ class HandlebarsCompiler {
 		}
 
 		const hbsFn = helperType === 'sync' ? 'registerHelper' : 'registerAsyncHelper';
-
 		return this._hbs[hbsFn](helperName, exstaticHelperProxy);
 	}
 
@@ -87,7 +86,7 @@ class HandlebarsCompiler {
 	}
 
 	registerHelper(...args) {
-		return this.registerHelperType('async', ...args);
+		return this.registerHelperType('sync', ...args);
 	}
 
 	registerAsyncHelper(...args) {
