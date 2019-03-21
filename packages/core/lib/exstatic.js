@@ -75,10 +75,6 @@ class Exstatic {
 	}
 
 	async loadFiles() {
-		if (this.fm.files.length > 0) {
-			return;
-		}
-
 		const blacklist = [this.fm.layoutsDir, this.fm.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
