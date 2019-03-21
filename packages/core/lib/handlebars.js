@@ -36,16 +36,16 @@ class HandlebarsCompiler {
 			HOOK_NAME, resolverArgs
 		);
 
-		['sync', 'async'].forEach(type => {
-			Object.keys(helpers[type]).forEach(helperName => {
+		for (const type of ['sync', 'async']) {
+			for (const helperName of Object.keys(helpers[type])) {
 				log.debug(t('Exstatic.registering_helper', {
 					type,
 					name: helperName
 				}));
 				const helperFn = helpers[type][helperName];
 				this.registerHelperType(type, helperName, helperFn);
-			});
-		});
+			}
+		}
 
 		log.verbose(t('Exstatic.helpers_registered'));
 		this.updateData();
