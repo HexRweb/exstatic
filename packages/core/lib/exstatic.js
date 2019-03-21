@@ -97,10 +97,10 @@ class Exstatic {
 	}
 
 	async write(force = false) {
-		const usedFilenames = [];
 		await this.compile();
 
-		this.fm.files.forEach(file => {
+		const usedFilenames = [];
+		for (const file of this.fm.files) {
 			const originalName = file.filename;
 			let index = 0;
 
@@ -110,7 +110,7 @@ class Exstatic {
 			}
 
 			usedFilenames.push(file.filename);
-		});
+		};
 
 		// Protect race conditions in hook
 		const {files} = this.fm;
