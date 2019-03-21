@@ -37,25 +37,25 @@ class Exstatic {
 		registerFileHooks(this.hook.generateHookRegisterer('project'), this);
 
 		const namespaces = [];
-		ensureArray(config.plugins).forEach(pluginName => {
-			pluginName = pluginName.replace('{cwd}', this.fm.dir);
-			let plugin;
+		config.plugins = ensureArray(config.plugins);
+		for (let path of config.plugins) {
+			path = this.fm.resolve(path);
 			try {
-				plugin = require(pluginName);
+				const plugin = require(path);
 
 				if (plugin.name && config[plugin.name] && typeof plugin.configure === 'function') {
 					if (namespaces.includes(plugin.name)) {
 						throw new ExstaticError(t('Exstatic.namespaceCollision', {
 							namespace: plugin.name,
-							path: pluginName
+							path
 						}));
 					}
 
 					plugin.configure(config[plugin.name]);
 				}
 
-				plugin.registerHooks(this.hook.generateHookRegisterer(pluginName));
-				log.verbose(t('Exstatic.plugin_loaded', {name: pluginName}));
+				plugin.registerHooks(this.hook.generateHookRegisterer(path));
+				log.verbose(t('Exstatic.plugin_loaded', {name: path}));
 			} catch (error) {
 				if (error instanceof ExstaticError) {
 					throw error;
@@ -63,7 +63,7 @@ class Exstatic {
 
 				log.error(t('Exstatic.plugin_loading_failed', {name: pluginName, error}));
 			}
-		});
+		}
 
 		await Promise.all([this.hbs.init(), this.fm.init()]);
 		await this.hook.executeHook('initialized', [], this);

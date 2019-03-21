@@ -62,6 +62,14 @@ module.exports = class FileManager {
 		return this._config;
 	}
 
+	resolve(segment) {
+		if (segment.startsWith('./')) {
+			return resolve(this.dir, segment);
+		}
+
+		return segment;
+	}
+
 	// Proxy method for file instances to use
 	get url() {
 		return this.instance.url;
