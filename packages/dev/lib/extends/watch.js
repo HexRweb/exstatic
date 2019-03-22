@@ -1,4 +1,3 @@
-const path = require('path');
 const chokidar = require('chokidar');
 const {Exstatic} = require('@exstatic/core');
 const {log} = require('@exstatic/logging');

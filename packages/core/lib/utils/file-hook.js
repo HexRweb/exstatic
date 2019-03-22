@@ -1,6 +1,6 @@
 const path = require('path');
 const {log} = require('@exstatic/logging');
-const t = require('../translations/');
+const t = require('../translations');
 const {hooks} = require('../hooks');
 
 function defaultFileName(hook) {

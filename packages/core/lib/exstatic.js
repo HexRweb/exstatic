@@ -60,7 +60,7 @@ class Exstatic {
 					throw error;
 				}
 
-				log.error(t('Exstatic.plugin_loading_failed', {name: pluginName, error}));
+				log.error(t('Exstatic.plugin_loading_failed', {name: path, error}));
 			}
 		}
 
@@ -109,7 +109,7 @@ class Exstatic {
 			}
 
 			usedFilenames.push(file.filename);
-		};
+		}
 
 		// Protect race conditions in hook
 		const {files} = this.fm;
