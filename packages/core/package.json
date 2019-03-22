@@ -27,7 +27,6 @@
     "@exstatic/plugin-base": "*",
     "@exstatic/utils": "*",
     "@hexr/hookit": "^0.2.0",
-    "bluebird": "^3.5.2",
     "express-hbs": "1.0.4",
     "html-minifier": "^3.5.20",
     "js-yaml": "^3.12.0",

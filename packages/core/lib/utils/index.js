@@ -1,7 +1,9 @@
-const {ensureArray, url, normalizePath: normalize} = require('@exstatic/utils');
+const {ensureArray, url, normalizePath: normalize, mapAsync, mapSeries} = require('@exstatic/utils');
 
 module.exports = {
 	ensureArray,
+	mapAsync,
+	mapSeries,
 	normalize,
 	url,
 

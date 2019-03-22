@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
-const Promise = require('bluebird');
 const {Exstatic} = require('@exstatic/core');
 const {log} = require('@exstatic/logging');
+const {mapSeries} = require('@exstatic/utils');
 const t = require('@exstatic/core/lib/translations');
 const {watch, build} = require('./extends');
 
@@ -44,7 +44,7 @@ class ExstaticDev extends Exstatic {
 	}
 
 	refreshAll() {
-		return Promise.mapSeries(this.fm.files, file => this.refreshFile(file));
+		return mapSeries(this.fm.files, file => this.refreshFile(file));
 	}
 
 	destroy() {

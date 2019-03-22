@@ -1,7 +1,7 @@
 const HOOK_NAME = 'register-helpers';
 const noVal = Symbol('__hbs__no_val');
 
-const Promise = require('bluebird');
+const {promisify} = require('util');
 const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
@@ -29,7 +29,7 @@ class HandlebarsCompiler {
 		this.compileOptions.settings.layoutsDir = this.instance.fm.layoutsDir;
 		this.compileOptions.settings.partialsDir = this.instance.fm.partialsDir;
 
-		this.compiler = Promise.promisify(this._hbs.express4(this.compileOptions.settings));
+		this.compiler = promisify(this._hbs.express4(this.compileOptions.settings));
 		log.verbose(t('Exstatic.registering_helpers'));
 		const resolverArgs = [require('./helpers')];
 		const helpers = await this.instance.hook.executeHook(

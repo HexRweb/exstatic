@@ -1,5 +1,5 @@
-const Promise = require('bluebird');
-const readdir = Promise.promisify(require('readdirp'));
+const {promisify} = require('util');
+const readdir = promisify(require('readdirp'));
 const {normalize} = require('.');
 
 // @todo: don't hardcode extensions

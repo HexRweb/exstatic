@@ -19,6 +19,7 @@
     "lint": "xo"
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "fs-extra": "^7.0.1"
   },
   "devDependencies": {},

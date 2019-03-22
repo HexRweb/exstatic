@@ -1,9 +1,8 @@
-const Promise = require('bluebird');
 const {log} = require('@exstatic/logging');
 const HookManager = require('@hexr/hookit');
 const HandlebarsCompiler = require('./handlebars');
 const FileManager = require('./file-manager');
-const {ensureArray, readConfig, getAllFiles, registerFileHooks} = require('./utils');
+const {ensureArray, readConfig, getAllFiles, registerFileHooks, mapAsync, mapSeries} = require('./utils');
 const t = require('./translations');
 const registerHooks = require('./hooks');
 const ExstaticError = require('./error');
@@ -78,7 +77,7 @@ class Exstatic {
 		const blacklist = [this.fm.layoutsDir, this.fm.partialsDir];
 
 		log.info(t('Exstatic.reading_files'));
-		await Promise.resolve(getAllFiles(this.fm.inputDir, blacklist)).map(file => this.fm.addFile(file, true));
+		await mapAsync(getAllFiles(this.fm.inputDir, blacklist), file => this.fm.addFile(file, true));
 		await this.hook.executeHook('load-pages', [this.fm.files]);
 		log.info(t('Exstatic.files_read'));
 	}
@@ -90,7 +89,7 @@ class Exstatic {
 		* all of the calls to the `contentFor` block helper in every file would add up and
 		* only be written to the first file that calls the corresponding `block` helper
 		*/
-		return Promise.mapSeries(this.fm.files, file => {
+		return mapSeries(this.fm.files, file => {
 			log.verbose(t('Exstatic.compile_file', {name: file.source}));
 			return file.compile();
 		});
@@ -116,7 +115,7 @@ class Exstatic {
 		const {files} = this.fm;
 
 		this.fm.files = await this.hook.executeHook('pre-write', [], files);
-		await Promise.map(this.fm.files, file => {
+		await mapAsync(this.fm.files, file => {
 			log.verbose(t('Exstatic.write_file', {name: file.filename}));
 			return file.save(force);
 		});

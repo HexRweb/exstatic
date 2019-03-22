@@ -22,7 +22,6 @@
     "@exstatic/core": "*",
     "@exstatic/logging": "*",
     "@exstatic/utils": "*",
-    "bluebird": "^3.5.3",
     "chokidar": "^2.1.2"
   },
   "devDependencies": {},
