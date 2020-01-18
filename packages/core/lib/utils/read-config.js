@@ -2,7 +2,7 @@ const {resolve} = require('path');
 const {log} = require('@exstatic/logging');
 const {readFile} = require('@exstatic/utils').fs;
 const t = require('../translations');
-const {loadYaml} = require('.');
+const {loadYaml} = require('./yaml-parser');
 
 module.exports = async function readConfig(basedir) {
 	let data;
