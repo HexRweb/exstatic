@@ -1,5 +1,4 @@
-const {promisify} = require('util');
-const readdir = promisify(require('readdirp'));
+const readdir = require('readdirp');
 const {normalize} = require('.');
 
 // @todo: don't hardcode extensions
@@ -21,10 +20,14 @@ const isValidFile = (file, blacklist) => {
 };
 
 async function getAllowedFiles(dir, blacklist = []) {
-	const {files} = await readdir({root: dir, entryType: 'files'});
-	return files
-		.map(({fullPath}) => normalize(fullPath))
-		.filter(file => isValidFile(file, blacklist));
+	const validFiles = [];
+	const fileFilter = ({fullPath}) => isValidFile(normalize(fullPath), blacklist);
+
+	for await (const entry of readdir(dir, {fileFilter})) {
+		validFiles.push(normalize(entry.fullPath));
+	}
+
+	return validFiles;
 }
 
 module.exports = getAllowedFiles;
