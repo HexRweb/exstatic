@@ -38,7 +38,7 @@ module.exports = class FileManager {
 
 	async init(options) {
 		this.initSyncOnly(options);
-		const tempDir = normalize(resolve(this.dir, '.exstatic'));
+		const tempDir = normalize(resolve(this.dir, '.exstatic', 'tmp'));
 
 		if (this.temp) {
 			await this.temp.releaseAll();

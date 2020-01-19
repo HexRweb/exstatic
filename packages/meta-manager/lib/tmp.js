@@ -4,8 +4,7 @@ const FileContext = require('./file-context');
 
 module.exports = class ExstaticTempFileManager {
 	constructor(options = {}) {
-		const wd = options.root || process.cwd();
-		this.root = path.resolve(wd, '.exstatic', 'tmp');
+		this.root = options.path || path.resolve(process.cwd(), '.exstatic', 'tmp');
 		this.fileList = new Map();
 	}
 
