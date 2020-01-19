@@ -40,6 +40,11 @@ class File extends AbstractFile {
 		await this.read();
 		let contents = this.raw.toString().trim();
 
+		if (!contents) {
+			this.compiled = '';
+			return this;
+		}
+
 		// Step 2: Extract metadata from file
 		try {
 			this.meta = getYaml(contents);
