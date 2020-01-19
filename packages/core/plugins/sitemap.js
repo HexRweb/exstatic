@@ -15,6 +15,10 @@ class Sitemap extends PluginBase {
 			return;
 		}
 
+		if (fileList.length === 0) {
+			return;
+		}
+
 		// @todo: limit entries per sitemap to 1000
 		let sitemapFile;
 		const filesInSitemap = fileList.filter(file => {
