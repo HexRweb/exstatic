@@ -1,12 +1,13 @@
 const HOOK_NAME = 'register-helpers';
 const noVal = Symbol('__hbs__no_val');
 
+const {resolve} = require('path');
 const {promisify} = require('util');
 const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
 const {log} = require('@exstatic/logging');
-const {ensureDir} = require('./utils').fs;
+const {ensureDir, pathExists} = require('./utils').fs;
 const t = require('./translations');
 
 class HandlebarsCompiler {
@@ -31,6 +32,10 @@ class HandlebarsCompiler {
 		this.compileOptions.settings.partialsDir = this.instance.fm.partialsDir;
 
 		await Promise.all([ensureDir(this.instance.fm.layoutsDir), ensureDir(this.instance.fm.partialsDir)]);
+
+		if (!await pathExists(resolve(this.instance.fm.layoutsDir, 'default.hbs'))) {
+			log.warn('Default layout does not exist. You might have issues compiling your templates.');
+		}
 
 		this.compiler = promisify(this._hbs.express4(this.compileOptions.settings));
 		log.verbose(t('Exstatic.registering_helpers'));
