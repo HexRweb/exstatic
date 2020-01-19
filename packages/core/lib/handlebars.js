@@ -6,6 +6,7 @@ const hbs = require('express-hbs');
 const get = require('lodash.get');
 const set = require('lodash.set');
 const {log} = require('@exstatic/logging');
+const {ensureDir} = require('./utils').fs;
 const t = require('./translations');
 
 class HandlebarsCompiler {
@@ -28,6 +29,8 @@ class HandlebarsCompiler {
 	async init() {
 		this.compileOptions.settings.layoutsDir = this.instance.fm.layoutsDir;
 		this.compileOptions.settings.partialsDir = this.instance.fm.partialsDir;
+
+		await Promise.all([ensureDir(this.instance.fm.layoutsDir), ensureDir(this.instance.fm.partialsDir)]);
 
 		this.compiler = promisify(this._hbs.express4(this.compileOptions.settings));
 		log.verbose(t('Exstatic.registering_helpers'));
