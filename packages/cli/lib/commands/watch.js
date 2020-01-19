@@ -21,6 +21,14 @@ module.exports = {
 			});
 
 			await instance.build().catch(error => {
+				if (argv.verbose) {
+					console.error('Build failed:');
+					const err = Error.coerce(error);
+					err.verbose = true;
+
+					throw err;
+				}
+
 				throw new Error(`Build failed - ${error.message}`);
 			});
 

@@ -16,7 +16,7 @@ module.exports = yargs
 		msg = msg || '';
 
 		if (err instanceof ExError) {
-			return console.error(err.message);
+			return console.error(err.verbose ? err.toString() : err.message);
 		}
 
 		if (msg.indexOf('Did you mean ') === 0) {
