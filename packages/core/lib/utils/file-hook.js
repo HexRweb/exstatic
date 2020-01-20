@@ -70,6 +70,10 @@ module.exports = function addFsHooks(register, instance) {
 
 		// CASE: failed to load the default module - no need to inform the user
 		if (fn instanceof Error) {
+			if (fn.code !== 'MODULE_NOT_FOUND') {
+				throw fn;
+			}
+
 			return;
 		}
 
