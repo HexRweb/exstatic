@@ -1,7 +1,7 @@
 const path = require('path');
 const assert = require('assert');
 const {ensureDir, writeFile} = require('@exstatic/utils').fs;
-const {normalize, file: {fileName}} = require('../utils');
+const {normalize, file: {fileName, urlPath}} = require('../utils');
 
 module.exports = class AbstractFile {
 	constructor(options = {}) {
@@ -12,7 +12,7 @@ module.exports = class AbstractFile {
 
 		this.parent = options.fileManager;
 		this.source = options.source;
-		this.filename = normalize(path.resolve(this.output, fileName(this.source)));
+		this.filename = normalize(path.resolve(this.output, fileName(urlPath(false, this.input, this.source))));
 	}
 
 	// Proxy methods for fs-related directories
