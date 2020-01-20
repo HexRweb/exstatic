@@ -17,7 +17,7 @@ module.exports = async function readConfig(basedir) {
 		return {data, file};
 	} catch (error) {
 		if (error.code !== 'ENOENT') {
-			log.error(t('Exstatic.config_parsing_failed', {ext: 'json', code: error.code}));
+			log.error(t('Exstatic.config_parsing_failed', {ext: 'json', code: error.code || error.message}));
 		}
 	}
 
