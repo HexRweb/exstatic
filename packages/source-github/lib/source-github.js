@@ -84,15 +84,29 @@ module.exports = class SourceGithub extends SourceBase {
 
 		if (Array.isArray(data)) {
 			this.debug(key, 'is a dir');
-			const children = await Promise.all(data.map(({path}) => this.getSingle({user, project, path})));
-			return children.reduce((flatChild, child) => flatChild.concat(child), []);
+			if (config.recursive) {
+				const children = await Promise.all(data.map(({path}) => this.getSingle({user, project, path})));
+				return children.reduce((flatChild, child) => flatChild.concat(child), []);
+			}
+
+			const promises = [];
+
+			for (const {path, type} of data) {
+				if (type !== 'file') {
+					continue;
+				}
+
+				promises.push(this.getSingle(({user, project, path})).then(payload => payload[0]));
+			}
+
+			return Promise.all(promises);
 		}
 
 		this.debug(key, 'is a file');
-		return {
+		return [{
 			path,
 			data: Buffer.from(data.content, 'base64')
-		};
+		}];
 	}
 
 	run() {
