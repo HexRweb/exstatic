@@ -109,8 +109,9 @@ module.exports = class SourceGithub extends SourceBase {
 		}];
 	}
 
-	run() {
-		// @todo
+	async run(config) {
+		const data = await this.getSingle(config);
+		return data;
 	}
 
 	query(options = {}) {
