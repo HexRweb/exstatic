@@ -78,7 +78,7 @@ class Exstatic {
 
 		log.info(t('Exstatic.reading_files'));
 		await mapAsync(getAllFiles(this.fm.inputDir, blacklist), file => this.fm.addFile(file, true));
-		await this.hook.executeHook('load-pages', [this.fm.files]);
+		await this.hook.executeHook('load-pages', [this.fm.files, this]);
 		log.info(t('Exstatic.files_read'));
 	}
 
