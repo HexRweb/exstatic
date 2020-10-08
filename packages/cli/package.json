@@ -24,7 +24,7 @@
   "dependencies": {
     "@exstatic/dev": "*",
     "@exstatic/utils": "*",
-    "yargs": "^13.2.1"
+    "yargs": "^16.0.3"
   },
   "devDependencies": {},
   "xo": false

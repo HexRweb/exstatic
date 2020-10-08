@@ -22,7 +22,7 @@
     "@exstatic/core": "*",
     "@exstatic/logging": "*",
     "@exstatic/utils": "*",
-    "chokidar": "^3.3.1"
+    "chokidar": "^3.4.2"
   },
   "devDependencies": {},
   "xo": false
