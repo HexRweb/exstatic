@@ -70,7 +70,7 @@ module.exports = class ExstaticCacheFileManager {
 
 	etagPath(etag) {
 		const resolvedPath = path.resolve(this.wd, `${etag}.cache`);
-		if (path.relative(this.wd, resolvedPath).indexOf('..') >= 0) {
+		if (path.relative(this.wd, resolvedPath).includes('..')) {
 			throw new ExError(`Etag ${etag} resolves outside of working directory`, 'EX_CACHE_NAMESPACE_ESCAPE');
 		}
 

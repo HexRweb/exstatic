@@ -13,4 +13,4 @@ module.exports = function coerceToFile(originalData, instance) {
 	}
 
 	throw new Error('COERSION_NOT_IMPLEMENTED');
-}
+};

@@ -6,7 +6,7 @@ const hash = require('../../../../test-utils/hash');
 process.env.EXSTATIC_LOG_LEVEL = 'error';
 const {Exstatic} = require('../../lib/exstatic');
 
-describe('Integration > Full Build', function () {
+describe('Integration > Full Build', () => {
 	let previousDir;
 	const root = path.resolve(__dirname, '../fixtures/test-instance/');
 	before(() => {

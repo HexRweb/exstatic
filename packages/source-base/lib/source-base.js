@@ -24,9 +24,10 @@ class ExstaticSource {
 		}
 	}
 
-	static replaceParams(string, params) {
-		return Object.entries(params).reduce(
-			(str, [key, value]) => str.replace(new RegExp(`:${key}`, 'g'), value),
+	static replaceParams(string, parameters) {
+		// eslint-disable-next-line unicorn/no-reduce
+		return Object.entries(parameters).reduce(
+			(string_, [key, value]) => string_.replace(new RegExp(`:${key}`, 'g'), value),
 			string
 		);
 	}
@@ -48,7 +49,7 @@ class ExstaticSource {
 
 	/* istanbul ignore next */
 	set name(_) {
-		return false;
+		// Noop
 	}
 
 	configure() {
@@ -75,8 +76,8 @@ class ExstaticSource {
 module.exports = ExstaticSource;
 module.exports.InvalidString = Cache.InvalidString;
 module.exports.Error = class SourceError extends Error {
-	constructor(msg, code) {
-		super(msg);
+	constructor(message, code) {
+		super(message);
 		this.code = code;
 	}
 };

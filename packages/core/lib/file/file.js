@@ -11,7 +11,7 @@ const {stripYaml, getYaml} = yamlParser;
  * Pattern used by express-hbs to get layout
  * @link https://github.com/barc/express-hbs/blob/master/lib/hbs.js
 */
-const expHbsLayoutPattern = /{{!<\s+([A-Za-z0-9\._\-\/]+)\s*}}/; // eslint-disable-line no-useless-escape
+const expHbsLayoutPattern = /{{!<\s+([\w.\-/]+)\s*}}/;
 
 class File extends AbstractFile {
 	constructor(options = {}) {
@@ -82,11 +82,11 @@ class File extends AbstractFile {
 		this.meta.path = filePath.replace('/index.html', '/');
 
 		this.tempContext = this.tempContext || filePath.replace('.html', '.hbs').replace(/\//g, '-');
-		const tempFile = this.temp.acquire(this.tempContext);
+		const temporaryFile = this.temp.acquire(this.tempContext);
 
 		// Step 4: Compile
-		await tempFile.write(contents);
-		contents = await this.compiler(tempFile.path, {page: this.meta});
+		await temporaryFile.write(contents);
+		contents = await this.compiler(temporaryFile.path, {page: this.meta});
 
 		// Build markdown
 		contents = marked(contents, {
@@ -98,8 +98,8 @@ class File extends AbstractFile {
 
 		contents = `{{!< ${layout}}}\n${contents}`;
 
-		await tempFile.write(contents);
-		this.compiled = Buffer.from(await this.compiler(tempFile.path, {page: this.meta}));
+		await temporaryFile.write(contents);
+		this.compiled = Buffer.from(await this.compiler(temporaryFile.path, {page: this.meta}));
 		return this;
 	}
 

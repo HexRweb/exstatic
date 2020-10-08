@@ -5,8 +5,8 @@ const hash = require('../../../../test-utils/hash');
 
 const File = require('../../lib/file');
 
-describe('Integration > File', function () {
-	describe('Parsing', function () {
+describe('Integration > File', () => {
+	describe('Parsing', () => {
 		const fixturesPath = path.resolve(__dirname, '../fixtures/');
 
 		function getFile(name) {
@@ -20,7 +20,7 @@ describe('Integration > File', function () {
 			})).extractMeta();
 		}
 
-		it('Generic Files', async function () {
+		it('Generic Files', async () => {
 			const file = await getFile('generic-file');
 			const expectedFileMeta = {
 				title: 'Generic File',
@@ -33,7 +33,7 @@ describe('Integration > File', function () {
 			expect(hash(file.hbs)).to.equal('69k5saSnIMIcITGMDTI7QrbIhwRX6AjlT01ehqTo6mY=');
 		});
 
-		it('Files with only metadata', async function () {
+		it('Files with only metadata', async () => {
 			const file = await getFile('only-meta');
 			const expectedFileMeta = {
 				title: 'Only Metadata',
@@ -47,7 +47,7 @@ describe('Integration > File', function () {
 			expect(file.hbs).to.equal('');
 		});
 
-		it('Files with only content', async function () {
+		it('Files with only content', async () => {
 			const file = await getFile('no-meta');
 			const expectedFileMeta = {
 				title: 'no-meta',
@@ -59,7 +59,7 @@ describe('Integration > File', function () {
 			expect(hash(file.hbs)).to.equal('9ww3CYkueKXosF1jHTX61at2GM8C/iykLsCEn4yTBJk=');
 		});
 
-		it('Files with metadata delimiters but no metadata', async function () {
+		it('Files with metadata delimiters but no metadata', async () => {
 			const file = await getFile('delim-no-meta');
 			const expectedFileMeta = {
 				title: 'delim-no-meta',

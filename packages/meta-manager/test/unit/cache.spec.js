@@ -8,7 +8,7 @@ const expectError = require('../../../../test-utils/expect-error');
 
 const root = path.resolve(__dirname, '../fixtures/');
 
-describe('Unit: meta-manager > cache', function () {
+describe('Unit: meta-manager > cache', () => {
 	let procStub;
 
 	beforeEach(() => {
@@ -19,27 +19,27 @@ describe('Unit: meta-manager > cache', function () {
 		procStub.restore();
 	});
 
-	it('Exports correct data', function () {
+	it('Exports correct data', () => {
 		expect(Cache.error).to.equal(error);
 		expect(Cache.InvalidString).to.be.ok;
 		expect(new Cache.InvalidString()).to.be.instanceOf(String);
 		expect(Cache).to.be.ok;
 	});
 
-	it('InvalidString adds isInvalid property', function () {
+	it('InvalidString adds isInvalid property', () => {
 		expect(new Cache.InvalidString().isInvalid).to.be.true;
 	});
 
-	describe('ExstaticCacheManager', function () {
-		describe('constructor', function () {
-			it('constructs', function () {
+	describe('ExstaticCacheManager', () => {
+		describe('constructor', () => {
+			it('constructs', () => {
 				const instance = new Cache({root, namespace: 'working'});
 				expect(instance.saveScheduled).to.be.false;
 				expect(instance.lastSaved).to.equal(-1);
 				expect(instance.wd).to.equal(path.resolve(root, '.exstatic/cache/working'));
 			});
 
-			it('constructor requires namespace', function () {
+			it('constructor requires namespace', () => {
 				try {
 					// eslint-disable-next-line no-unused-vars
 					const instance = new Cache();
@@ -50,13 +50,13 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('defaults wd to cwd', function () {
+			it('defaults wd to cwd', () => {
 				const instance = new Cache({namespace: 'test'});
 				expect(instance.wd).to.equal(path.resolve(process.cwd(), '.exstatic/cache/test'));
 			});
 		});
 
-		describe('scheduleSave', function () {
+		describe('scheduleSave', () => {
 			const instance = new Cache({root, namespace: 'working'});
 			instance.manifest = {};
 			let ntStub;
@@ -69,13 +69,13 @@ describe('Unit: meta-manager > cache', function () {
 				ntStub.restore();
 			});
 
-			it('does not double schedule', function () {
+			it('does not double schedule', () => {
 				instance.saveScheduled = true;
 				expect(instance.scheduleSave()).to.be.true;
 				expect(ntStub.called).to.be.false;
 			});
 
-			it('deduplicate', function () {
+			it('deduplicate', () => {
 				instance.saveScheduled = false;
 				instance.lastSaved = Date.now() + 10000;
 				expect(instance.scheduleSave()).to.be.false;
@@ -83,7 +83,7 @@ describe('Unit: meta-manager > cache', function () {
 				expect(ntStub.calledOnce).to.be.false;
 			});
 
-			it('saves', function () {
+			it('saves', () => {
 				instance.lastSaved = -1;
 				instance.saveScheduled = false;
 
@@ -93,8 +93,8 @@ describe('Unit: meta-manager > cache', function () {
 			});
 		});
 
-		describe('forceSave', function () {
-			it('clean', async function () {
+		describe('forceSave', () => {
+			it('clean', async () => {
 				const instance = new Cache({root, namespace: 'working'});
 				const writeStub = sinon.stub(fs, 'writeFile').resolves();
 				try {
@@ -105,7 +105,7 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('sync', function () {
+			it('sync', () => {
 				const instance = new Cache({root, namespace: 'working'});
 				instance.dirty = true;
 				const writeStub = sinon.stub(fs, 'writeFile').resolves();
@@ -120,7 +120,7 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('async', async function () {
+			it('async', async () => {
 				const instance = new Cache({root, namespace: 'working'});
 				instance.dirty = true;
 				const writeStub = sinon.stub(fs, 'writeFile').resolves();
@@ -136,7 +136,7 @@ describe('Unit: meta-manager > cache', function () {
 			});
 
 			// @todo
-			it('updates properties', async function () {
+			it('updates properties', async () => {
 				const instance = new Cache({root, namespace: 'working'});
 				const writeStub = sinon.stub(fs, 'writeFile').resolves();
 				const dateStub = sinon.stub(Date, 'now').returns(123321);
@@ -157,8 +157,8 @@ describe('Unit: meta-manager > cache', function () {
 			});
 		});
 
-		describe('init', function () {
-			it('creates folder if needed', async function () {
+		describe('init', () => {
+			it('creates folder if needed', async () => {
 				const instance = new Cache({root, namespace: 'fake'});
 				const ensureStub = sinon.stub(fs, 'ensureDir');
 				const folder = path.resolve(root, '.exstatic/cache/fake');
@@ -172,7 +172,7 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('creates a manifest if needed', async function () {
+			it('creates a manifest if needed', async () => {
 				const instance = new Cache({root, namespace: 'no-manifest'});
 				sinon.stub(instance, 'scheduleSave');
 
@@ -183,7 +183,7 @@ describe('Unit: meta-manager > cache', function () {
 				expect(instance.manifest.version).to.be.a('string');
 			});
 
-			it('errors with a bad manifest', async function () {
+			it('errors with a bad manifest', async () => {
 				const instance = new Cache({root, namespace: 'wrong-manifest'});
 				sinon.stub(instance, 'scheduleSave');
 
@@ -196,7 +196,7 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('errors with a bad manifest', async function () {
+			it('errors with a bad manifest', async () => {
 				const instance = new Cache({root, namespace: 'wrong-manifest-no-data'});
 
 				try {
@@ -208,7 +208,7 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('schedules exit hook', async function () {
+			it('schedules exit hook', async () => {
 				const instance = new Cache({root, namespace: 'working'});
 				await instance.init();
 
@@ -225,7 +225,7 @@ describe('Unit: meta-manager > cache', function () {
 			});
 		});
 
-		it('add', async function () {
+		it('add', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
@@ -244,7 +244,7 @@ describe('Unit: meta-manager > cache', function () {
 			}
 		});
 
-		it('removeItem', async function () {
+		it('removeItem', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
@@ -262,7 +262,7 @@ describe('Unit: meta-manager > cache', function () {
 			}
 		});
 
-		it('removeEtag', async function () {
+		it('removeEtag', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 			const removeItem = sinon.stub(instance, 'removeItem').resolves(true);
@@ -274,7 +274,7 @@ describe('Unit: meta-manager > cache', function () {
 			expect(removeItem.calledOnce).to.be.true;
 		});
 
-		it('removePath', async function () {
+		it('removePath', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 			const removeItem = sinon.stub(instance, 'removeItem').resolves(true);
@@ -286,11 +286,11 @@ describe('Unit: meta-manager > cache', function () {
 			expect(removeItem.calledOnce).to.be.true;
 		});
 
-		describe('etagPath', function () {
+		describe('etagPath', () => {
 			const instance = new Cache({root, namespace: 'working'});
 			before(() => instance.init());
 
-			it('Disallows path traversal', function () {
+			it('Disallows path traversal', () => {
 				try {
 					// eslint-disable-next-line no-unused-vars
 					const result = instance.etagPath('/test');
@@ -301,13 +301,13 @@ describe('Unit: meta-manager > cache', function () {
 				}
 			});
 
-			it('resolves path properly', function () {
+			it('resolves path properly', () => {
 				const result = instance.etagPath('testing');
 				expect(result).to.equal(path.resolve(instance.wd, 'testing.cache'));
 			});
 		});
 
-		it('hasEtag', async function () {
+		it('hasEtag', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
@@ -315,7 +315,7 @@ describe('Unit: meta-manager > cache', function () {
 			expect(instance.hasEtag('test')).to.be.true;
 		});
 
-		it('hasPath', async function () {
+		it('hasPath', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
@@ -323,7 +323,7 @@ describe('Unit: meta-manager > cache', function () {
 			expect(instance.hasPath('/testing')).to.be.true;
 		});
 
-		it('getEtagFromPath', async function () {
+		it('getEtagFromPath', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 
@@ -331,7 +331,7 @@ describe('Unit: meta-manager > cache', function () {
 			expect(etag).to.equal('test');
 		});
 
-		it('getContents', async function () {
+		it('getContents', async () => {
 			const instance = new Cache({root, namespace: 'working'});
 			await instance.init();
 

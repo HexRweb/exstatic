@@ -8,13 +8,11 @@ const transformConfig = require('./transform-config');
 
 module.exports = class SourceGithub extends SourceBase {
 	get defaults() {
-		return Object.assign({
-			headers: {
-				accept: 'application/vnd.github.v3+json'
-			},
-			validateStatus: status => (status >= 200 && status < 300) || status === 304,
-			baseURL: API_URL
-		}, SourceBase.defaults);
+		return {headers: {
+			accept: 'application/vnd.github.v3+json'
+		},
+		validateStatus: status => (status >= 200 && status < 300) || status === 304,
+		baseURL: API_URL, ...SourceBase.defaults};
 	}
 
 	get name() {
@@ -86,7 +84,7 @@ module.exports = class SourceGithub extends SourceBase {
 			this.debug(key, 'is a dir');
 			if (config.recursive) {
 				const children = await Promise.all(data.map(({path}) => this.getSingle({user, project, path})));
-				return children.reduce((flatChild, child) => flatChild.concat(child), []);
+				return children.flat();
 			}
 
 			const promises = [];
@@ -96,6 +94,7 @@ module.exports = class SourceGithub extends SourceBase {
 					continue;
 				}
 
+				// eslint-disable-next-line promise/prefer-await-to-then
 				promises.push(this.getSingle(({user, project, path})).then(payload => payload[0]));
 			}
 

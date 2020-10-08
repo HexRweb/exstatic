@@ -6,7 +6,7 @@ module.exports = function mergeLocalAndVirtualPages(hookResults, docs, instance)
 	hookResults.forEach(({result}) =>
 		ensureArray(result).forEach(newPage => {
 			if (newPage instanceof AbstractFile) {
-				return docs.push(newPage)
+				return docs.push(newPage);
 			}
 
 			docs.push(coerce(newPage, instance));

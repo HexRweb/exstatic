@@ -2,21 +2,21 @@ const readdir = require('readdirp');
 const {normalize} = require('.');
 
 // @todo: don't hardcode extensions
-const ALLOWED_EXTENSIONS = ['hbs', 'md'];
+const ALLOWED_EXTENSIONS = new Set(['hbs', 'md']);
 
-const isValidFile = (file, blacklist) => {
+const isValidFile = (file, ignorelist) => {
 	const extension = file.split('.').pop().toLowerCase();
-	if (file.includes('/_') || !ALLOWED_EXTENSIONS.includes(extension)) {
+	if (file.includes('/_') || !ALLOWED_EXTENSIONS.has(extension)) {
 		return false;
 	}
 
-	return blacklist.reduce((state, bad) => {
-		if (file.indexOf(bad) >= 0) {
+	for (const ignoredPattern of ignorelist) {
+		if (file.includes(ignoredPattern)) {
 			return false;
 		}
+	}
 
-		return state;
-	}, true);
+	return true;
 };
 
 async function getAllowedFiles(dir, blacklist = []) {

@@ -2,7 +2,7 @@ const path = require('path');
 const {random, fs, error: ExError, normalizePath: normalize} = require('@exstatic/utils');
 const FileContext = require('./file-context');
 
-module.exports = class ExstaticTempFileManager {
+module.exports = class ExstaticTemporaryFileManager {
 	constructor(options = {}) {
 		this.root = options.path || path.resolve(process.cwd(), '.exstatic', 'tmp');
 		this.fileList = new Map();

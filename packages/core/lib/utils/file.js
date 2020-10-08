@@ -1,3 +1,4 @@
+/* eslint-disable default-param-last */
 const path = require('path');
 const slugify = require('slugify');
 const {normalize} = require('.');
@@ -43,7 +44,7 @@ function fileName(urlPath, explicit = false) {
 	if (!explicit && !urlPath.match(/\/?index\.html$/i)) {
 		urlPath = `${urlPath.replace(/\.html$/i, '')}/index.html`;
 	// Make sure the file gets its own directory
-	} else if (explicit && !urlPath.match(/\.[\w]+$/)) {
+	} else if (explicit && !urlPath.match(/\.\w+$/)) {
 		urlPath += '/index.html';
 	}
 

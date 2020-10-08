@@ -34,9 +34,7 @@ class Sitemap extends PluginBase {
 		await Promise.all(filesInSitemap.map(async file => {
 			const fileMeta = await stat(file.source);
 
-			file.meta.sitemap = Object.assign({
-				lastModified: fileMeta.mtime
-			}, file.meta.sitemap);
+			file.meta.sitemap = {lastModified: fileMeta.mtime, ...file.meta.sitemap};
 
 			sitemap += `
 			<url>

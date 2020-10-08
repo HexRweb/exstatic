@@ -5,7 +5,7 @@ const HOOKS = [
 	'register-helpers',
 	'pre-write'
 ];
-const SYNC_HOOKS = ['pre-write'];
+const SYNC_HOOKS = new Set(['pre-write']);
 
 const resolvers = {};
 
@@ -39,7 +39,7 @@ function resolverFor(hookName) {
 
 module.exports = function registerHooks(manager) {
 	HOOKS.forEach(
-		hook => manager.addHook(hook, SYNC_HOOKS.includes(hook), resolverFor(hook))
+		hook => manager.addHook(hook, SYNC_HOOKS.has(hook), resolverFor(hook))
 	);
 };
 

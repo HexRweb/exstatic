@@ -10,18 +10,18 @@ class FunctionalBase extends Base {
 	}
 }
 
-describe('Package > Source Base', function () {
+describe('Package > Source Base', () => {
 	let instance;
 
 	beforeEach(() => {
 		instance = new FunctionalBase();
 	});
 
-	it('constructs', function () {
+	it('constructs', () => {
 		expect(instance).to.be.ok;
 	});
 
-	it('requires name to be implemented', function () {
+	it('requires name to be implemented', () => {
 		try {
 			instance = new Base();
 			expectError();
@@ -30,12 +30,12 @@ describe('Package > Source Base', function () {
 		}
 	});
 
-	it('setting name does not do anything', function () {
+	it('setting name does not do anything', () => {
 		instance.name = 'fake-test';
 		expect(instance.name).to.equal('test');
 	});
 
-	it('configure throws an error by default', function () {
+	it('configure throws an error by default', () => {
 		try {
 			instance.configure();
 			expectError();
@@ -44,7 +44,7 @@ describe('Package > Source Base', function () {
 		}
 	});
 
-	it('run throws an error by default', function () {
+	it('run throws an error by default', () => {
 		try {
 			instance.run();
 			expectError();
@@ -53,14 +53,14 @@ describe('Package > Source Base', function () {
 		}
 	});
 
-	it('replaceParams', function () {
-		const params = {test: 'yes', sleep: 'for-the-weak'};
+	it('replaceParams', () => {
+		const parameters = {test: 'yes', sleep: 'for-the-weak'};
 		const response = '/is/sleep/for-the-weak/?answer=yes';
-		expect(Base.replaceParams('/is/sleep/:sleep/?answer=:test', params)).to.equal(response);
+		expect(Base.replaceParams('/is/sleep/:sleep/?answer=:test', parameters)).to.equal(response);
 		expect(Base.replaceParams('/:a/:b/:c', {})).to.equal('/:a/:b/:c');
 	});
 
-	it('properly registers helper hook', function () {
+	it('properly registers helper hook', () => {
 		instance.register = sinon.stub();
 		const registerHook = sinon.stub();
 
@@ -75,7 +75,7 @@ describe('Package > Source Base', function () {
 		expect(instance.register.calledOnce).to.be.true;
 	});
 
-	it('registers hooks properly', function () {
+	it('registers hooks properly', () => {
 		const response = instance.register.call({name: 'test'});
 
 		expect(response).to.be.an('object').with.keys(['async']);
@@ -83,7 +83,7 @@ describe('Package > Source Base', function () {
 		expect(response.async.test).to.be.a('function');
 	});
 
-	it('registered hook calls run', function () {
+	it('registered hook calls run', () => {
 		const run = sinon.stub();
 		const ctx = {name: 'test', run};
 		const {async} = instance.register.call(ctx);

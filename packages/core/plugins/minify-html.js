@@ -13,12 +13,10 @@ class PluginMinifyHtml extends PluginBase {
 	}
 
 	configure(options = {}) {
-		this.options = Object.assign({
-			minifyCSS: true,
+		this.options = {minifyCSS: true,
 			minifyJS: true,
 			collapseWhitespace: true,
-			removeComments: true
-		}, options);
+			removeComments: true, ...options};
 	}
 
 	write(fileList) {

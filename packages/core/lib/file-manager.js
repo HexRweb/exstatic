@@ -1,5 +1,5 @@
 const {resolve} = require('path');
-const {tmp: TempManager} = require('@exstatic/meta-manager');
+const {tmp: TemporaryManager} = require('@exstatic/meta-manager');
 const {normalize} = require('./utils');
 const {File} = require('./file');
 
@@ -38,13 +38,13 @@ module.exports = class FileManager {
 
 	async init(options) {
 		this.initSyncOnly(options);
-		const tempDir = normalize(resolve(this.dir, '.exstatic', 'tmp'));
+		const temporaryDir = normalize(resolve(this.dir, '.exstatic', 'tmp'));
 
 		if (this.temp) {
 			await this.temp.releaseAll();
 		}
 
-		this.temp = new TempManager({root: tempDir});
+		this.temp = new TemporaryManager({root: temporaryDir});
 		return this.temp.init();
 	}
 
@@ -54,12 +54,12 @@ module.exports = class FileManager {
 		}
 	}
 
-	set config(value) {
-		this._config = value ? normalize(value) : value;
-	}
-
 	get config() {
 		return this._config;
+	}
+
+	set config(value) {
+		this._config = value ? normalize(value) : value;
 	}
 
 	resolve(segment) {

@@ -71,5 +71,5 @@ class ExstaticDev extends Exstatic {
 	}
 }
 
-module.exports = opts => new ExstaticDev(opts);
+module.exports = options => new ExstaticDev(options);
 module.exports.ExstaticDev = ExstaticDev;

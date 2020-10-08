@@ -10,5 +10,6 @@ const Promise = require('bluebird');
 */
 
 module.exports = function mapAsync(array, iterFn) {
+	// eslint-disable-next-line unicorn/no-fn-reference-in-iterator
 	return Promise.resolve(array).map(iterFn);
 };

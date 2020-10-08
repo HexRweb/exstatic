@@ -10,15 +10,15 @@ describe('Package > Plugin Base', () => {
 		instance = new Base();
 	});
 
-	it('index exports base', function () {
+	it('index exports base', () => {
 		expect(require('../index.js')).to.equal(Base); // eslint-disable-line unicorn/import-index
 	});
 
-	it('constructs', function () {
+	it('constructs', () => {
 		expect(instance).to.be.ok;
 	});
 
-	it('class contains required functions', function () {
+	it('class contains required functions', () => {
 		expect(instance.configure).to.be.a('function');
 		expect(instance.registerHooks).to.be.a('function');
 		expect(instance.hookWrite).to.be.a('function');
@@ -27,13 +27,13 @@ describe('Package > Plugin Base', () => {
 		expect(instance.write).to.be.a('function');
 	});
 
-	it('configure is functional', function () {
+	it('configure is functional', () => {
 		const ctx = {testing: true};
 		instance.configure(ctx);
 		expect(instance.options).to.deep.equal(ctx);
 	});
 
-	it('registers hooks', function () {
+	it('registers hooks', () => {
 		const register = sinon.stub();
 		instance.registerHooks(register);
 
@@ -43,7 +43,7 @@ describe('Package > Plugin Base', () => {
 		expect(register.calledWith('pre-write')).to.be.true;
 	});
 
-	it('hooks call proper fns', function () {
+	it('hooks call proper fns', () => {
 		const register = sinon.stub();
 		instance.registerHooks(register);
 
@@ -61,15 +61,15 @@ describe('Package > Plugin Base', () => {
 		expect(instance.hookWrite.calledOnce).to.be.true;
 	});
 
-	it('load pages', function () {
+	it('load pages', () => {
 		expect(instance.addPages()).to.be.ok;
 	});
 
-	it('register helpers', function () {
+	it('register helpers', () => {
 		expect(instance.registerHelpers()).to.be.ok;
 	});
 
-	it('pre-write', async function () {
+	it('pre-write', async () => {
 		const fakeFiles = ['File', 'File', 'File'];
 		const newFiles = ['new', 'new'];
 

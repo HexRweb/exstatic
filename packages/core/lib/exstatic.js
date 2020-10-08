@@ -27,7 +27,7 @@ class Exstatic {
 
 	async initialize(overrides = {}) {
 		let {file, data: config} = await readConfig(this.fm.dir);
-		config = Object.assign({}, defaultConfig, config, overrides);
+		config = {...defaultConfig, ...config, ...overrides};
 		this.__config = config;
 		this.fm.initSyncOnly(config);
 		this.fm.config = file;
@@ -35,7 +35,7 @@ class Exstatic {
 
 		registerFileHooks(this.hook.generateHookRegisterer('project'), this);
 
-		const namespaces = [];
+		const namespaces = new Set([]);
 		config.plugins = ensureArray(config.plugins);
 		for (let path of config.plugins) {
 			path = this.fm.resolve(path);
@@ -43,7 +43,7 @@ class Exstatic {
 				const plugin = require(path);
 
 				if (plugin.name && config[plugin.name] && typeof plugin.configure === 'function') {
-					if (namespaces.includes(plugin.name)) {
+					if (namespaces.has(plugin.name)) {
 						throw new ExstaticError(t('Exstatic.namespaceCollision', {
 							namespace: plugin.name,
 							path
@@ -142,5 +142,5 @@ class Exstatic {
 	}
 }
 
-module.exports = opts => new Exstatic(opts);
+module.exports = options => new Exstatic(options);
 module.exports.Exstatic = Exstatic;

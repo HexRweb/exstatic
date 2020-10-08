@@ -11,24 +11,24 @@ module.exports = yargs
 		global: true
 	})
 	.commandDir('./commands')
-	.fail((msg, err, yargs) => {
-		err = err || new Error(msg);
-		msg = msg || '';
+	.fail((message, err, yargs) => {
+		err = err || new Error(message);
+		message = message || '';
 
 		if (err instanceof ExError) {
 			return console.error(err.verbose ? err.toString() : err.message);
 		}
 
-		if (msg.indexOf('Did you mean ') === 0) {
+		if (message.indexOf('Did you mean ') === 0) {
 			yargs.showHelp();
-			return console.log('\n\nCommand not found.', msg);
+			return console.log('\n\nCommand not found.', message);
 		}
 
-		if (msg === 'SHOW_HELP') {
+		if (message === 'SHOW_HELP') {
 			return yargs.showHelp();
 		}
 
-		console.log(msg || err.message);
+		console.log(message || err.message);
 	})
 	.demandCommand(1, 'SHOW_HELP')
 	.showHelpOnFail(true)

@@ -1,5 +1,5 @@
 const HOOK_NAME = 'register-helpers';
-const noVal = Symbol('__hbs__no_val');
+const noValue = Symbol('__hbs__no_val');
 
 const {resolve} = require('path');
 const {promisify} = require('util');
@@ -89,7 +89,7 @@ class HandlebarsCompiler {
 	}
 
 	generateCompiler(path, pageContext) {
-		const context = Object.assign({}, this.compileOptions, pageContext);
+		const context = {...this.compileOptions, ...pageContext};
 		return this.compiler(path, context);
 	}
 
@@ -109,12 +109,12 @@ class HandlebarsCompiler {
 		return this._hbs.updateTemplateOptions({data: this._data});
 	}
 
-	data(path = false, value = noVal) {
+	data(path = false, value = noValue) {
 		if (!path) {
 			return this._data;
 		}
 
-		if (value === noVal) {
+		if (value === noValue) {
 			return get(this._data, path);
 		}
 

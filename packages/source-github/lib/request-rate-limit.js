@@ -12,7 +12,7 @@ module.exports = function handlePossibleRateLimit(error) {
 
 	let rateLimitResetMessage = headers['x-ratelimit-reset'] || '';
 	if (rateLimitResetMessage) {
-		let resetTime = new Date(parseInt(rateLimitResetMessage, 10));
+		let resetTime = new Date(Number.parseInt(rateLimitResetMessage, 10));
 		resetTime = `${resetTime.getHours() + 1}:${resetTime.getMinutes().toString().padStart(2, '0')}`;
 		rateLimitResetMessage = ` Rate limit resets at ${resetTime}`;
 	}
